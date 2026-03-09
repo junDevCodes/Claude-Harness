@@ -2,6 +2,17 @@
 name: pdf
 description: Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.
 license: Proprietary. LICENSE.txt has complete terms
+triggers:
+  - PDF
+  - pdf
+  - .pdf
+  - merge PDF
+  - split PDF
+  - PDF form
+  - OCR
+  - PDF encrypt
+  - extract text from PDF
+  - create PDF
 ---
 
 # PDF Processing Guide
@@ -305,6 +316,28 @@ with open("encrypted.pdf", "wb") as output:
 | Command line merge | qpdf | `qpdf --empty --pages ...` |
 | OCR scanned PDFs | pytesseract | Convert to image first |
 | Fill PDF forms | pdf-lib or pypdf (see FORMS.md) | See FORMS.md |
+
+## Anti-Patterns
+
+### 1. Unicode Subscript/Superscript in ReportLab
+- **BAD**: `"H₂O"` — Unicode subscript characters render as black boxes in built-in fonts
+- **GOOD**: ReportLab XML markup `"H<sub>2</sub>O"` in Paragraph objects
+
+### 2. Loading Entire Large PDF into Memory
+- **BAD**: `PdfReader("500page.pdf")` — loads all pages at once, causes memory spikes
+- **GOOD**: Process pages in ranges or use streaming; for extraction, specify page ranges:
+  ```python
+  reader = PdfReader("large.pdf")
+  for page in reader.pages[start:end]:  # Process in batches
+      text = page.extract_text()
+  ```
+
+### 3. Generating Sensitive PDFs Without Encryption
+- **BAD**: Personal/financial data in unencrypted PDF distributed externally
+- **GOOD**: Always encrypt PDFs containing sensitive information:
+  ```python
+  writer.encrypt("userpassword", "ownerpassword")
+  ```
 
 ## Next Steps
 

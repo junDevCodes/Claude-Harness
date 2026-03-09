@@ -1,5 +1,5 @@
 {
-    "version": "1.0",
+    "version": "1.3",
     "description": "Skill activation triggers for Claude Code. Controls when skills automatically suggest or block actions.",
     "skills": {
         "skill-developer": {
@@ -14,7 +14,7 @@
                     "add skill",
                     "skill triggers",
                     "skill rules",
-                    "hook system",
+                    "claude hook system",
                     "skill development",
                     "skill-rules.json"
                 ],
@@ -32,46 +32,27 @@
             "description": "FastAPI backend development patterns for Python async applications with SQLModel/SQLAlchemy, domain-driven design, and layered architecture",
             "promptTriggers": {
                 "keywords": [
-                    "backend",
-                    "backend development",
                     "fastapi",
                     "FastAPI",
-                    "service",
-                    "repository",
-                    "route",
-                    "router",
-                    "routing",
-                    "API",
-                    "endpoint",
-                    "async",
-                    "await",
                     "SQLModel",
                     "SQLAlchemy",
-                    "database",
-                    "orm",
-                    "domain",
-                    "dto",
                     "pydantic",
-                    "validation",
-                    "model",
-                    "middleware"
+                    "uvicorn",
+                    "alembic"
                 ],
                 "intentPatterns": [
                     "(create|add|implement|build).*?(route|endpoint|API|router|service|repository)",
                     "(fix|handle|debug).*?(error|exception|backend)",
                     "(add|implement).*?(middleware|validation|error.*?handling)",
                     "(organize|structure|refactor).*?(backend|service|API|domain)",
-                    "(how to|best practice).*?(backend|fastapi|route|router|service|repository)",
-                    "(async|await).*?(pattern|function|method)",
+                    "(how to|best practice).*?(fastapi|route|router|service|repository)",
                     "(database|orm|model).*?(query|create|update|delete)"
                 ]
             },
             "fileTriggers": {
                 "pathPatterns": [
-                    "backend/backend/**/*.py",
-                    "backend/backend/api/**/*.py",
-                    "backend/backend/domain/**/*.py",
-                    "backend/backend/dtos/**/*.py"
+                    "backend/**/*.py",
+                    "base/fastapi/**/*.py"
                 ],
                 "pathExclusions": [
                     "**/__pycache__/**",
@@ -86,7 +67,6 @@
                     "async def",
                     "AsyncSession",
                     "SQLModel",
-                    "BaseRepository",
                     "class.*Service:",
                     "class.*Repository:"
                 ]
@@ -96,33 +76,24 @@
             "type": "guardrail",
             "enforcement": "block",
             "priority": "high",
-            "description": "Next.js 15/React 19/TypeScript best practices including MUI v5 compatibility and App Router patterns",
+            "description": "Next.js 15/React 19/TypeScript best practices including App Router patterns, Server/Client Components, shadcn/ui, Tailwind CSS 4",
             "promptTriggers": {
                 "keywords": [
-                    "component",
-                    "react component",
-                    "UI",
-                    "interface",
-                    "page",
-                    "modal",
-                    "dialog",
-                    "form",
-                    "MUI",
-                    "Material-UI",
-                    "Grid",
-                    "styling",
-                    "frontend",
-                    "React",
                     "Next.js",
                     "nextjs",
+                    "next.js",
+                    "React",
                     "server component",
                     "client component",
                     "app router",
-                    "use client"
+                    "use client",
+                    "use server",
+                    "shadcn",
+                    "tailwind"
                 ],
                 "intentPatterns": [
                     "(create|add|make|build|update|modify|edit).*?(component|UI|page|modal|dialog|form)",
-                    "(how to|best practice).*?(component|react|MUI|nextjs|next.js)",
+                    "(how to|best practice).*?(component|react|nextjs|next.js)",
                     "(style|design|layout).*?(component|UI)",
                     "(server|client).*?component",
                     "app router"
@@ -132,23 +103,18 @@
                 "pathPatterns": [
                     "frontend/src/**/*.tsx",
                     "frontend/src/**/*.ts",
-                    "frontend/src/app/**/*.tsx",
-                    "frontend/src/app/**/*.ts",
-                    "frontend/src/components/**/*.tsx"
+                    "base/nextjs/src/**/*.tsx",
+                    "base/nextjs/src/**/*.ts"
                 ],
                 "pathExclusions": [
                     "**/*.test.tsx",
                     "**/*.test.ts",
                     "**/*.spec.tsx",
                     "**/*.spec.ts",
-                    "**/*.styles.ts",
                     "**/next.config.*",
                     "**/tsconfig.json"
                 ],
                 "contentPatterns": [
-                    "from '@mui/material';",
-                    "import.*Grid.*from.*@mui",
-                    "<Grid ",
                     "'use client'",
                     "'use server'",
                     "export default async function",
@@ -156,7 +122,7 @@
                     "next/image"
                 ]
             },
-            "blockMessage": "⚠️ BLOCKED - Next.js Frontend Best Practices Required\n\n📋 REQUIRED ACTION:\n1. Use Skill tool: 'nextjs-frontend-guidelines'\n2. Review Next.js 15 App Router patterns (Server vs Client Components)\n3. Check MUI v5 patterns (Grid uses xs/sm props, NOT size={{}})\n4. Use proper styling patterns (MUI v5 + Tailwind CSS 4)\n5. Then retry this edit\n\nReason: Enforce Next.js 15 + MUI v5 compatibility and React best practices\nFile: {file_path}\n\n💡 TIP: Add '// @skip-validation' comment to skip future checks",
+            "blockMessage": "⚠️ BLOCKED - Next.js Frontend Best Practices Required\n\n📋 REQUIRED ACTION:\n1. Use Skill tool: 'nextjs-frontend-guidelines'\n2. Review Next.js 15 App Router patterns (Server vs Client Components)\n3. Use proper shadcn/ui + Tailwind CSS 4 patterns\n4. Then retry this edit\n\nReason: Enforce Next.js 15 best practices\nFile: {file_path}\n\n💡 TIP: Add '// @skip-validation' comment to skip future checks",
             "skipConditions": {
                 "sessionSkillUsed": true,
                 "fileMarkers": [
@@ -165,38 +131,48 @@
                 "envOverride": "SKIP_FRONTEND_GUIDELINES"
             }
         },
-        "route-tester": {
+        "pytest-backend-testing": {
             "type": "domain",
             "enforcement": "suggest",
             "priority": "high",
-            "description": "Testing authenticated API routes with JWT cookie-based auth",
+            "description": "Comprehensive pytest testing guide for FastAPI backends. Covers unit testing, integration testing, async patterns, mocking, fixtures, coverage, and FastAPI-specific testing with TestClient.",
             "promptTriggers": {
                 "keywords": [
-                    "test route",
-                    "test endpoint",
-                    "test API",
-                    "route testing",
-                    "API testing",
-                    "authenticated route",
-                    "JWT testing",
-                    "cookie auth",
-                    "test with auth"
+                    "pytest",
+                    "python test",
+                    "unit test",
+                    "integration test",
+                    "test coverage",
+                    "pytest mock",
+                    "pytest fixture",
+                    "MagicMock",
+                    "AsyncMock",
+                    "TestClient",
+                    "async test"
                 ],
                 "intentPatterns": [
-                    "(test|debug|verify).*?(route|endpoint|API)",
-                    "(how to|how do I).*?test.*?(route|endpoint|API)",
-                    "test.*?(authenticated|auth|JWT|cookie)"
+                    "(write|create|add|update|fix).*?test",
+                    "(how to|how do I).*?test",
+                    "test.*?(repository|service|route|endpoint|API)",
+                    "(improve|increase|check).*?coverage",
+                    "(mock|stub|fake).*?(database|session|repository|service)",
+                    "failing test"
                 ]
             },
             "fileTriggers": {
                 "pathPatterns": [
-                    "**/routes/**/*.ts",
-                    "**/test-*.js",
-                    "**/test-*.ts"
+                    "backend/tests/**/*.py",
+                    "base/fastapi/tests/**/*.py"
                 ],
                 "contentPatterns": [
-                    "router\\.(get|post|put|delete|patch)",
-                    "app\\.(get|post|put|delete|patch)"
+                    "@pytest\\.mark",
+                    "import pytest",
+                    "def test_",
+                    "async def test_",
+                    "@pytest\\.fixture",
+                    "AsyncMock",
+                    "MagicMock",
+                    "TestClient"
                 ]
             }
         },
@@ -204,15 +180,13 @@
             "type": "domain",
             "enforcement": "suggest",
             "priority": "high",
-            "description": "Sentry error tracking and performance monitoring patterns",
+            "description": "Sentry v8 error tracking and performance monitoring patterns",
             "promptTriggers": {
                 "keywords": [
-                    "error handling",
-                    "exception",
                     "sentry",
                     "error tracking",
                     "captureException",
-                    "monitoring",
+                    "error monitoring",
                     "performance tracking"
                 ],
                 "intentPatterns": [
@@ -236,712 +210,559 @@
                 ]
             }
         },
-        "pytest-backend-testing": {
+        "frontend-design": {
             "type": "domain",
             "enforcement": "suggest",
             "priority": "high",
-            "description": "Comprehensive pytest testing guide for FastAPI backends. Covers unit testing, integration testing, async patterns, mocking, fixtures, coverage, and FastAPI-specific testing with TestClient. Use when writing or updating test code.",
+            "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use for web components, pages, dashboards, and UI design.",
             "promptTriggers": {
                 "keywords": [
-                    "test",
-                    "tests",
-                    "testing",
-                    "unit test",
-                    "integration test",
-                    "pytest",
-                    "test coverage",
-                    "coverage",
-                    "mock",
-                    "mocking",
-                    "fixture",
-                    "fixtures",
-                    "TestClient",
-                    "async test",
-                    "test database",
-                    "@pytest.mark",
-                    "assert",
-                    "test case",
-                    "test suite"
-                ],
-                "intentPatterns": [
-                    "(write|create|add|update|fix).*?test",
-                    "(how to|how do I).*?test",
-                    "test.*?(repository|service|route|endpoint|API)",
-                    "(improve|increase|check).*?coverage",
-                    "(mock|stub|fake).*?(database|session|repository|service)",
-                    "(async|await).*?test",
-                    "test.*?(async|await)",
-                    "(fixture|setup|teardown).*?test",
-                    "failing test",
-                    "test.*?(error|exception|failure)"
-                ]
-            },
-            "fileTriggers": {
-                "pathPatterns": [
-                    "backend/tests/**/*.py",
-                    "backend/tests/**/test_*.py",
-                    "backend/tests/**/*_test.py",
-                    "backend/tests/**/conftest.py"
-                ],
-                "contentPatterns": [
-                    "@pytest\\.mark",
-                    "import pytest",
-                    "from pytest import",
-                    "def test_",
-                    "async def test_",
-                    "@pytest\\.fixture",
-                    "AsyncMock",
-                    "MagicMock",
-                    "TestClient",
-                    "assert.*==",
-                    "pytest\\.raises"
-                ]
-            }
-        },
-        "reel-creator": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "Create Instagram/TikTok aggro-style reels using Remotion with voiceovers, sound effects, animations, and video editing",
-            "promptTriggers": {
-                "keywords": [
-                    "릴스",
-                    "reel",
-                    "reels",
-                    "remotion",
-                    "숏폼",
-                    "short form",
-                    "short video",
-                    "영상",
-                    "video content",
-                    "어그로",
-                    "aggro",
-                    "tiktok",
-                    "틱톡",
-                    "인스타그램",
-                    "instagram",
-                    "voiceover",
-                    "보이스오버",
-                    "음성",
-                    "composition"
-                ],
-                "intentPatterns": [
-                    "(create|make|build|만들|제작).*?(reel|릴스|영상|video|숏폼)",
-                    "(reel|릴스|영상).*?(create|make|만들|제작)",
-                    "(aggro|어그로).*?(style|스타일|영상|video|reel|릴스)",
-                    "(instagram|인스타|tiktok|틱톡).*?(video|영상|content|콘텐츠)",
-                    "(voiceover|음성|보이스).*?(generate|만들|생성)",
-                    "remotion.*?(composition|video|영상)"
-                ]
-            },
-            "fileTriggers": {
-                "pathPatterns": [
-                    "reels/src/compositions/**/*.tsx",
-                    "reels/src/compositions/**/*.ts",
-                    "reels/public/audio/**/*",
-                    "reels/public/videos/**/*"
-                ],
-                "contentPatterns": [
-                    "from \"remotion\"",
-                    "createComposition",
-                    "useCurrentFrame",
-                    "useVideoConfig",
-                    "AbsoluteFill",
-                    "staticFile.*?audio"
-                ]
-            }
-        },
-        "visual-hook-creator": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "Create attention-grabbing visual hooks for the first 3 seconds of Instagram Reels/TikTok. Includes color flash, glitch effects, screen shake, zoom, kinetic typography, and layered timing. Use when creating reel hooks, visual effects for short videos, 후킹 효과, 시각 효과, 첫 3초 hook, scroll-stopping effects.",
-            "promptTriggers": {
-                "keywords": [
-                    "visual hook",
-                    "시각 후킹",
-                    "후킹 효과",
-                    "첫 3초",
-                    "first 3 seconds",
-                    "scroll stop",
-                    "스크롤 멈춤",
-                    "color flash",
-                    "색상 플래시",
-                    "glitch effect",
-                    "글리치",
-                    "screen shake",
-                    "화면 흔들림",
-                    "zoom burst",
-                    "줌 효과",
-                    "kinetic text",
-                    "텍스트 애니메이션",
-                    "attention grabbing",
-                    "hook segment",
-                    "오프닝 효과",
-                    "opening effect"
-                ],
-                "intentPatterns": [
-                    "(create|make|add|만들|추가).*?(visual|시각).*?(hook|후킹|효과)",
-                    "(첫|first).*?(3초|3 seconds|초).*?(hook|후킹|효과)",
-                    "(glitch|글리치|shake|흔들|flash|플래시).*?(effect|효과)",
-                    "(scroll|스크롤).*?(stop|멈춤|잡|grab)",
-                    "(reel|릴스|영상).*?(hook|후킹|오프닝)",
-                    "(attention|주목|시선).*?(grab|끌|사로잡)"
-                ]
-            },
-            "fileTriggers": {
-                "pathPatterns": [
-                    "reels/src/compositions/**/*hook*.tsx",
-                    "reels/src/components/**/*.tsx"
-                ],
-                "contentPatterns": [
-                    "ColorFlash",
-                    "ScreenShake",
-                    "GlitchText",
-                    "ZoomBurst",
-                    "TextPop",
-                    "HOOK_TIMING"
-                ]
-            }
-        },
-        "viral-reel-creator": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "Create viral Instagram/TikTok reels with proven hook techniques, voiceover generation, sound effects, animations, and video editing. Keywords: reel, reels, instagram, tiktok, viral, short-form, 릴스, 숏폼, 바이럴, 후킹, hook, remotion, video composition, portrait video, 9:16, vertical video",
-            "promptTriggers": {
-                "keywords": [
-                    "viral reel",
-                    "viral video",
-                    "viral content",
-                    "바이럴",
-                    "바이럴 릴스",
-                    "바이럴 영상",
-                    "후킹",
-                    "hook",
-                    "hooking",
-                    "instagram reel",
-                    "인스타 릴스",
-                    "tiktok video",
-                    "틱톡 영상",
-                    "short form",
-                    "숏폼",
-                    "vertical video",
-                    "세로 영상",
-                    "9:16",
-                    "portrait video",
-                    "scroll stopping",
-                    "스크롤 멈춤",
-                    "첫 3초",
-                    "first 3 seconds",
-                    "CTA",
-                    "콜투액션",
-                    "conversion video",
-                    "branding video"
-                ],
-                "intentPatterns": [
-                    "(create|make|build|만들|제작).*?(viral|바이럴).*?(reel|릴스|video|영상)",
-                    "(viral|바이럴).*?(content|콘텐츠|video|영상|reel|릴스)",
-                    "(hook|후킹|hooking).*?(reel|릴스|video|영상)",
-                    "(reel|릴스|video|영상).*?(hook|후킹|hooking)",
-                    "(instagram|인스타|tiktok|틱톡).*?(viral|바이럴|hook|후킹)",
-                    "(첫|first).*?(3초|3 seconds).*?(hook|후킹|잡|grab)",
-                    "(scroll|스크롤).*?(stop|멈춤|잡|grab).*?(video|영상|reel|릴스)",
-                    "(conversion|전환|branding|브랜딩).*?(video|영상|reel|릴스)",
-                    "(short.*?form|숏폼).*?(content|콘텐츠|video|영상)"
-                ]
-            },
-            "fileTriggers": {
-                "pathPatterns": [
-                    "reels/src/compositions/**/*.tsx",
-                    "reels/src/compositions/**/*.ts",
-                    "reels/public/audio/**/*",
-                    "reels/public/videos/**/*"
-                ],
-                "contentPatterns": [
-                    "from \"remotion\"",
-                    "createComposition",
-                    "Portrait-1080p",
-                    "HookSection",
-                    "CTASection",
-                    "TransitionSeries"
-                ]
-            }
-        },
-        "reels-fire-effect": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "Create explosive fire effects for Instagram/TikTok reels hook segments. Includes fire particle animations, flame bursts, explosion effects, fire glow, and dramatic entrance animations. Use when creating reels with fire effects, explosive hooks, dramatic reveals, or attention-grabbing opening sequences.",
-            "promptTriggers": {
-                "keywords": [
-                    "fire effect",
-                    "fire",
-                    "flame",
-                    "explosion",
-                    "불 이펙트",
-                    "화염",
-                    "폭발",
-                    "불꽃",
-                    "fire animation",
-                    "flame burst",
-                    "fire particles",
-                    "explosive hook",
-                    "dramatic reveal",
-                    "fire glow",
-                    "burning effect",
-                    "inferno",
-                    "blaze"
-                ],
-                "intentPatterns": [
-                    "(add|create|make|만들|추가).*?(fire|flame|불|화염|폭발)",
-                    "(fire|flame|불|화염).*?(effect|이펙트|효과|animation|애니메이션)",
-                    "(hook|훅).*?(fire|flame|explosion|불|폭발)",
-                    "(explosive|dramatic|폭발|드라마틱).*?(effect|reveal|opening)",
-                    "(reel|릴스).*?(fire|flame|불|화염)",
-                    "(fire|불).*?(particle|파티클|burst|burst)"
-                ]
-            },
-            "fileTriggers": {
-                "pathPatterns": [
-                    "reels/src/components/fire/**/*.tsx",
-                    "reels/src/compositions/**/*fire*.tsx",
-                    "reels/src/compositions/**/*explosion*.tsx"
-                ],
-                "contentPatterns": [
-                    "FireParticle",
-                    "FlameBurst",
-                    "FireRing",
-                    "FireGlow",
-                    "fire.*?effect",
-                    "flame.*?animation"
-                ]
-            }
-        },
-        "handwriting-beautifier": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "손글씨 이미지를 Replicate의 Nano Banana Pro 모델로 부드럽고 세련된 손글씨로 변환하는 스킬",
-            "promptTriggers": {
-                "keywords": [
-                    "손글씨",
-                    "handwriting",
-                    "필체",
-                    "글씨체",
-                    "calligraphy",
-                    "nano banana",
-                    "나노바나나",
-                    "손글씨 변환",
-                    "손글씨 다듬기",
-                    "handwriting beautify",
-                    "penmanship"
-                ],
-                "intentPatterns": [
-                    "(beautify|transform|convert|변환|다듬|개선).*?(handwriting|손글씨|필체|글씨체)",
-                    "(손글씨|handwriting|필체).*?(smooth|clean|부드럽|깔끔|예쁘게)",
-                    "nano banana.*?(handwriting|손글씨|이미지)",
-                    "(이미지|image).*?(손글씨|handwriting).*?(변환|convert)",
-                    "(create|make|만들).*?(smooth|부드러운).*?(handwriting|손글씨)"
-                ]
-            }
-        },
-        "copyright-safe-style-transfer": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "Replicate의 FLUX Pro 계열 모델(Kontext, Redux, Depth)을 사용하여 이미지 스타일을 저작권에 안전하게 변환",
-            "promptTriggers": {
-                "keywords": [
-                    "스타일 변환",
-                    "style transfer",
-                    "이미지 변환",
-                    "image transformation",
-                    "저작권",
-                    "copyright",
-                    "copyright-safe",
-                    "FLUX",
-                    "flux pro",
-                    "flux kontext",
-                    "flux redux",
-                    "flux depth",
-                    "restyle",
-                    "리스타일",
-                    "스타일 변경",
-                    "아트 스타일",
-                    "art style",
-                    "이미지 스타일"
-                ],
-                "intentPatterns": [
-                    "(change|transform|convert|변환|변경|바꾸).*?(style|스타일)",
-                    "(style|스타일).*?(transfer|변환|변경|바꾸)",
-                    "(image|이미지).*?(style|스타일).*?(change|transform|변환|변경)",
-                    "(copyright|저작권).*?(safe|안전|문제)",
-                    "flux.*?(style|스타일|변환|transfer)",
-                    "(restyle|리스타일).*?(image|이미지)",
-                    "(art|아트).*?(style|스타일).*?(apply|적용|변환)"
-                ]
-            }
-        },
-        "product-display-video": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "Replicate의 Kling v2.5 모델을 사용하여 제품 이미지를 거치대/디스플레이 스탠드에 걸린 비디오로 변환",
-            "promptTriggers": {
-                "keywords": [
-                    "거치대",
-                    "거치대 비디오",
-                    "거치대 영상",
-                    "display stand",
-                    "product display",
-                    "제품 거치대",
-                    "스탠드 비디오",
-                    "제품 영상",
-                    "제품 비디오",
-                    "showcase video",
-                    "product video",
-                    "클링",
-                    "kling",
-                    "rotating stand",
-                    "회전 거치대",
-                    "디스플레이 스탠드",
-                    "제품 쇼케이스",
-                    "product showcase"
-                ],
-                "intentPatterns": [
-                    "(만들|create|make|generate|생성).*?(거치대|display stand|stand).*?(비디오|video|영상)",
-                    "(거치대|display stand|스탠드).*?(걸|mount|hang|display).*?(비디오|video|영상)",
-                    "(이미지|image|사진|photo).*?(거치대|display|스탠드).*?(비디오|video|영상)",
-                    "(제품|product).*?(거치대|display|stand).*?(비디오|video|영상)",
-                    "(kling|클링).*?(비디오|video|영상)",
-                    "(비디오|video|영상).*?(거치대|display stand|쇼케이스)"
-                ]
-            }
-        },
-        "evan-insight-blog-writer": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "evan-insight 블로그 투자 분석 글 작성. 어그로 두괄식, 쉬운 언어, 자연스러운 문체. 투자 분석, 주식 분석, 기업 분석, 블로그 글쓰기, 투자 글, evan-insight, 100배 주식, Next 구글, Next NVIDIA 관련 키워드로 트리거.",
-            "promptTriggers": {
-                "keywords": [
-                    "evan-insight",
-                    "투자 분석",
-                    "주식 분석",
-                    "기업 분석",
-                    "투자 글",
-                    "블로그 글쓰기",
-                    "100배 주식",
-                    "Next 구글",
-                    "Next NVIDIA",
-                    "투자 블로그",
-                    "분석 글",
-                    "어그로",
-                    "두괄식"
-                ],
-                "intentPatterns": [
-                    "(write|create|작성|쓰).*?(투자|분석|블로그).*?(글|article|post)",
-                    "(투자|기업|주식).*?(분석|analysis).*?(글|작성|write)",
-                    "evan-insight.*?(글|post|article|작성)",
-                    "(쉽게|쉬운).*?(풀어|설명|쓰).*?(투자|분석)",
-                    "(어그로|두괄식).*?(글|작성|쓰)",
-                    "(Next|다음).*?(구글|NVIDIA|테슬라)"
-                ]
-            },
-            "fileTriggers": {
-                "pathPatterns": [
-                    "evan-insight/content/posts/**/*.md"
-                ],
-                "contentPatterns": [
-                    "category:.*?(AI|Sector Analysis)",
-                    "Next.*?(구글|NVIDIA)",
-                    "100배"
-                ]
-            }
-        },
-        "youtube-editor": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "YouTube 영상 편집 스킬. Remotion으로 자막 싱크, 오디오 트랜스크립션, 렌더링. 유튜브 영상, 팟캐스트 영상, 자막 추가, 캡션, 트랜스크립트, Whisper, 영상 렌더링, 16:9, 1080p 관련 키워드로 트리거됨.",
-            "promptTriggers": {
-                "keywords": [
-                    "유튜브",
-                    "youtube",
-                    "팟캐스트",
-                    "podcast",
-                    "자막",
-                    "caption",
-                    "subtitle",
-                    "캡션",
-                    "트랜스크립트",
-                    "transcript",
-                    "transcription",
-                    "whisper",
-                    "영상 렌더링",
-                    "video rendering",
-                    "16:9",
-                    "1080p",
-                    "landscape video",
-                    "가로 영상",
-                    "자막 싱크",
-                    "caption sync",
-                    "오디오 추출",
-                    "audio transcription"
-                ],
-                "intentPatterns": [
-                    "(create|make|build|만들|제작|편집).*?(youtube|유튜브|팟캐스트|podcast).*?(video|영상)",
-                    "(youtube|유튜브|팟캐스트|podcast).*?(video|영상).*?(create|make|만들|제작)",
-                    "(add|추가|넣|싱크).*?(caption|자막|subtitle|캡션)",
-                    "(caption|자막|subtitle).*?(sync|싱크|맞추)",
-                    "(transcribe|트랜스크립션|변환).*?(audio|오디오|음성)",
-                    "(render|렌더링|렌더).*?(video|영상|16:9|1080p)",
-                    "whisper.*?(transcription|transcript|자막|오디오)",
-                    "(landscape|가로|16:9).*?(video|영상)"
-                ]
-            },
-            "fileTriggers": {
-                "pathPatterns": [
-                    "reels/src/compositions/**/*.tsx",
-                    "reels/src/compositions/**/*.ts",
-                    "reels/public/audio/**/*.json",
-                    "reels/public/audio/**/*.mp3"
-                ],
-                "contentPatterns": [
-                    "Landscape-1080p",
-                    "CaptionWord",
-                    "transcript",
-                    "useCurrentFrame",
-                    "interpolate",
-                    "fadeIn",
-                    "fadeOut"
-                ]
-            }
-        },
-        "youtube-editor-highlight": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "YouTube 영상에서 현재 말하는 단어를 형광색 박스로 하이라이트하는 자막 편집 스킬. Remotion 기반, 실시간 워드 하이라이트, 형광 외곽선, 둥근 박스, 카라오케 스타일 자막. 하이라이트 자막, highlight caption, karaoke subtitle, word highlight, 현재 단어 강조, 실시간 자막, 형광 자막, neon caption 관련 키워드로 트리거됨.",
-            "promptTriggers": {
-                "keywords": [
-                    "하이라이트 자막",
-                    "highlight caption",
-                    "highlight subtitle",
-                    "형광 자막",
-                    "neon caption",
-                    "neon subtitle",
-                    "karaoke subtitle",
-                    "karaoke caption",
-                    "카라오케 자막",
-                    "word highlight",
-                    "단어 하이라이트",
-                    "현재 단어",
-                    "current word",
-                    "실시간 자막",
-                    "glow caption",
-                    "글로우 자막",
-                    "형광색 박스",
-                    "neon box",
-                    "하이라이트 박스"
-                ],
-                "intentPatterns": [
-                    "(add|create|make|만들|추가).*?(highlight|하이라이트|형광).*?(caption|자막|subtitle)",
-                    "(caption|자막|subtitle).*?(highlight|하이라이트|형광|neon|네온)",
-                    "(current|현재).*?(word|단어).*?(highlight|강조|표시)",
-                    "(karaoke|카라오케).*?(style|스타일).*?(caption|자막)",
-                    "(word|단어).*?(by.*?word|하나씩).*?(highlight|강조)",
-                    "(glow|글로우|neon|네온).*?(caption|자막|box|박스)",
-                    "(실시간|real.*?time).*?(자막|caption).*?(하이라이트|highlight)"
-                ]
-            },
-            "fileTriggers": {
-                "pathPatterns": [
-                    "reels/src/components/HighlightCaption.tsx",
-                    "reels/src/compositions/**/*highlight*.tsx"
-                ],
-                "contentPatterns": [
-                    "HighlightCaption",
-                    "highlightColor",
-                    "boxStyle.*?neon",
-                    "형광",
-                    "glow"
-                ]
-            }
-        },
-        "detailed-page-writer": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "전자책, 템플릿, 디지털 상품 상세페이지 작성. 고객 문제 짚기, 변화 보여주기, 숫자/사례로 확신 주기, 가격 정당화, CTA 작성 가이드",
-            "promptTriggers": {
-                "keywords": [
-                    "상세페이지",
-                    "상세 페이지",
-                    "detailed page",
-                    "product page",
-                    "랜딩페이지",
-                    "랜딩 페이지",
+                    "design",
+                    "UI design",
+                    "component design",
                     "landing page",
-                    "제품 설명",
-                    "상품 설명",
-                    "상품 소개",
-                    "product description",
-                    "전자책 판매",
-                    "ebook 판매",
-                    "템플릿 판매",
-                    "디지털 상품",
-                    "digital product",
-                    "래피드",
-                    "latpeed",
-                    "타임딜",
-                    "time deal",
-                    "얼리버드",
-                    "early bird",
-                    "구매 전환",
-                    "conversion",
-                    "판매 페이지",
-                    "sales page",
-                    "copywriting",
-                    "카피라이팅",
-                    "상품 카피",
-                    "제품 카피"
+                    "dashboard",
+                    "beautiful",
+                    "styled",
+                    "responsive"
                 ],
                 "intentPatterns": [
-                    "(작성|쓰|만들|write|create).*?(상세페이지|상세 페이지|상품 설명|제품 설명|랜딩)",
-                    "(상세페이지|상세 페이지|상품 설명|제품 설명).*?(작성|쓰|만들|write|create)",
-                    "(전자책|ebook|템플릿|template|워크북).*?(판매|설명|소개|페이지)",
-                    "(판매|설명|소개|페이지).*?(전자책|ebook|템플릿|template|워크북)",
-                    "(디지털|digital).*?(상품|product).*?(설명|페이지|판매)",
-                    "(구매|purchase|conversion|전환).*?(유도|높이|올리)",
-                    "(설득력|compelling).*?(설명|description|카피|copy)",
-                    "(래피드|latpeed).*?(상품|등록|판매)",
-                    "(얼리버드|early.*?bird|타임딜|time.*?deal).*?(가격|할인|프레이밍)",
-                    "(CTA|콜투액션|call.*?to.*?action).*?(작성|만들)"
+                    "(design|style|beautify|improve).*?(UI|component|page|interface)",
+                    "(create|build|make).*?(landing|dashboard|portfolio|website)",
+                    "(modern|clean|minimal|beautiful).*?(UI|design|layout)"
+                ]
+            }
+        },
+        "vercel-react-best-practices": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "React and Next.js performance optimization guidelines from Vercel Engineering.",
+            "promptTriggers": {
+                "keywords": [
+                    "performance",
+                    "optimization",
+                    "bundle size",
+                    "lazy loading",
+                    "React memo",
+                    "useMemo",
+                    "useCallback",
+                    "re-render"
+                ],
+                "intentPatterns": [
+                    "(optimize|improve|fix).*?(performance|speed|bundle|render)",
+                    "(reduce|minimize).*?(re-render|bundle|load time)",
+                    "(lazy|dynamic).*?(import|load|component)"
                 ]
             },
             "fileTriggers": {
                 "pathPatterns": [
-                    "**/landing/**/*.md",
-                    "**/sales/**/*.md",
-                    "**/product-pages/**/*.md",
-                    "**/marketing/**/*.md"
+                    "frontend/src/**/*.tsx",
+                    "frontend/src/**/*.ts",
+                    "base/nextjs/src/**/*.tsx"
                 ],
                 "contentPatterns": [
-                    "상세페이지",
-                    "랜딩페이지",
-                    "구매하기",
-                    "얼리버드",
-                    "타임딜",
-                    "지금 바로"
+                    "useMemo",
+                    "useCallback",
+                    "React.memo",
+                    "dynamic\\(",
+                    "Suspense"
                 ]
             }
         },
-        "threads-writer": {
+        "web-design-guidelines": {
             "type": "domain",
             "enforcement": "suggest",
-            "priority": "high",
-            "description": "Threads(스레드) 글쓰기 스킬. 11가지 템플릿으로 주제에 맞는 스레드 글을 작성. 스레드, threads, 글쓰기, 글 작성, SNS 글, 소셜 미디어 글, 인사이트 글, 넘버링, 원칙, YES/NO, 실패 극복, 수익화, 효율화, 일잘러, 책 인사이트, 시간 관리 관련 키워드로 트리거.",
+            "priority": "medium",
+            "description": "Review UI code for Web Interface Guidelines compliance. Use when reviewing UI, checking accessibility, auditing design, or reviewing UX.",
             "promptTriggers": {
                 "keywords": [
-                    "스레드",
-                    "threads",
-                    "thread",
-                    "스레드 글",
-                    "threads 글",
-                    "SNS 글",
-                    "소셜 글",
-                    "인사이트 글",
-                    "글쓰기",
-                    "글 작성",
-                    "글 써줘",
-                    "넘버링 글",
-                    "원칙 글",
-                    "실패 극복기",
-                    "수익화 글",
-                    "효율화 글",
-                    "일잘러",
-                    "책 인사이트",
-                    "시간 관리 글"
+                    "accessibility",
+                    "a11y",
+                    "UX review",
+                    "UI review",
+                    "design audit",
+                    "WCAG",
+                    "aria",
+                    "contrast ratio"
                 ],
                 "intentPatterns": [
-                    "(스레드|threads|thread).*?(글|작성|써|쓰|write|post)",
-                    "(글|post).*?(스레드|threads|thread)",
-                    "(써줘|작성|write).*?(스레드|threads|SNS|소셜)",
-                    "(인사이트|공감|경험).*?(글|작성|써|쓰)",
-                    "(넘버링|원칙|YES.*?NO).*?(템플릿|형식|글)",
-                    "(실패|극복|수익화|효율화|자동화).*?(글|이야기|공유)",
-                    "(일잘러|시간 관리|루틴|책).*?(글|인사이트|공유)"
+                    "(review|audit|check).*?(UI|design|accessibility|UX)",
+                    "(improve|fix).*?(accessibility|a11y|contrast)",
+                    "(check|verify).*?(WCAG|aria|keyboard navigation)"
                 ]
             }
         },
-        "cliwant-brand-guidelines": {
-            "type": "guardrail",
-            "enforcement": "block",
-            "priority": "critical",
-            "description": "Official brand guidelines for Cliwant. Use when creating presentations, documents, marketing materials, or any visual/written content featuring Cliwant branding.",
+        "mermaid": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "medium",
+            "description": "Generate Mermaid diagrams from user requirements. Supports flowcharts, sequence diagrams, class diagrams, ER diagrams, Gantt charts.",
             "promptTriggers": {
                 "keywords": [
-                    "cliwant",
-                    "CLIWANT",
-                    "클라이원트",
-                    "presentation",
-                    "ppt",
-                    "PPT",
+                    "mermaid",
+                    "diagram",
+                    "flowchart",
+                    "sequence diagram",
+                    "class diagram",
+                    "ER diagram",
+                    "Gantt",
+                    "ERD",
+                    "flow diagram"
+                ],
+                "intentPatterns": [
+                    "(create|draw|generate|make).*?(diagram|flowchart|chart|ERD)",
+                    "(diagram|chart|flow).*?(create|draw|generate|make)",
+                    "visualize.*?(flow|process|architecture|database)"
+                ]
+            }
+        },
+        "pdf": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "medium",
+            "description": "Read, create, merge, split, rotate, watermark, encrypt PDF files. Use for any PDF manipulation task.",
+            "promptTriggers": {
+                "keywords": [
+                    "PDF",
+                    "pdf",
+                    ".pdf",
+                    "merge PDF",
+                    "split PDF",
+                    "PDF form",
+                    "OCR",
+                    "PDF encrypt"
+                ],
+                "intentPatterns": [
+                    "(read|create|merge|split|rotate|watermark|encrypt).*?PDF",
+                    "PDF.*?(read|create|merge|split|rotate|watermark|encrypt)",
+                    "(extract|convert).*?PDF"
+                ]
+            }
+        },
+        "pptx": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "medium",
+            "description": "Create, edit, and analyze PowerPoint presentations (.pptx files).",
+            "promptTriggers": {
+                "keywords": [
                     "pptx",
                     "PPTX",
-                    "pitching deck",
-                    "pitch deck",
-                    "IR",
-                    "investor relations",
-                    "브랜드",
-                    "brand",
-                    "branding",
-                    "logo",
-                    "로고",
-                    "marketing material",
-                    "마케팅 자료",
-                    "발표 자료",
-                    "프레젠테이션",
-                    "slide",
+                    "PowerPoint",
+                    "presentation",
                     "slides",
-                    "슬라이드"
+                    "deck",
+                    "slide deck"
                 ],
                 "intentPatterns": [
-                    "(create|make|build|update|modify|edit).*?(presentation|ppt|pptx|slide|deck)",
-                    "(create|make|build|update|modify|edit).*?(cliwant|클라이원트)",
-                    "(cliwant|클라이원트).*?(presentation|ppt|pptx|slide|deck|자료|발표)",
-                    "(presentation|ppt|pptx|slide|deck).*?(cliwant|클라이원트)",
-                    "(pitching|pitch|IR|investor).*?(deck|presentation|자료)",
-                    "(brand|브랜드|logo|로고).*?(cliwant|클라이원트)",
-                    "(cliwant|클라이원트).*?(brand|브랜드|logo|로고)",
-                    "발표.*?자료.*?(만들|작성|제작)",
-                    "(만들|작성|제작).*?발표.*?자료"
+                    "(create|make|edit|modify).*?(presentation|pptx|slides|deck)",
+                    "(presentation|pptx|slides).*?(create|make|edit|modify)"
                 ]
             },
             "fileTriggers": {
                 "pathPatterns": [
-                    "**/*.pptx",
-                    "**/presentation/**",
-                    "**/slides/**",
-                    "**/marketing/**"
+                    "**/*.pptx"
+                ]
+            }
+        },
+        "docx": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "medium",
+            "description": "Create, read, edit Word documents (.docx files). Use for professional documents with tables, headings, page numbers, or letterheads.",
+            "promptTriggers": {
+                "keywords": [
+                    "docx",
+                    "DOCX",
+                    "Word document",
+                    "word doc",
+                    ".docx",
+                    "Word file"
                 ],
-                "contentPatterns": [
-                    "cliwant",
-                    "CLIWANT",
-                    "클라이원트",
-                    "#686FE8",
-                    "#001376"
+                "intentPatterns": [
+                    "(create|make|edit|modify|read).*?(Word|docx|document)",
+                    "(Word|docx|document).*?(create|make|edit|modify|read)"
                 ]
             },
-            "blockMessage": "⚠️ BLOCKED - Cliwant Brand Guidelines Required\n\n📋 REQUIRED ACTION:\n1. Use Skill tool: 'cliwant-brand-guidelines'\n2. Review logo usage rules (brand_logo.png as primary)\n3. Use correct colors: #686FE8 (Purple), #001376 (Dark Blue)\n4. Use Pretendard typography\n5. Write brand name correctly: CLIWANT (English) / 클라이원트 (Korean)\n6. Then proceed with content creation\n\nReason: Ensure consistent Cliwant brand identity\nFile: {file_path}\n\n💡 Assets located in: .claude/skills/cliwant-brand-guidelines/assets/",
-            "skipConditions": {
-                "sessionSkillUsed": true,
-                "fileMarkers": [
-                    "@skip-brand-validation"
+            "fileTriggers": {
+                "pathPatterns": [
+                    "**/*.docx"
+                ]
+            }
+        },
+        "brand-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "medium",
+            "description": "Applies Anthropic's official brand colors and typography to artifacts. Use when brand colors or style guidelines, visual formatting, or company design standards apply.",
+            "promptTriggers": {
+                "keywords": [
+                    "Anthropic brand",
+                    "brand color",
+                    "brand guidelines",
+                    "brand style",
+                    "Anthropic design"
                 ],
-                "envOverride": "SKIP_BRAND_GUIDELINES"
+                "intentPatterns": [
+                    "(apply|use|follow).*?(brand|Anthropic).*?(color|style|guideline)",
+                    "(brand|Anthropic).*?(color|style|typography|design)"
+                ]
+            }
+        },
+        "ppt-brand-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "medium",
+            "description": "PPT brand guidelines for VRL presentations. Use when creating slides or presentation materials following VRL design standards.",
+            "promptTriggers": {
+                "keywords": [
+                    "VRL",
+                    "VRL presentation",
+                    "VRL brand",
+                    "VRL slides"
+                ],
+                "intentPatterns": [
+                    "(create|make).*?VRL.*?(presentation|slides|deck)",
+                    "VRL.*?(brand|style|color|design)"
+                ]
+            }
+        },
+        "aws-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "AWS 인프라 및 서비스 활용 가이드라인. S3 presigned URL, ECS Fargate 배포, ECR 이미지 관리, IAM 최소 권한, CloudWatch, GitHub Actions CI/CD",
+            "promptTriggers": {
+                "keywords": [
+                    "aws", "s3", "s3 upload", "presigned url", "ecs", "ecr",
+                    "iam", "cloudwatch", "fargate", "aws deploy", "github actions deploy"
+                ],
+                "intentPatterns": [
+                    "(upload|store|download).*?(s3|bucket|file)",
+                    "(deploy|배포).*?(ecs|fargate|aws)",
+                    "(iam|permission|role|policy).*?(aws|resource)",
+                    "presigned.*?url",
+                    "github actions.*?deploy"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    ".github/workflows/**/*.yaml",
+                    ".github/workflows/**/*.yml",
+                    "**/utils/s3.py",
+                    "**/s3Upload.ts"
+                ],
+                "contentPatterns": [
+                    "boto3",
+                    "@aws-sdk",
+                    "generate_presigned",
+                    "createPresignedPost",
+                    "aws-actions/"
+                ]
+            }
+        },
+        "database-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "크로스 스택 데이터베이스 설계 가이드라인. ERD, 정규화, 인덱스 전략, 읽기/쓰기 분리, 마이그레이션, 트랜잭션 격리 수준, 커넥션 풀링",
+            "promptTriggers": {
+                "keywords": [
+                    "database", "database design", "database schema", "ERD",
+                    "normalization", "index strategy", "composite index",
+                    "read write separation", "read replica", "database migration",
+                    "schema migration",
+                    "query optimization", "slow query", "connection pool",
+                    "transaction isolation", "deadlock"
+                ],
+                "intentPatterns": [
+                    "(design|create|optimize).*?(schema|table|database|index)",
+                    "(slow|optimize|fix).*?(query|database|index)",
+                    "(read|write).*?(replica|separation|분리)",
+                    "n\\+1.*?(query|problem)",
+                    "(design|review|plan).*?(migration|migrate).*?(schema|database)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "**/migrations/**/*.py",
+                    "**/migrations/**/*.sql",
+                    "**/prisma/schema.prisma",
+                    "**/alembic/**/*.py",
+                    "**/flyway/**/*.sql"
+                ],
+                "contentPatterns": [
+                    "CREATE TABLE",
+                    "CREATE INDEX",
+                    "EXPLAIN ANALYZE",
+                    "@Entity",
+                    "model.*{.*@id"
+                ]
+            }
+        },
+        "django-backend-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Django 5 + DRF + SimpleJWT 백엔드 개발 가이드라인. AbstractBaseUser, DRF ViewSet, SimpleJWT 인증, settings/ 환경 분리, 커스텀 예외 핸들러",
+            "promptTriggers": {
+                "keywords": [
+                    "django", "drf", "django rest framework", "AbstractBaseUser",
+                    "SimpleJWT", "django viewset", "django serializer",
+                    "django models", "django settings", "django orm",
+                    "pytest-django", "python backend"
+                ],
+                "intentPatterns": [
+                    "(create|add|build).*?(django|drf|serializer|viewset)",
+                    "(django|drf).*?(auth|jwt|permission|view)",
+                    "(how to|best practice).*?django",
+                    "django.*?(model|view|serializer|url|settings)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "base/django/**/*.py",
+                    "**/manage.py",
+                    "**/settings/**/*.py"
+                ],
+                "contentPatterns": [
+                    "from django",
+                    "from rest_framework",
+                    "AbstractBaseUser",
+                    "ModelViewSet",
+                    "SimpleJWT"
+                ]
+            }
+        },
+        "docker-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "크로스 스택 Docker 컨테이너화 가이드라인. 멀티 스테이지 빌드, non-root 실행, 레이어 캐시 최적화, docker-compose, health check, .dockerignore",
+            "promptTriggers": {
+                "keywords": [
+                    "docker", "dockerfile", "docker-compose", "docker compose",
+                    "container", "containerize", "multi-stage build",
+                    "docker image", "docker build", "non-root container",
+                    "docker health check", "dockerignore"
+                ],
+                "intentPatterns": [
+                    "(create|write|optimize|fix).*?(dockerfile|docker)",
+                    "(docker|container).*?(build|run|compose|health)",
+                    "(multi.?stage|multistage).*?build",
+                    "(non.?root|root user).*?container"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "**/Dockerfile",
+                    "**/Dockerfile.*",
+                    "**/docker-compose.yaml",
+                    "**/docker-compose.yml",
+                    "**/.dockerignore"
+                ],
+                "contentPatterns": [
+                    "FROM.*AS builder",
+                    "FROM.*AS runner",
+                    "HEALTHCHECK",
+                    "USER appuser",
+                    "adduser -S"
+                ]
+            }
+        },
+        "embedded-c-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "C embedded firmware development guidelines. HAL Ops Table, FreeRTOS, ring buffer, no-malloc, Unity test, CMake dual-build HOST/STM32",
+            "promptTriggers": {
+                "keywords": [
+                    "embedded c", "c embedded", "hal gpio", "hal uart",
+                    "freertos", "rtos", "ring buffer", "unity test",
+                    "stm32", "esp32", "microcontroller", "c99 embedded",
+                    "gpio driver", "uart driver", "cmake cross compile"
+                ],
+                "intentPatterns": [
+                    "(write|create|implement).*?(driver|hal|freertos|firmware)",
+                    "(gpio|uart|spi|i2c).*?(driver|hal|register|init)",
+                    "(embedded|firmware|mcu|microcontroller).*?(c|code|pattern)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "base/c-embedded/**/*.c",
+                    "base/c-embedded/**/*.h",
+                    "base/c-embedded/**/CMakeLists.txt"
+                ],
+                "contentPatterns": [
+                    "hal_gpio",
+                    "hal_uart",
+                    "FreeRTOS",
+                    "xTaskCreate",
+                    "Unity.h"
+                ]
+            }
+        },
+        "embedded-cpp-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "C++17 embedded systems guidelines. Pure virtual HAL interface, RAII, lightweight Mock, Google Test, dependency injection, enum class",
+            "promptTriggers": {
+                "keywords": [
+                    "embedded c++", "embedded cpp", "c++ embedded",
+                    "hal interface", "raii embedded", "google test embedded",
+                    "c++17 embedded", "pure virtual hal", "mock embedded",
+                    "igpio", "iuart", "noexcept embedded"
+                ],
+                "intentPatterns": [
+                    "(write|create|implement).*?(c\\+\\+|cpp).*?(driver|hal|firmware)",
+                    "(pure virtual|interface|abstract).*?(hal|gpio|uart)",
+                    "(raii|smart pointer|unique_ptr).*?embedded"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "base/cpp-embedded/**/*.cpp",
+                    "base/cpp-embedded/**/*.hpp",
+                    "base/cpp-embedded/**/*.h",
+                    "base/cpp-embedded/**/CMakeLists.txt"
+                ],
+                "contentPatterns": [
+                    "class IGpio",
+                    "class IUart",
+                    "virtual.*noexcept",
+                    "Google_test",
+                    "#include <gtest/gtest.h>"
+                ]
+            }
+        },
+        "express-backend-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Express.js + TypeScript 백엔드 개발 가이드라인. DDD 구조, Prisma ORM, JWT Refresh Token Rotation, AppError 계층, Zod 검증, S3 presigned URL",
+            "promptTriggers": {
+                "keywords": [
+                    "express", "express.js", "expressjs", "express router",
+                    "express middleware", "express typescript", "express jwt",
+                    "express prisma", "express controller", "express service",
+                    "node backend", "zod validation", "app error"
+                ],
+                "intentPatterns": [
+                    "(create|add|build).*?(express|router|middleware)",
+                    "(express|node).*?(auth|jwt|service|controller|repository)",
+                    "(how to|best practice).*?express"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "base/express/src/**/*.ts"
+                ],
+                "contentPatterns": [
+                    "from 'express'",
+                    "Router()",
+                    "AppError",
+                    "PrismaClient",
+                    "ZodError"
+                ]
+            }
+        },
+        "nestjs-backend-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "NestJS 10 + TypeScript + Prisma 5 백엔드 개발 가이드라인. Guard+Passport JWT, @CurrentUser(), Controller→Service→Repository, TransformInterceptor, HttpExceptionFilter",
+            "promptTriggers": {
+                "keywords": [
+                    "nestjs", "nest.js", "nest backend", "nestjs controller",
+                    "nestjs service", "nestjs guard", "nestjs module",
+                    "nestjs prisma", "nestjs jwt", "nestjs passport",
+                    "nestjs interceptor", "nestjs filter", "nestjs decorator",
+                    "nestjs repository", "nestjs typescript"
+                ],
+                "intentPatterns": [
+                    "(create|add|build).*?(nestjs|nest module|nest controller)",
+                    "(nestjs|nest).*?(guard|auth|jwt|interceptor|filter)",
+                    "(how to|best practice).*?nestjs"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "base/nestjs/src/**/*.ts"
+                ],
+                "contentPatterns": [
+                    "@Controller",
+                    "@Injectable",
+                    "@Module",
+                    "PassportStrategy",
+                    "TransformInterceptor"
+                ]
+            }
+        },
+        "react-native-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "React Native (Expo SDK 52) 개발 가이드라인. Expo Router v4, Zustand 인증 상태 관리, Axios 401 인터셉터, SecureStore 토큰 관리",
+            "promptTriggers": {
+                "keywords": [
+                    "react native", "react-native", "expo", "expo router",
+                    "expo sdk", "securestore", "react native auth",
+                    "expo navigation", "expo typescript", "react native component",
+                    "zustand mobile"
+                ],
+                "intentPatterns": [
+                    "(create|build|add).*?(react native|expo|mobile screen)",
+                    "(react native|expo).*?(auth|navigation|component|hook)",
+                    "(how to|best practice).*?(react native|expo)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "base/react-native/**/*.tsx",
+                    "base/react-native/**/*.ts",
+                    "**/app.json"
+                ],
+                "contentPatterns": [
+                    "expo-router",
+                    "SecureStore",
+                    "from 'zustand'",
+                    "Expo.Constants",
+                    "useRouter"
+                ]
+            }
+        },
+        "spring-boot-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Spring Boot 3 + Java 21 백엔드 개발 가이드라인. Controller→Service→Repository, JPA Entity, Spring Security JWT, GlobalExceptionHandler, ApiResponse<T>",
+            "promptTriggers": {
+                "keywords": [
+                    "spring boot", "springboot", "spring-boot", "spring security",
+                    "jpa", "hibernate", "spring controller", "spring service",
+                    "spring repository", "spring entity", "bean validation",
+                    "global exception handler", "java backend", "spring jwt"
+                ],
+                "intentPatterns": [
+                    "(create|add|build).*?(spring|jpa|entity|controller)",
+                    "(spring|java).*?(auth|jwt|security|service|repository)",
+                    "(how to|best practice).*?(spring boot|jpa)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "base/spring-boot/src/**/*.java"
+                ],
+                "contentPatterns": [
+                    "@RestController",
+                    "@Service",
+                    "@Repository",
+                    "@Entity",
+                    "JwtAuthenticationFilter"
+                ]
             }
         }
     },
@@ -961,6 +782,12 @@
             "pathPatterns": "Adjust to match your project structure (blog-api, auth-service, etc.)",
             "keywords": "Add domain-specific terms relevant to your project",
             "intentPatterns": "Use regex for flexible user intent matching"
+        },
+        "changelog": {
+            "v1.3": "2026-03-09 — Phase 4-B 오탐 수정 (5건). fastapi: async/await 키워드 제거 + (async|await) intentPattern 제거 (JS/TS async/await 오탐 방지). database: migration → database migration+schema migration 구체화 + intentPattern 설계 관점으로 한정 (db-migration-agent 중복 방지). skill-developer: hook system → claude hook system 구체화 (React hooks/git hooks 오탐 방지). pytest: test/tests/testing/mock/mocking/fixture 일반 키워드 제거, python test/pytest mock/pytest fixture/MagicMock/AsyncMock으로 교체 (Jest/Vitest 오탐 방지). error-tracking: monitoring → error monitoring 구체화 (CloudWatch/Prometheus 오탐 방지).",
+            "v1.2": "2026-03-08 — Phase 2-D 일괄 통합. 신규 10개 스킬 트리거 규칙 추가 (aws-guidelines, database-guidelines, django-backend-guidelines, docker-guidelines, embedded-c-guidelines, embedded-cpp-guidelines, express-backend-guidelines, nestjs-backend-guidelines, react-native-guidelines, spring-boot-guidelines). 전체 등록 스킬: 24개.",
+            "v1.1": "2026-03-02 — 유령 항목 13개 제거 (route-tester, reel-creator 계열, handwriting-beautifier, copyright-safe-style-transfer, product-display-video, evan-insight-blog-writer, youtube-editor 계열, detailed-page-writer, threads-writer, cliwant-brand-guidelines). 미등록 스킬 9개 규칙 추가 (brand-guidelines, docx, frontend-design, mermaid, pdf, ppt-brand-guidelines, pptx, vercel-react-best-practices, web-design-guidelines). fastapi/nextjs 트리거 정밀화.",
+            "v1.0": "2026-03-01 — 초기 버전"
         }
     }
 }

@@ -2,6 +2,14 @@
 name: docx
 description: "Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files). Triggers include: any mention of \"Word doc\", \"word document\", \".docx\", or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from .docx files, inserting or replacing images in documents, performing find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a \"report\", \"memo\", \"letter\", \"template\", or similar deliverable as a Word or .docx file, use this skill. Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation."
 license: Proprietary. LICENSE.txt has complete terms
+triggers:
+  - docx
+  - DOCX
+  - Word document
+  - word doc
+  - .docx
+  - Word file
+  - create document
 ---
 
 # DOCX creation, editing, and analysis
@@ -267,7 +275,7 @@ sections: [{
 }]
 ```
 
-### Critical Rules for docx-js
+### Anti-Patterns & Critical Rules
 
 - **Set page size explicitly** - docx-js defaults to A4; use US Letter (12240 x 15840 DXA) for US documents
 - **Landscape: pass portrait dimensions** - docx-js swaps width/height internally; pass short edge as `width`, long edge as `height`, and set `orientation: PageOrientation.LANDSCAPE`
@@ -283,6 +291,8 @@ sections: [{
 - **TOC requires HeadingLevel only** - no custom styles on heading paragraphs
 - **Override built-in styles** - use exact IDs: "Heading1", "Heading2", etc.
 - **Include `outlineLevel`** - required for TOC (0 for H1, 1 for H2, etc.)
+- **Replace entire `<w:r>` elements** - when adding tracked changes, replace the whole `<w:r>...</w:r>` block with `<w:del>...<w:ins>...` as siblings; don't inject tracked change tags inside a run
+- **Preserve `<w:rPr>` formatting** - copy the original run's `<w:rPr>` block into tracked change runs to maintain bold, font size, etc.
 
 ---
 
@@ -336,11 +346,6 @@ Validates with auto-repair, condenses XML, and creates DOCX. Use `--validate fal
 
 **Auto-repair won't fix:**
 - Malformed XML, invalid element nesting, missing relationships, schema violations
-
-### Common Pitfalls
-
-- **Replace entire `<w:r>` elements**: When adding tracked changes, replace the whole `<w:r>...</w:r>` block with `<w:del>...<w:ins>...` as siblings. Don't inject tracked change tags inside a run.
-- **Preserve `<w:rPr>` formatting**: Copy the original run's `<w:rPr>` block into your tracked change runs to maintain bold, font size, etc.
 
 ---
 

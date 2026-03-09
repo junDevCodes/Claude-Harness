@@ -2,6 +2,14 @@
 name: pptx
 description: "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks"
 license: Proprietary. LICENSE.txt has complete terms
+triggers:
+  - pptx
+  - PPTX
+  - PowerPoint
+  - presentation
+  - slides
+  - slide deck
+  - pptx create
 ---
 
 # PPTX creation, editing, and analysis
@@ -9,6 +17,12 @@ license: Proprietary. LICENSE.txt has complete terms
 ## Overview
 
 A user may ask you to create, edit, or analyze the contents of a .pptx file. A .pptx file is essentially a ZIP archive containing XML files and other resources that you can read or edit. You have different tools and workflows available for different tasks.
+
+### Anti-Patterns Quick Index
+
+- **NEVER use `position: absolute`** in HTML slides — use flexbox only (see Layout Tips)
+- **NEVER vertically stack** charts/tables below text — use two-column or full-slide layout (see Layout Tips)
+- **Avoid verbose code** — write concise, no unnecessary print statements (see Code Style Guidelines)
 
 ## Reading and analyzing content
 
@@ -471,10 +485,7 @@ pdftoppm -jpeg -r 150 -f 2 -l 5 template.pdf slide  # Converts only pages 2-5
 ```
 
 ## Code Style Guidelines
-**IMPORTANT**: When generating code for PPTX operations:
-- Write concise code
-- Avoid verbose variable names and redundant operations
-- Avoid unnecessary print statements
+**IMPORTANT**: Write concise code — avoid verbose variable names, redundant operations, and unnecessary print statements.
 
 ## Dependencies
 

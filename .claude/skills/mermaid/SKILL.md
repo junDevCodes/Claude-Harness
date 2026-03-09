@@ -4,6 +4,17 @@ description: Generate Mermaid diagrams from user requirements. Supports flowchar
 allowed-tools: Read Write Edit
 metadata:
   argument-hint: "[diagram description or requirements]"
+triggers:
+  - mermaid
+  - diagram
+  - flowchart
+  - sequence diagram
+  - class diagram
+  - ER diagram
+  - ERD
+  - Gantt chart
+  - flow diagram
+  - architecture diagram
 ---
 
 # Mermaid Diagram Generator

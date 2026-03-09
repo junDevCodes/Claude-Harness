@@ -1,6 +1,13 @@
 ---
 name: ppt-brand-guidelines
 description: PPT brand guidelines for VRL presentations. Use when creating slides, decks, or any presentation materials. Provides color palette, logo usage, and minimal design principles.
+triggers:
+  - VRL
+  - VRL presentation
+  - VRL brand
+  - VRL slides
+  - VRL deck
+  - VRL design
 ---
 
 # VRL PPT Brand Guidelines
@@ -191,6 +198,69 @@ body {
 - Header: #1E293B, 24pt, bold
 - Cards: #F8FAFC, 8pt radius, 18pt padding
 - Body text: #1E293B, 11pt
+
+## 안티패턴
+
+### ❌ 로고에 CSS 필터 적용
+
+로고는 라임 그린 배경이 내장되어 있어 필터 적용 시 색상이 왜곡된다.
+
+```css
+/* BAD — 로고 색상 파괴 */
+.logo img { filter: brightness(0) invert(1); }
+.logo img { filter: grayscale(1); }
+
+/* GOOD — 필터 없이 그대로 사용 */
+.logo img { width: 100%; height: 100%; object-fit: contain; /* NO FILTER */ }
+```
+
+### ❌ 브랜드 외 색상 사용
+
+VRL 3색(Lime Green `#BDFF00` / Dark Navy `#1E293B` / White `#FFFFFF`) 외 임의 색상을 사용하면 브랜드 일관성이 깨진다.
+
+```
+BAD: 파란색 헤더, 빨간색 강조, 회색 배경 — 브랜드 색상 미준수
+GOOD: 강조 → #BDFF00, 배경 → #1E293B 또는 #FFFFFF, 보조 → #64748B / #94A3B8
+```
+
+### ❌ 과도한 텍스트 밀도
+
+슬라이드 당 한 가지 메시지 원칙을 어기고 긴 문장을 가득 채우는 것은 VRL 미니멀 스타일 위반이다.
+
+```
+BAD: 슬라이드 1장에 10개 이상 불릿 포인트, 9pt 이하 소형 폰트
+GOOD: 핵심 메시지 3개 이하, Body 최소 11pt, 여백 40% 이상 유지
+```
+
+### ❌ 타이틀/클로징 슬라이드에 흰 배경 사용
+
+Hero/Closing 슬라이드는 반드시 Dark Navy 배경이어야 한다. 흰 배경은 브랜드 임팩트를 잃는다.
+
+```
+BAD: Title 슬라이드 background: #FFFFFF
+GOOD: Title/Closing 슬라이드 background: #1E293B (Dark Navy)
+     Content 슬라이드 background: #FFFFFF
+```
+
+### ❌ 헤더 아래 장식선 / 뱃지 추가
+
+언더라인, 구분선, 원형 아이콘 뱃지는 VRL 클린 디자인에 반한다.
+
+```
+BAD: 헤더 하단 accent line, 섹션 제목 underline, 아이콘 circular badge
+GOOD: 계층은 폰트 크기·굵기·색상(Navy vs Slate)으로만 표현
+```
+
+### ❌ Lime Green을 배경 전체에 사용
+
+Lime Green(`#BDFF00`)은 통계 수치, 하이라이트 카드 등 핵심 강조 요소에만 제한적으로 사용한다. 배경 전체 적용 시 가독성 저하.
+
+```
+BAD: 슬라이드 배경 전체를 #BDFF00으로 채움
+GOOD: 핵심 통계 숫자, highlight card(.card.highlight), summary stats에만 사용
+```
+
+---
 
 ## Assets
 

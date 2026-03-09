@@ -1,13 +1,24 @@
 ---
 name: pytest-backend-testing
 description: Comprehensive pytest testing guide for FastAPI backends. Covers unit testing, integration testing, async patterns, mocking, fixtures, coverage, and FastAPI-specific testing with TestClient. Use when writing or updating test code for backend services, repositories, or API routes.
+triggers:
+  - pytest
+  - unit test
+  - integration test
+  - test coverage
+  - mock
+  - fixture
+  - TestClient
+  - async test
+  - conftest
+  - pytest-asyncio
 ---
 
 # Pytest Backend Testing Guidelines
 
 ## Purpose
 
-Complete guide for writing comprehensive tests for FastAPI backend applications using pytest, pytest-asyncio, and FastAPI TestClient. Emphasizes async testing, proper mocking, layered testing (repository → service → router), and achieving high test coverage.
+Complete guide for writing comprehensive tests for FastAPI backend applications using pytest, pytest-asyncio, and FastAPI TestClient. Emphasizes async testing, proper mocking, layered testing (repository -> service -> router), and achieving high test coverage.
 
 ## When to Use This Skill
 
@@ -56,26 +67,21 @@ Ensuring good coverage? Check these:
 
 ## Project Testing Structure
 
-Your qwarty backend testing structure:
-
 ```
 backend/
   tests/
     conftest.py              # Global fixtures
     unit/
       domain/
-        artist/
-          test_artist_repository.py
-          test_artist_service.py
-        artwork/
-        auth/
-        ...
+        {entity}/
+          test_{entity}_repository.py
+          test_{entity}_service.py
       middleware/
         test_error_handler.py
       utils/
         test_utils.py
     integration/             # End-to-end tests
-      test_artist_api.py
+      test_{entity}_api.py
       test_auth_flow.py
 ```
 
@@ -90,16 +96,16 @@ import pytest
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 @pytest.mark.asyncio
-async def test_get_artist_by_id(db_session: AsyncSession):
+async def test_get_entity_by_id(db_session: AsyncSession):
     # Arrange
-    artist_id = "test-artist-id"
+    entity_id = "test-entity-id"
 
     # Act
-    result = await repository.get_by_id(artist_id)
+    result = await repository.get_by_id(entity_id)
 
     # Assert
     assert result is not None
-    assert result.id == artist_id
+    assert result.id == entity_id
 ```
 
 ### Mocking Database Session
@@ -108,15 +114,15 @@ async def test_get_artist_by_id(db_session: AsyncSession):
 from unittest.mock import AsyncMock, MagicMock
 
 @pytest.mark.asyncio
-async def test_create_artist_success():
+async def test_create_entity_success():
     # Arrange
     mock_session = AsyncMock(spec=AsyncSession)
     mock_session.execute = AsyncMock()
     mock_session.commit = AsyncMock()
 
     # Act
-    service = ArtistService(mock_session)
-    result = await service.create_artist(data)
+    service = EntityService(mock_session)
+    result = await service.create_entity(data)
 
     # Assert
     assert mock_session.commit.called
@@ -133,9 +139,9 @@ def client():
     app = create_application()
     return TestClient(app)
 
-def test_get_artist_endpoint(client):
+def test_get_entity_endpoint(client):
     # Act
-    response = client.get("/api/v1/artists/test-id")
+    response = client.get("/api/v1/entities/test-id")
 
     # Assert
     assert response.status_code == 200
@@ -156,9 +162,9 @@ def test_get_artist_endpoint(client):
 
 ```python
 # Pattern: test_<what>_<when>_<expected>
-def test_create_artist_with_valid_data_returns_artist()
-def test_get_artist_when_not_found_raises_not_found_error()
-def test_update_artist_with_duplicate_name_raises_conflict_error()
+def test_create_entity_with_valid_data_returns_entity()
+def test_get_entity_when_not_found_raises_not_found_error()
+def test_update_entity_with_duplicate_name_raises_conflict_error()
 ```
 
 ### Test Organization
@@ -171,7 +177,7 @@ def test_update_artist_with_duplicate_name_raises_conflict_error()
 
 ## Topic Guides
 
-### 🏗️ Testing Architecture
+### Testing Architecture
 
 **Three-Layer Testing Strategy:**
 1. **Repository Layer**: Test database queries, CRUD operations
@@ -184,11 +190,11 @@ def test_update_artist_with_duplicate_name_raises_conflict_error()
 - Use integration tests for end-to-end flows
 - Maintain test isolation
 
-**[📖 Complete Guide: resources/testing-architecture.md](resources/testing-architecture.md)**
+**[Complete Guide: resources/testing-architecture.md](resources/testing-architecture.md)**
 
 ---
 
-### 🧪 Unit Testing
+### Unit Testing
 
 **Unit Test Best Practices:**
 - Test single responsibility
@@ -197,26 +203,25 @@ def test_update_artist_with_duplicate_name_raises_conflict_error()
 - Independent and isolated
 - Test both success and failure paths
 
-**Unit Test Pattern:**
 ```python
 @pytest.mark.asyncio
-async def test_artist_service_create():
+async def test_entity_service_create():
     # Mock repository
     mock_repo = AsyncMock()
-    mock_repo.create = AsyncMock(return_value=artist_model)
+    mock_repo.create = AsyncMock(return_value=entity_model)
 
     # Test service logic
-    service = ArtistService(mock_repo)
-    result = await service.create_artist(data)
+    service = EntityService(mock_repo)
+    result = await service.create_entity(data)
 
     assert result.name == data.name
 ```
 
-**[📖 Complete Guide: resources/unit-testing.md](resources/unit-testing.md)**
+**[Complete Guide: resources/unit-testing.md](resources/unit-testing.md)**
 
 ---
 
-### 🔗 Integration Testing
+### Integration Testing
 
 **Integration Test Focus:**
 - Test multiple components together
@@ -224,24 +229,23 @@ async def test_artist_service_create():
 - Verify end-to-end workflows
 - Test API contracts
 
-**Integration Test Pattern:**
 ```python
 @pytest.mark.asyncio
-async def test_create_artist_flow(db_session, client):
-    # Full flow: API → Service → Repository → DB
-    response = client.post("/api/v1/artists", json=artist_data)
+async def test_create_entity_flow(db_session, client):
+    # Full flow: API -> Service -> Repository -> DB
+    response = client.post("/api/v1/entities", json=entity_data)
     assert response.status_code == 201
 
     # Verify in database
-    artist = await db_session.get(Artist, response.json()["id"])
-    assert artist is not None
+    entity = await db_session.get(Entity, response.json()["id"])
+    assert entity is not None
 ```
 
-**[📖 Complete Guide: resources/integration-testing.md](resources/integration-testing.md)**
+**[Complete Guide: resources/integration-testing.md](resources/integration-testing.md)**
 
 ---
 
-### ⚡ Async Testing
+### Async Testing
 
 **Async Test Patterns:**
 - Use `@pytest.mark.asyncio` decorator
@@ -250,7 +254,6 @@ async def test_create_artist_flow(db_session, client):
 - Test async context managers
 - Handle async exceptions
 
-**Async Mock Pattern:**
 ```python
 from unittest.mock import AsyncMock
 
@@ -262,11 +265,11 @@ async def test_async_function():
     mock_func.assert_awaited_once()
 ```
 
-**[📖 Complete Guide: resources/async-testing.md](resources/async-testing.md)**
+**[Complete Guide: resources/async-testing.md](resources/async-testing.md)**
 
 ---
 
-### 🎭 Mocking & Fixtures
+### Mocking & Fixtures
 
 **Mocking Strategy:**
 - Mock external dependencies (database, APIs, S3)
@@ -274,40 +277,36 @@ async def test_async_function():
 - Mock at layer boundaries
 - Use MagicMock for sync, AsyncMock for async
 
-**Fixture Pattern:**
 ```python
 import pytest
 
 @pytest.fixture
-def sample_artist():
-    return Artist(
+def sample_entity():
+    return Entity(
         id="test-id",
-        name="Test Artist",
+        name="Test Entity",
         bio="Test bio"
     )
 
 @pytest.fixture
 async def db_session():
-    # Setup test database session
     async with get_test_session() as session:
         yield session
         await session.rollback()
 ```
 
-**[📖 Complete Guide: resources/mocking-fixtures.md](resources/mocking-fixtures.md)**
+**[Complete Guide: resources/mocking-fixtures.md](resources/mocking-fixtures.md)**
 
 ---
 
-### 📊 Coverage Best Practices
+### Coverage Best Practices
 
 **Coverage Strategy:**
 - Aim for 80%+ coverage (project requirement)
 - Focus on critical business logic
 - Test error paths and edge cases
 - Use coverage reports to find gaps
-- Exclude non-testable code (config, main.py)
 
-**Coverage Commands:**
 ```bash
 # Run tests with coverage
 pytest --cov=backend --cov-report=term-missing
@@ -319,11 +318,11 @@ pytest --cov=backend --cov-report=html
 pytest --cov=backend --cov-fail-under=80
 ```
 
-**[📖 Complete Guide: resources/coverage-best-practices.md](resources/coverage-best-practices.md)**
+**[Complete Guide: resources/coverage-best-practices.md](resources/coverage-best-practices.md)**
 
 ---
 
-### 🚀 FastAPI Testing
+### FastAPI Testing
 
 **FastAPI Test Patterns:**
 - Use TestClient for route testing
@@ -332,35 +331,20 @@ pytest --cov=backend --cov-fail-under=80
 - Test authentication/authorization
 - Test error handling middleware
 
-**TestClient Pattern:**
 ```python
 from fastapi.testclient import TestClient
 
-def test_create_artist_endpoint(client: TestClient):
+def test_create_entity_endpoint(client: TestClient):
     response = client.post(
-        "/api/v1/artists",
-        json={"name": "Artist", "bio": "Bio"}
+        "/api/v1/entities",
+        json={"name": "Entity", "bio": "Bio"}
     )
     assert response.status_code == 201
     data = response.json()
-    assert data["name"] == "Artist"
+    assert data["name"] == "Entity"
 ```
 
-**[📖 Complete Guide: resources/fastapi-testing.md](resources/fastapi-testing.md)**
-
----
-
-## Navigation Guide
-
-| Need to... | Read this resource |
-|------------|-------------------|
-| Understand test structure | [testing-architecture.md](resources/testing-architecture.md) |
-| Write unit tests | [unit-testing.md](resources/unit-testing.md) |
-| Write integration tests | [integration-testing.md](resources/integration-testing.md) |
-| Test async code | [async-testing.md](resources/async-testing.md) |
-| Use mocks and fixtures | [mocking-fixtures.md](resources/mocking-fixtures.md) |
-| Improve coverage | [coverage-best-practices.md](resources/coverage-best-practices.md) |
-| Test FastAPI routes | [fastapi-testing.md](resources/fastapi-testing.md) |
+**[Complete Guide: resources/fastapi-testing.md](resources/fastapi-testing.md)**
 
 ---
 
@@ -379,134 +363,33 @@ def test_create_artist_endpoint(client: TestClient):
 
 ---
 
-## Quick Reference: Test Template
+## Anti-Patterns
 
-```python
-"""Tests for Artist domain."""
-import pytest
-from unittest.mock import AsyncMock, MagicMock
-from sqlmodel.ext.asyncio.session import AsyncSession
+### 1. 테스트 간 공유 가변 상태
+- BAD: 모듈 레벨 리스트에 테스트 데이터 누적
+- GOOD: 각 테스트에서 fixture로 독립 데이터 생성
 
-from backend.domain.artist.service import ArtistService
-from backend.domain.artist.repository import ArtistRepository
-from backend.domain.artist.model import Artist
-from backend.dtos.artist import ArtistRequestDto
-from backend.error import NotFoundError
+### 2. 구현 세부사항 테스트
+- BAD: private 메서드 호출 횟수 assert
+- GOOD: public API의 입출력 결과만 assert
 
+### 3. 단위 테스트에서 실제 DB 사용
+- BAD: 실제 PostgreSQL 세션으로 unit test
+- GOOD: AsyncMock 세션 + in-memory fixture
 
-@pytest.fixture
-def sample_artist():
-    """Fixture for sample artist data."""
-    return Artist(
-        id="test-artist-id",
-        name="Test Artist",
-        bio="Test bio"
-    )
+### 4. 에러 경로 미테스트
+- BAD: happy path만 테스트
+- GOOD: 404, 401, 409, 500 등 에러 시나리오 별도 테스트
 
-
-@pytest.fixture
-def mock_session():
-    """Fixture for mocked database session."""
-    return AsyncMock(spec=AsyncSession)
-
-
-class TestArtistRepository:
-    """Test suite for ArtistRepository."""
-
-    @pytest.mark.asyncio
-    async def test_get_by_id_success(self, mock_session, sample_artist):
-        """Test get_by_id returns artist when found."""
-        # Arrange
-        mock_result = MagicMock()
-        mock_result.scalar_one_or_none.return_value = sample_artist
-        mock_session.execute = AsyncMock(return_value=mock_result)
-
-        repository = ArtistRepository(mock_session)
-
-        # Act
-        result = await repository.get_by_id("test-artist-id")
-
-        # Assert
-        assert result is not None
-        assert result.id == sample_artist.id
-        assert result.name == sample_artist.name
-
-    @pytest.mark.asyncio
-    async def test_get_by_id_not_found(self, mock_session):
-        """Test get_by_id returns None when not found."""
-        # Arrange
-        mock_result = MagicMock()
-        mock_result.scalar_one_or_none.return_value = None
-        mock_session.execute = AsyncMock(return_value=mock_result)
-
-        repository = ArtistRepository(mock_session)
-
-        # Act
-        result = await repository.get_by_id("nonexistent-id")
-
-        # Assert
-        assert result is None
-
-
-class TestArtistService:
-    """Test suite for ArtistService."""
-
-    @pytest.mark.asyncio
-    async def test_create_artist_success(self, mock_session, sample_artist):
-        """Test create_artist creates and returns artist."""
-        # Arrange
-        mock_repo = AsyncMock()
-        mock_repo.create = AsyncMock(return_value=sample_artist)
-
-        service = ArtistService(mock_session)
-        service._repository = mock_repo
-
-        request_dto = ArtistRequestDto(
-            name="Test Artist",
-            bio="Test bio"
-        )
-
-        # Act
-        result = await service.create_artist(request_dto)
-
-        # Assert
-        assert result.name == request_dto.name
-        mock_repo.create.assert_awaited_once()
-```
+### 5. 과도한 모킹 (over-mocking)
+- BAD: 모든 의존성을 Mock -- 실제 동작 미검증
+- GOOD: Repository만 Mock, Service 로직은 실제 실행
 
 ---
 
-## Current Project Configuration
+## Quick Reference: Test Template
 
-Your qwarty backend test setup:
-
-**pytest.ini (in pyproject.toml):**
-```toml
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-filterwarnings = ["ignore::DeprecationWarning"]
-markers = [
-    "security: marks tests as security tests (SQL injection, etc.)",
-    "performance: marks tests as performance benchmarks",
-]
-addopts = [
-    "--cov=backend",
-    "--cov-report=term-missing",
-    "--cov-report=html",
-    "--cov-fail-under=80",
-]
-```
-
-**Test Dependencies:**
-- pytest 8.4.2+
-- pytest-asyncio 0.24.0+
-- pytest-cov 6.0.0+
-
-**Coverage Exclusions:**
-- Tests themselves (`tests/*`)
-- `__init__.py` files
-- Main application entry (`backend/main.py`)
-- Some routers and specific domains (see pyproject.toml)
+> **[Complete template: resources/test-template.md](resources/test-template.md)**
 
 ---
 

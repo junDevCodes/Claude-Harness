@@ -1,6 +1,17 @@
 ---
 name: skill-developer
 description: Create and manage Claude Code skills following Anthropic best practices. Use when creating new skills, modifying skill-rules.json, understanding trigger patterns, working with hooks, debugging skill activation, or implementing progressive disclosure. Covers skill structure, YAML frontmatter, trigger types (keywords, intent patterns, file paths, content patterns), enforcement levels (block, suggest, warn), hook mechanisms (UserPromptSubmit, PreToolUse), session tracking, and the 500-line rule.
+triggers:
+  - skill system
+  - create skill
+  - add skill
+  - skill triggers
+  - skill rules
+  - hook system
+  - skill development
+  - skill-rules.json
+  - SKILL.md
+  - skill activation
 ---
 
 # Skill Developer Guide
@@ -43,7 +54,7 @@ Automatically activates when you mention:
 - **Method**: Analyzes edited files for risky patterns, displays reminder if needed
 - **Use Cases**: Error handling awareness without blocking friction
 
-**Philosophy Change (2025-10-27):** We moved away from blocking PreToolUse for Sentry/error handling. Instead, use gentle post-response reminders that don't block workflow but maintain code quality awareness.
+**Design Decision:** Blocking PreToolUse hooks create workflow friction. Prefer gentle post-response reminders (Stop hook) that maintain code quality awareness without interrupting the developer flow.
 
 ### Configuration File
 
@@ -117,6 +128,12 @@ Defines:
 ---
 name: my-new-skill
 description: Brief description including keywords that trigger this skill. Mention topics, file types, and use cases. Be explicit about trigger terms.
+triggers:
+  - keyword1
+  - keyword2
+  - keyword3
+  - keyword4
+  - keyword5
 ---
 
 # My New Skill
@@ -287,6 +304,61 @@ When creating a new skill, verify:
 - [ ] **SKILL.md under 500 lines** ⭐
 - [ ] Reference files created if needed
 - [ ] Table of contents added to files > 100 lines
+
+---
+
+## Anti-Patterns
+
+### 1. SKILL.md 500줄 초과
+
+- **BAD:** 모든 상세 내용을 SKILL.md 하나에 인라인
+  ```markdown
+  # My Skill (780 lines)
+  ## Pattern 1 ... (200 lines of code)
+  ## Pattern 2 ... (200 lines of code)
+  ## Full API Reference ... (300 lines)
+  ```
+- **GOOD:** 핵심만 SKILL.md에 유지, 상세 내용은 `resources/`로 분리
+  ```markdown
+  # My Skill (350 lines)
+  ## Pattern 1 (핵심 코드 10줄)
+  ## Pattern 2 (핵심 코드 10줄)
+  See [Full API Reference](resources/api-reference.md)
+  ```
+
+### 2. Frontmatter triggers 누락
+
+- **BAD:** name + description만 작성, triggers 미지정
+  ```yaml
+  ---
+  name: my-skill
+  description: Some description
+  ---
+  ```
+- **GOOD:** triggers 5개 이상 명시하여 자동 활성화 보장
+  ```yaml
+  ---
+  name: my-skill
+  description: Some description
+  triggers:
+    - nestjs guard
+    - nestjs module
+    - nestjs controller
+    - nestjs service
+    - nestjs interceptor
+  ---
+  ```
+
+### 3. 과도하게 넓은 트리거
+
+- **BAD:** 범용 키워드로 오발동 유발
+  ```json
+  { "keywords": ["code", "programming", "backend", "frontend"] }
+  ```
+- **GOOD:** 구체적 키워드로 정확한 활성화
+  ```json
+  { "keywords": ["nestjs guard", "nestjs module", "passport jwt"] }
+  ```
 
 ---
 

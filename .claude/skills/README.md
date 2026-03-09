@@ -18,150 +18,66 @@ Skills are modular knowledge bases that Claude loads when needed. They provide:
 
 ---
 
-## Available Skills
+## Available Skills (24개)
 
-### skill-developer (Meta-Skill)
-**Purpose:** Creating and managing Claude Code skills
+### 웹 백엔드 스킬 (6개)
 
-**Files:** 7 resource files (426 lines total)
+| 스킬 | 대상 스택 | 줄수 |
+|---|---|---|
+| `fastapi-backend-guidelines` | FastAPI + SQLModel + async | 436 |
+| `express-backend-guidelines` | Express.js + TypeScript + Prisma | 500 |
+| `django-backend-guidelines` | Django 5 + DRF + SimpleJWT | 500 |
+| `nestjs-backend-guidelines` | NestJS 10 + TypeScript + Prisma | 486 |
+| `spring-boot-guidelines` | Spring Boot 3 + Java 21 + JPA | 499 |
+| `pytest-backend-testing` | pytest + FastAPI TestClient | 403 |
 
-**Use when:**
-- Creating new skills
-- Understanding skill structure
-- Working with skill-rules.json
-- Debugging skill activation
+### 프론트엔드 스킬 (4개)
 
-**Customization:** ✅ None - copy as-is
+| 스킬 | 대상 스택 | 줄수 |
+|---|---|---|
+| `nextjs-frontend-guidelines` | Next.js 15 + React 19 + App Router | 415 |
+| `vercel-react-best-practices` | React/Next.js 성능 최적화 | 365 |
+| `web-design-guidelines` | UI/UX 접근성 감사 | 295 |
+| `frontend-design` | 프로덕션 UI 컴포넌트 제작 | 292 |
 
-**[View Skill →](skill-developer/)**
+### 모바일 + 임베디드 스킬 (3개)
 
----
+| 스킬 | 대상 스택 | 줄수 |
+|---|---|---|
+| `react-native-guidelines` | Expo SDK 52 + Expo Router + Zustand | 500 |
+| `embedded-c-guidelines` | C99 + HAL Ops Table + FreeRTOS + Unity | 497 |
+| `embedded-cpp-guidelines` | C++17 + 순수 가상 HAL + RAII + Google Test | 439 |
 
-### backend-dev-guidelines
-**Purpose:** Node.js/Express/TypeScript development patterns
+### 공통 인프라 스킬 (3개)
 
-**Files:** 12 resource files (304 lines main + resources)
+| 스킬 | 목적 | 줄수 |
+|---|---|---|
+| `docker-guidelines` | 멀티 스테이지 빌드, non-root, docker-compose | 456 |
+| `aws-guidelines` | S3 presigned URL, ECS, ECR, IAM, CloudWatch | 459 |
+| `database-guidelines` | ERD, 정규화, 인덱스, 읽기/쓰기 분리, 마이그레이션 | 441 |
 
-**Covers:**
-- Layered architecture (Routes → Controllers → Services → Repositories)
-- BaseController pattern
-- Prisma database access
-- Sentry error tracking
-- Zod validation
-- UnifiedConfig pattern
-- Dependency injection
-- Testing strategies
+### 문서/다이어그램 스킬 (4개)
 
-**Use when:**
-- Creating/modifying API routes
-- Building controllers or services
-- Database operations with Prisma
-- Setting up error tracking
+| 스킬 | 목적 | 줄수 |
+|---|---|---|
+| `mermaid` | 다이어그램 / 플로우차트 / ERD 생성 | 212 |
+| `pdf` | PDF 생성/편집/추출/변환 | 347 |
+| `pptx` | PowerPoint 프레젠테이션 제작 | 500 |
+| `docx` | Word 문서 제작/편집 | 486 |
 
-**Customization:** ⚠️ Update `pathPatterns` in skill-rules.json to match your backend directories
+### 브랜드 + 에러 추적 스킬 (3개)
 
-**Example pathPatterns:**
-```json
-{
-  "pathPatterns": [
-    "src/api/**/*.ts",       // Single app with src/api
-    "backend/**/*.ts",       // Backend directory
-    "services/*/src/**/*.ts" // Multi-service monorepo
-  ]
-}
-```
+| 스킬 | 목적 | 줄수 |
+|---|---|---|
+| `brand-guidelines` | Anthropic 브랜드 색상/타이포그래피 | 243 |
+| `ppt-brand-guidelines` | VRL PPT 브랜드 가이드라인 | 267 |
+| `error-tracking` | Sentry v8 에러 추적/성능 모니터링 | 404 |
 
-**[View Skill →](backend-dev-guidelines/)**
+### 메타 스킬 (1개)
 
----
-
-### frontend-dev-guidelines
-**Purpose:** React/TypeScript/MUI v7 development patterns
-
-**Files:** 11 resource files (398 lines main + resources)
-
-**Covers:**
-- Modern React patterns (Suspense, lazy loading)
-- useSuspenseQuery for data fetching
-- MUI v7 styling (Grid with `size={{}}` prop)
-- TanStack Router
-- File organization (features/ pattern)
-- Performance optimization
-- TypeScript best practices
-
-**Use when:**
-- Creating React components
-- Fetching data with TanStack Query
-- Styling with MUI v7
-- Setting up routing
-
-**Customization:** ⚠️ Update `pathPatterns` + verify you use React/MUI
-
-**Example pathPatterns:**
-```json
-{
-  "pathPatterns": [
-    "src/**/*.tsx",          // Single React app
-    "frontend/src/**/*.tsx", // Frontend directory
-    "apps/web/**/*.tsx"      // Monorepo web app
-  ]
-}
-```
-
-**Note:** This skill is configured as a **guardrail** (enforcement: "block") to prevent MUI v6→v7 incompatibilities.
-
-**[View Skill →](frontend-dev-guidelines/)**
-
----
-
-### route-tester
-**Purpose:** Testing authenticated API routes with JWT cookie auth
-
-**Files:** 1 main file (389 lines)
-
-**Covers:**
-- JWT cookie-based authentication testing
-- test-auth-route.js script patterns
-- cURL with cookie authentication
-- Debugging auth issues
-- Testing POST/PUT/DELETE operations
-
-**Use when:**
-- Testing API endpoints
-- Debugging authentication
-- Validating route functionality
-
-**Customization:** ⚠️ Requires JWT cookie auth setup
-
-**Ask first:** "Do you use JWT cookie-based authentication?"
-- If YES: Copy and customize service URLs
-- If NO: Skip or adapt for your auth method
-
-**[View Skill →](route-tester/)**
-
----
-
-### error-tracking
-**Purpose:** Sentry error tracking and monitoring patterns
-
-**Files:** 1 main file (~250 lines)
-
-**Covers:**
-- Sentry v8 initialization
-- Error capture patterns
-- Breadcrumbs and user context
-- Performance monitoring
-- Integration with Express and React
-
-**Use when:**
-- Setting up error tracking
-- Capturing exceptions
-- Adding error context
-- Debugging production issues
-
-**Customization:** ⚠️ Update `pathPatterns` for your backend
-
-**[View Skill →](error-tracking/)**
+| 스킬 | 목적 | 줄수 |
+|---|---|---|
+| `skill-developer` | 스킬 생성/관리/트리거 설계 | 498 |
 
 ---
 
@@ -171,7 +87,7 @@ Skills are modular knowledge bases that Claude loads when needed. They provide:
 
 **For Claude Code:**
 ```
-User: "Add the backend-dev-guidelines skill to my project"
+User: "Add the nestjs-backend-guidelines skill to my project"
 
 Claude should:
 1. Ask about project structure
@@ -186,7 +102,7 @@ See [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md) for complet
 
 **Step 1: Copy the skill directory**
 ```bash
-cp -r claude-code-infrastructure-showcase/.claude/skills/backend-dev-guidelines \\
+cp -r advanced-harness-window/.claude/skills/nestjs-backend-guidelines \
       your-project/.claude/skills/
 ```
 
@@ -194,7 +110,7 @@ cp -r claude-code-infrastructure-showcase/.claude/skills/backend-dev-guidelines 
 
 If you don't have one, create it:
 ```bash
-cp claude-code-infrastructure-showcase/.claude/skills/skill-rules.json \\
+cp advanced-harness-window/.claude/skills/skill-rules.json \
    your-project/.claude/skills/
 ```
 
@@ -202,10 +118,10 @@ Then customize the `pathPatterns` for your project:
 ```json
 {
   "skills": {
-    "backend-dev-guidelines": {
+    "nestjs-backend-guidelines": {
       "fileTriggers": {
         "pathPatterns": [
-          "YOUR_BACKEND_PATH/**/*.ts"  // ← Update this!
+          "src/**/*.ts"  // ← Update this!
         ]
       }
     }
@@ -224,10 +140,10 @@ Then customize the `pathPatterns` for your project:
 ### What It Does
 
 Defines when skills should activate based on:
-- **Keywords** in user prompts ("backend", "API", "route")
+- **Keywords** in user prompts ("nestjs", "docker", "s3 upload")
 - **Intent patterns** (regex matching user intent)
 - **File path patterns** (editing backend files)
-- **Content patterns** (code contains Prisma queries)
+- **Content patterns** (code contains specific imports)
 
 ### Configuration Format
 
@@ -255,9 +171,8 @@ Defines when skills should activate based on:
 - **block**: Must use skill before proceeding (guardrail)
 
 **Use "block" for:**
-- Preventing breaking changes (MUI v6→v7)
-- Critical database operations
-- Security-sensitive code
+- Preventing breaking changes (Next.js App Router vs Pages Router)
+- Critical security-sensitive code patterns
 
 **Use "suggest" for:**
 - General best practices
@@ -279,6 +194,9 @@ See the **skill-developer** skill for complete guide on:
 ---
 name: my-skill
 description: What this skill does
+triggers:
+  - keyword1
+  - keyword2
 ---
 
 # My Skill Title
@@ -289,12 +207,11 @@ description: What this skill does
 ## When to Use This Skill
 [Auto-activation scenarios]
 
-## Quick Reference
-[Key patterns and examples]
+## Core Patterns
+[Key patterns with code examples]
 
-## Resource Files
-- [topic-1.md](resources/topic-1.md)
-- [topic-2.md](resources/topic-2.md)
+## Anti-Patterns
+[❌ What NOT to do]
 ```
 
 ---
@@ -308,21 +225,17 @@ description: What this skill does
 2. Is skill listed in `skill-rules.json`?
 3. Do `pathPatterns` match your files?
 4. Are hooks installed and working?
-5. Is settings.json configured correctly?
 
 **Debug:**
 ```bash
-# Check skill exists
+# Check skills exist
 ls -la .claude/skills/
 
 # Validate skill-rules.json
-cat .claude/skills/skill-rules.json | jq .
+cat .claude/skills/skill-rules.json | python -m json.tool
 
 # Check hooks are executable
-ls -la .claude/hooks/*.sh
-
-# Test hook manually
-./.claude/hooks/skill-activation-prompt.sh
+ls -la .claude/hooks/
 ```
 
 ### Skill activates too often
@@ -352,17 +265,10 @@ Update skill-rules.json:
 5. Test activation after integration
 
 **Common mistakes:**
-- Keeping example paths (blog-api/, frontend/)
+- Keeping example paths (base/nestjs/, base/express/)
 - Not asking about monorepo vs single-app
 - Copying skill-rules.json without customization
 
 ---
 
-## Next Steps
-
-1. **Start simple:** Add one skill that matches your work
-2. **Verify activation:** Edit a relevant file, skill should suggest
-3. **Add more:** Once first skill works, add others
-4. **Customize:** Adjust triggers based on your workflow
-
-**Questions?** See [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md) for comprehensive integration instructions.
+*Last updated: 2026-03-08 (Phase 2-D 완료 — 전체 24개 스킬 목록 최신화, skill-rules.json v1.2)*
