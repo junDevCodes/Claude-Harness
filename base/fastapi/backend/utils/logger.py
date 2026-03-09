@@ -1,0 +1,18 @@
+"""Centralized logger configuration."""
+
+import logging
+import sys
+
+
+def setup_logging(level: str = "INFO") -> None:
+    """Configure root logger with JSON-friendly format."""
+    logging.basicConfig(
+        level=getattr(logging, level.upper(), logging.INFO),
+        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+        datefmt="%Y-%m-%dT%H:%M:%S",
+        stream=sys.stdout,
+    )
+
+
+# Module-level logger for direct use
+logger = logging.getLogger("backend")

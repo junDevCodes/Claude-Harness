@@ -1,0 +1,26 @@
+# ---------------------------------------------------------------------------
+# Production Dependencies
+# Django 5 + DRF + SimpleJWT + PostgreSQL + S3
+# ---------------------------------------------------------------------------
+
+# Core
+Django==5.1.5
+djangorestframework==3.15.2
+djangorestframework-simplejwt==5.3.1
+django-cors-headers==4.6.0
+
+# Database
+psycopg[binary]==3.2.4
+dj-database-url==2.3.0
+
+# AWS S3
+boto3==1.35.99
+
+# Serving static files in production
+whitenoise==6.8.2
+
+# Environment variables
+python-dotenv==1.0.1
+
+# Production WSGI server
+gunicorn==23.0.0

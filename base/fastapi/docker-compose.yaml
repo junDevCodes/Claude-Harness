@@ -1,0 +1,57 @@
+name: fastapi-base
+
+# ---------------------------------------------------------------------------
+# Common settings
+# ---------------------------------------------------------------------------
+x-common: &common
+  restart: unless-stopped
+  env_file:
+    - .env
+  networks:
+    - app-net
+
+# ---------------------------------------------------------------------------
+# Services
+# ---------------------------------------------------------------------------
+services:
+  # PostgreSQL (single instance — use same DSN for read and write in .env)
+  db:
+    image: postgres:16-alpine
+    container_name: fastapi-db
+    environment:
+      POSTGRES_USER: ${WRITE_DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${WRITE_DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${WRITE_DB_NAME:-myapp_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${WRITE_DB_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-net
+
+  # FastAPI Application
+  api:
+    <<: *common
+    build: .
+    container_name: fastapi-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WRITE_DB_HOST: db
+      READ_DB_HOST: db
+      DB_SSL_REQUIRED: "false"
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  db-data:

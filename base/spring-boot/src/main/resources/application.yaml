@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: base-spring-boot
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: ${SERVER_PORT:8080}
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiry: ${JWT_ACCESS_TOKEN_EXPIRY:900}      # 15분 (초 단위)
+  refresh-token-expiry: ${JWT_REFRESH_TOKEN_EXPIRY:604800} # 7일 (초 단위)
+
+aws:
+  access-key: ${AWS_ACCESS_KEY_ID}
+  secret-key: ${AWS_SECRET_ACCESS_KEY}
+  region: ${AWS_REGION:ap-northeast-2}
+  s3:
+    bucket: ${AWS_S3_BUCKET}
+
+logging:
+  level:
+    com.base: INFO
+    org.springframework.security: WARN

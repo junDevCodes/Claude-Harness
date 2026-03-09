@@ -1,0 +1,163 @@
+"""
+Database session management with read/write separation.
+
+Pattern:
+- Write operations → write_db (primary/master)
+- Read operations  → read_db (replica/slave)
+- Event loop-based engine caching for async performance
+"""
+
+import asyncio
+import logging
+import warnings
+from contextlib import asynccontextmanager
+from typing import Any, AsyncGenerator
+from weakref import WeakKeyDictionary
+
+from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
+from sqlmodel.ext.asyncio.session import AsyncSession
+
+from backend.core.config import settings
+
+# Suppress SQLAlchemy warnings about non-checked-in connections
+warnings.filterwarnings(
+    "ignore",
+    message=".*non-checked-in connection.*",
+    category=Warning,
+)
+
+logger = logging.getLogger(__name__)
+
+_sessionmaker_cache: "WeakKeyDictionary[Any, Any]" = WeakKeyDictionary()
+_write_engine_cache: "WeakKeyDictionary[asyncio.AbstractEventLoop, Any]" = WeakKeyDictionary()
+_read_engine_cache: "WeakKeyDictionary[asyncio.AbstractEventLoop, Any]" = WeakKeyDictionary()
+
+
+def _build_db_url(user: str, password: str, host: str, port: int, name: str) -> str:
+    """Build asyncpg database URL with optional SSL."""
+    base_url = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{name}"
+    if settings.use_db_ssl:
+        return f"{base_url}?ssl=require"
+    return base_url
+
+
+def _create_write_async_engine() -> AsyncEngine:
+    return create_async_engine(
+        _build_db_url(
+            settings.write_db_user,
+            settings.write_db_password,
+            settings.write_db_host,
+            settings.write_db_port,
+            settings.write_db_name,
+        ),
+        future=True,
+        echo=False,
+        pool_pre_ping=True,
+        pool_size=15,
+        max_overflow=25,
+        pool_recycle=3600,
+        pool_timeout=30,
+    )
+
+
+def _create_read_async_engine() -> AsyncEngine:
+    return create_async_engine(
+        _build_db_url(
+            settings.read_db_user,
+            settings.read_db_password,
+            settings.read_db_host,
+            settings.read_db_port,
+            settings.read_db_name,
+        ),
+        future=True,
+        echo=False,
+        pool_pre_ping=True,
+        pool_size=15,
+        max_overflow=25,
+        pool_recycle=3600,
+        pool_timeout=30,
+    )
+
+
+def get_write_engine() -> Any:
+    loop = asyncio.get_running_loop()
+    if loop not in _write_engine_cache:
+        _write_engine_cache[loop] = _create_write_async_engine()
+    return _write_engine_cache[loop]
+
+
+def get_read_engine() -> Any:
+    loop = asyncio.get_running_loop()
+    if loop not in _read_engine_cache:
+        _read_engine_cache[loop] = _create_read_async_engine()
+    return _read_engine_cache[loop]
+
+
+def get_write_sessionmaker() -> Any:
+    engine = get_write_engine()
+    if engine not in _sessionmaker_cache:
+        _sessionmaker_cache[engine] = async_sessionmaker(
+            engine,
+            expire_on_commit=False,
+            class_=AsyncSession,
+        )
+    return _sessionmaker_cache[engine]
+
+
+def get_read_sessionmaker() -> Any:
+    engine = get_read_engine()
+    if engine not in _sessionmaker_cache:
+        _sessionmaker_cache[engine] = async_sessionmaker(
+            engine,
+            expire_on_commit=False,
+            class_=AsyncSession,
+        )
+    return _sessionmaker_cache[engine]
+
+
+@asynccontextmanager
+async def get_write_session() -> AsyncGenerator[AsyncSession, None]:
+    """Context manager for write sessions."""
+    Session = get_write_sessionmaker()
+    async with Session() as sess:
+        yield sess
+
+
+@asynccontextmanager
+async def get_read_session() -> AsyncGenerator[AsyncSession, None]:
+    """Context manager for read sessions."""
+    Session = get_read_sessionmaker()
+    async with Session() as sess:
+        yield sess
+
+
+async def get_write_session_dependency() -> AsyncGenerator[AsyncSession, None]:
+    """FastAPI dependency for write sessions.
+
+    Usage:
+        session: AsyncSession = Depends(get_write_session_dependency)
+
+    Use for endpoints that CREATE, UPDATE, or DELETE data.
+    """
+    Session = get_write_sessionmaker()
+    session = Session()
+    try:
+        yield session
+    finally:
+        await session.close()
+
+
+async def get_read_session_dependency() -> AsyncGenerator[AsyncSession, None]:
+    """FastAPI dependency for read sessions.
+
+    Usage:
+        session: AsyncSession = Depends(get_read_session_dependency)
+
+    Use for endpoints that only READ data.
+    """
+    Session = get_read_sessionmaker()
+    session = Session()
+    try:
+        yield session
+    finally:
+        await session.close()
