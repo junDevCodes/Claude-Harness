@@ -1,0 +1,60 @@
+name: PR Code Review Checklist
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  code-review-checklist:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          separator: "\n"
+
+      - name: Post review checklist
+        uses: actions/github-script@v7
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        with:
+          script: |
+            const changedFiles = process.env.ALL_CHANGED_FILES || '';
+            const files = changedFiles.split('\n').filter(f => f.trim());
+            const ts = files.filter(f => /\.(ts|tsx)$/.test(f));
+            const py = files.filter(f => /\.py$/.test(f));
+            const body = [
+              '## Code Review Checklist',
+              '',
+              `> Changed: TypeScript ${ts.length}개, Python ${py.length}개`,
+              '> 상세 리뷰: Claude Code에서 `code-architecture-reviewer` 에이전트 실행',
+              '',
+              '### Architecture',
+              '- [ ] 새 파일이 기존 도메인 구조에 맞게 배치되었는가?',
+              '- [ ] API 계약 변경 시 버전 관리되었는가?',
+              '- [ ] DB 스키마 변경 시 마이그레이션 파일이 포함되었는가?',
+              '',
+              '### Code Quality',
+              '- [ ] TypeScript strict 모드 오류 없음',
+              '- [ ] 에러 핸들링이 기존 패턴을 따르는가?',
+              '- [ ] 비동기 처리에 async/await가 올바르게 사용되었는가?',
+              '',
+              '### Security',
+              '- [ ] 민감 정보가 코드에 하드코딩되지 않았는가?',
+              '- [ ] 입력 검증이 모든 엔드포인트에 적용되었는가?',
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body,
+            });

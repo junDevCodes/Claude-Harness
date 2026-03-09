@@ -18,6 +18,52 @@ Hooks are scripts that run at specific points in Claude's workflow:
 
 ## Essential Hooks (Start Here)
 
+### session-start-docs-loader (UserPromptSubmit)
+
+**Purpose:** 세션 첫 번째 프롬프트에서 4문서(docs/) 읽기 지시를 Claude 컨텍스트에 자동 주입
+
+**How it works:**
+1. stdin에서 `{ session_id, cwd, prompt }` JSON 읽기
+2. `.claude/.session-cache/[session_id].loaded` 파일 존재 여부 확인
+3. 없으면 → 첫 번째 프롬프트: 4문서 읽기 지시 stdout 출력 + `.loaded` 플래그 파일 생성
+4. 있으면 → 이미 로드됨: 즉시 exit(0) (무출력)
+
+**Why it's essential:** 세션마다 수동으로 4문서를 열지 않아도 되며, 작업 맥락을 자동으로 복원한다.
+
+**Integration:**
+```bash
+# Copy both files
+cp session-start-docs-loader.sh your-project/.claude/hooks/
+cp session-start-docs-loader.ts your-project/.claude/hooks/
+
+# Make executable
+chmod +x your-project/.claude/hooks/session-start-docs-loader.sh
+```
+
+**Add to settings.json:**
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start-docs-loader.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Session cache:** `.claude/.session-cache/[session_id].loaded` — `.gitignore`에 `*.loaded` 패턴 추가 필요
+
+**Customization:** ✅ None needed — `docs/history.md`에서 Phase 정보 자동 추출
+
+---
+
 ### skill-activation-prompt (UserPromptSubmit)
 
 **Purpose:** Automatically suggests relevant skills based on user prompts and file context
@@ -111,6 +157,95 @@ chmod +x your-project/.claude/hooks/post-tool-use-tracker.sh
 ---
 
 ## Optional Hooks (Require Customization)
+
+### docs-update-reminder (Stop)
+
+**Purpose:** 세션 종료 시 `docs/history.md` 미갱신 감지 → 갱신 리마인더 출력
+
+**How it works:**
+1. stdin에서 `{ session_id }` JSON 읽기
+2. `.session-cache/[session_id].loaded` 파일 없으면 → 4문서 기반 세션 아님, 스킵
+3. `.loaded` 파일 mtime = 세션 시작 시각
+4. `docs/history.md` mtime 비교
+5. history.md 미갱신이면 → 리마인더 + `/harness-docs-update` 커맨드 안내
+6. 오류 시 항상 exit(0) — Stop 훅 블로킹 방지
+
+**Integration:**
+```bash
+cp docs-update-reminder.sh your-project/.claude/hooks/
+cp docs-update-reminder.ts your-project/.claude/hooks/
+chmod +x your-project/.claude/hooks/docs-update-reminder.sh
+```
+
+**Add to settings.json:**
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/docs-update-reminder.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Skip:** `SKIP_DOCS_REMINDER=1` 환경변수로 비활성화 가능
+
+**Customization:** ⚠️ 이 훅은 `docs/history.md`가 있는 프로젝트 전용 (4문서 체계 사용 프로젝트)
+
+---
+
+### pr-review-trigger (PostToolUse — Bash)
+
+**Purpose:** `gh pr create` 실행 직후 `code-architecture-reviewer` 에이전트 실행을 Claude 컨텍스트에 권고
+
+**How it works:**
+1. PostToolUse(Bash) 이벤트로 모든 Bash 명령 완료 후 실행
+2. `tool_input.command`에 `gh pr create` 포함 시에만 동작 (그 외 exit 0)
+3. `tool_response.output`에서 PR URL 추출 (regex)
+4. 권고 메시지 stdout 출력 + **exit 2** → Claude 컨텍스트 주입
+
+**Integration:**
+```bash
+cp pr-review-trigger.sh your-project/.claude/hooks/
+cp pr-review-trigger.ts your-project/.claude/hooks/
+chmod +x your-project/.claude/hooks/pr-review-trigger.sh
+```
+
+**Add to settings.json:**
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/pr-review-trigger.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Skip:** `SKIP_PR_REVIEW=1` 환경변수로 비활성화 가능
+
+**Review output path:** `docs/reviews/[YYYY-MM-DD]-[branch-or-task-name]-review.md`
+
+**GitHub Actions 연계:** `.github/workflows/pr-code-review.yaml` — PR 체크리스트 댓글 자동 작성
+
+**Customization:** ✅ None needed — `gh pr create` 명령 자동 감지
+
+---
 
 ### tsc-check (Stop)
 

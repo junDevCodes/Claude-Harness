@@ -17,6 +17,10 @@ Create or update `.claude/settings.json` in your project root:
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/skill-activation-prompt.sh"
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start-docs-loader.sh"
           }
         ]
       }
@@ -28,6 +32,15 @@ Create or update `.claude/settings.json` in your project root:
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/post-tool-use-tracker.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/pr-review-trigger.sh"
           }
         ]
       }
@@ -46,6 +59,10 @@ Create or update `.claude/settings.json` in your project root:
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/error-handling-reminder.sh"
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/docs-update-reminder.sh"
           }
         ]
       }
@@ -175,6 +192,63 @@ if [[ $total_errors -ge 10 ]]; then  # Now requires 10+ errors
 fi
 ```
 
+## pr-review-trigger (PostToolUse — Bash)
+
+`gh pr create` 실행 감지 → `code-architecture-reviewer` 에이전트 실행 권고 메시지를 Claude 컨텍스트에 주입.
+
+### 동작 방식
+
+1. PostToolUse(Bash) 이벤트로 실행 — 모든 Bash 명령 완료 후 트리거
+2. `tool_input.command`에 `gh pr create` 포함 여부 확인 → 없으면 즉시 exit 0
+3. `SKIP_PR_REVIEW` 환경변수 확인 → 설정 시 exit 0
+4. `tool_response.output`에서 PR URL 추출 (regex)
+5. 리뷰 권고 메시지 stdout 출력 후 **exit 2** → Claude 컨텍스트에 자동 주입
+
+### exit 2 동작
+
+PostToolUse 훅에서 exit 2(block mode)를 사용하면 stdout이 Claude 컨텍스트에 주입된다.
+Claude는 해당 내용을 읽고 후속 동작을 결정한다.
+
+### 환경변수
+
+```bash
+# pr-review-trigger 비활성화
+export SKIP_PR_REVIEW=1
+```
+
+### settings.json 등록
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/post-tool-use-tracker.sh" }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/pr-review-trigger.sh" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### 리뷰 저장 경로
+
+```
+docs/reviews/[YYYY-MM-DD]-[branch-or-task-name]-review.md
+```
+
+디렉토리가 없으면 `code-architecture-reviewer` 에이전트가 자동 생성.
+
+---
+
 ## Environment Variables
 
 ### Global Environment Variables
@@ -184,6 +258,9 @@ Set in your shell profile (`.bashrc`, `.zshrc`, etc.):
 ```bash
 # Disable error handling reminders
 export SKIP_ERROR_REMINDER=1
+
+# Disable docs update reminder (Stop hook)
+export SKIP_DOCS_REMINDER=1
 
 # Custom project directory (if not using default)
 export CLAUDE_PROJECT_DIR=/path/to/your/project
