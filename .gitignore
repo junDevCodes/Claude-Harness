@@ -2,6 +2,11 @@
 
 # Claude session cache (local session flags — not committed)
 .claude/.session-cache/*.loaded
+.claude/settings.local.json
+
+# Frontend test artifacts
+frontend/playwright-report/
+frontend/test-results/
 
 # Temporary downloaded repos for analysis
 agency-agents-main/
