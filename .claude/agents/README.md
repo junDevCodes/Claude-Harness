@@ -16,7 +16,19 @@ Agents are autonomous Claude instances that handle specific complex tasks. Unlik
 
 ---
 
-## Available Agents (10)
+## Available Agents (16)
+
+### planner
+**Purpose:** 구현 계획 수립 — 코드베이스 분석 후 단계별 구현 전략 설계
+
+**When to use:**
+- 새 기능 개발 시작 전 전체 구조 설계
+- 복잡한 리팩토링 전략 수립
+- 여러 파일에 걸친 변경 계획 필요 시
+
+**Integration:** ✅ Copy as-is
+
+---
 
 ### code-architecture-reviewer
 **Purpose:** Review code for architectural consistency and best practices
@@ -146,13 +158,73 @@ Agents are autonomous Claude instances that handle specific complex tasks. Unlik
 
 ---
 
+### db-migration-agent
+**Purpose:** DB 스키마 변경을 Alembic/Prisma/Django/Flyway 마이그레이션 파일로 자동화
+
+**When to use:**
+- 모델/엔티티 변경 후 마이그레이션 파일 생성 시
+- DROP/NOT NULL 등 위험 연산 포함 마이그레이션 검토 시
+- 스택별(FastAPI/NestJS/Django/Spring Boot) 마이그레이션 자동화 필요 시
+
+**Integration:** ✅ Copy as-is
+
+---
+
+### api-spec-generator
+**Purpose:** 백엔드 소스 코드를 정적 분석하여 OpenAPI 3.0 YAML 스펙을 자동 생성
+
+**When to use:**
+- API 문서화 최초 생성 시
+- 라우터/컨트롤러 변경 후 openapi.yaml 갱신 필요 시
+- 여러 서비스 스펙을 하나의 YAML로 병합 시
+
+**Integration:** ✅ Copy as-is
+
+---
+
+### test-coverage-agent
+**Purpose:** 커버리지 측정 후 미커버 함수에 정상/에러/경계값 테스트 케이스를 자동 작성
+
+**When to use:**
+- 커버리지 목표 미달 시 (예: 80% 미만)
+- 신규 서비스 레이어 추가 후 테스트 보강 시
+- pytest/Jest/JUnit5/Google Test 스택에서 미테스트 함수 탐지 시
+
+**Integration:** ✅ Copy as-is
+
+---
+
+### performance-auditor
+**Purpose:** FE Core Web Vitals + BE API 응답시간을 종합 점검하고 P1/P2/P3 우선순위로 개선 권고
+
+**When to use:**
+- 성능 저하 신고 또는 배포 전 점검 시
+- LCP/FCP/CLS/TTI 이슈 탐지 및 원인 분석 시
+- N+1 쿼리·DB 인덱스 누락 등 백엔드 성능 이슈 점검 시
+
+**Integration:** ✅ Copy as-is
+
+---
+
+### security-auditor
+**Purpose:** OWASP Top 10 기준으로 JWT/SQL Injection/XSS/CSRF/민감정보/권한 상승 취약점을 자동 점검
+
+**When to use:**
+- 보안 감사 요청 또는 새 인증 기능 추가 후
+- 배포 전 보안 체크리스트 검증 시
+- CRITICAL/HIGH/MEDIUM/LOW 심각도 분류 및 조치 방법 필요 시
+
+**Integration:** ✅ Copy as-is
+
+---
+
 ## How to Integrate an Agent
 
 ### Standard Integration (Most Agents)
 
 **Step 1: Copy the file**
 ```bash
-cp showcase/.claude/agents/agent-name.md \\
+cp showcase/.claude/agents/agent-name.md \
    your-project/.claude/agents/
 ```
 
@@ -207,6 +279,7 @@ That's it! Agents work immediately.
 
 | Agent | Complexity | Customization | Auth Required |
 |-------|-----------|---------------|---------------|
+| planner | Medium | ✅ None | No |
 | code-architecture-reviewer | Medium | ✅ None | No |
 | code-refactor-master | High | ✅ None | No |
 | documentation-architect | Medium | ✅ None | No |
@@ -217,6 +290,11 @@ That's it! Agents work immediately.
 | auth-route-tester | Medium | ⚠️ Auth setup | JWT cookies |
 | auth-route-debugger | Medium | ⚠️ Auth setup | JWT cookies |
 | auto-error-resolver | Low | ⚠️ Paths | No |
+| db-migration-agent | High | ✅ None | No |
+| api-spec-generator | Medium | ✅ None | No |
+| test-coverage-agent | High | ✅ None | No |
+| performance-auditor | Medium | ✅ None | No |
+| security-auditor | Medium | ✅ None | No |
 
 ---
 
@@ -232,6 +310,13 @@ That's it! Agents work immediately.
    ```
 4. **Update paths if found** to `$CLAUDE_PROJECT_DIR` or `.`
 5. **For auth agents:** Ask if they use JWT cookie auth first
+
+**신규 자동화 에이전트 활용 안내:**
+- `db-migration-agent`: 스택 감지(Alembic/Prisma/Django/Flyway) 후 자동 마이그레이션 — "마이그레이션 만들어줘" 요청 시 사용
+- `api-spec-generator`: 소스 정적 분석 → openapi.yaml 생성 — "API 문서 만들어줘" 요청 시 사용
+- `test-coverage-agent`: 커버리지 측정 → 미커버 함수 테스트 자동 작성 — "커버리지 올려줘" 요청 시 사용
+- `performance-auditor`: CWV + API 응답시간 점검 → P1/P2/P3 권고 — "성능 점검해줘" 요청 시 사용
+- `security-auditor`: OWASP Top 10 취약점 점검 → 심각도 분류 — "보안 감사해줘" 요청 시 사용
 
 **That's it!** Agents are the easiest components to integrate.
 
