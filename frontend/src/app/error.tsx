@@ -1,18 +1,25 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect } from "react";
 import { AlertCircle, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface ErrorProps {
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+type ErrorProps = {
   error: Error & { digest?: string };
   reset: () => void;
-}
+};
 
 export default function Error({ error, reset }: ErrorProps) {
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error("Application error:", error);
   }, [error]);
 
@@ -23,9 +30,9 @@ export default function Error({ error, reset }: ErrorProps) {
           <div className="mx-auto w-12 h-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
             <AlertCircle className="w-6 h-6 text-destructive" />
           </div>
-          <CardTitle className="text-xl">오류가 발생했습니다</CardTitle>
+          <CardTitle className="text-xl">문제가 발생했습니다</CardTitle>
           <CardDescription>
-            페이지를 불러오는 중 문제가 발생했습니다.
+            요청을 처리하는 중 오류가 발생했습니다.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -42,7 +49,7 @@ export default function Error({ error, reset }: ErrorProps) {
               다시 시도
             </Button>
             <Button variant="outline" asChild className="w-full">
-              <a href="/">홈으로 돌아가기</a>
+              <Link href="/">홈으로 이동</Link>
             </Button>
           </div>
         </CardContent>

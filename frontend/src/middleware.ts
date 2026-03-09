@@ -10,9 +10,6 @@ import type { NextRequest } from "next/server";
 // Routes that require authentication (none for now since we removed admin/form/match)
 const PROTECTED_PATHS: string[] = [];
 
-// Routes that should redirect to home if already authenticated
-const AUTH_PATHS = ["/login", "/signup"];
-
 // Public paths that don't require any checks
 const PUBLIC_PATHS = [
   "/",
@@ -41,9 +38,6 @@ export function middleware(request: NextRequest) {
   const isProtectedPath = PROTECTED_PATHS.some((path) =>
     pathname.startsWith(path)
   );
-
-  // Check if current path is an auth path (login/signup)
-  const isAuthPath = AUTH_PATHS.some((path) => pathname.startsWith(path));
 
   // Redirect unauthenticated users from protected routes to login
   if (isProtectedPath && !isAuthenticated) {
