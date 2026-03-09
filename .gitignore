@@ -1,5 +1,8 @@
 .pnpm-store
 
+# Claude session cache (local session flags — not committed)
+.claude/.session-cache/*.loaded
+
 *.tar.*
 *.tar
 *.pt

@@ -17,6 +17,115 @@ This repository is a **reference library** of Claude Code infrastructure compone
 
 ---
 
+## 적용 시나리오 판별 (신규 vs 기존 프로젝트)
+
+사용자가 하네스 적용을 요청하면 **먼저 현재 프로젝트 상태를 확인**합니다:
+
+```bash
+ls .claude/ 2>/dev/null && echo "기존 모드" || echo "신규 모드"
+```
+
+### 신규 프로젝트 모드 (`.claude/` 없음)
+
+→ `.claude/` 전체 복사 후 설정. `HARNESS_USAGE_GUIDE.md` 1부를 따릅니다.
+
+```bash
+cp -r [harness_path]/.claude ./
+chmod +x .claude/hooks/*.sh
+cd .claude/hooks && npm install
+```
+
+→ 베이스 코드 선택 후 복사 (신규 프로젝트만 해당).
+
+### 기존 프로젝트 모드 (`.claude/` 있음)
+
+**절대 `.claude/`를 덮어쓰지 않습니다.** 병합 방식으로 진행합니다.
+
+**병합 원칙:**
+- `settings.json`: 기존 훅 배열 **유지** + 새 항목 추가
+- `skill-rules.json`: 기존 스킬 **유지** + 새 스킬 항목 추가
+- `skills/`: 기존 스킬 **유지** + 새 스킬 디렉토리 추가
+- `agents/`: 기존 에이전트 **유지** + 새 에이전트 파일 추가
+- `hooks/`: 기존 훅 **유지** + 새 훅 파일 추가
+
+**병합 전 충돌 분석:**
+```bash
+# 기존 settings.json 훅 목록 확인
+cat .claude/settings.json | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+for event, hooks in d.get('hooks', {}).items():
+    print(f'{event}:', [h.get('hooks',[{}])[0].get('command','?') for h in hooks if h.get('hooks')])
+"
+
+# 기존 스킬 목록 확인
+ls .claude/skills/
+
+# 기존 에이전트 목록 확인
+ls .claude/agents/
+```
+
+**settings.json 병합 패턴:**
+```json
+// 기존 UserPromptSubmit 배열에 추가 (기존 항목 뒤에)
+"UserPromptSubmit": [
+  { /* 기존 항목 유지 */ },
+  {
+    "hooks": [{
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/skill-activation-prompt.sh"
+    }]
+  },
+  {
+    "hooks": [{
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start-docs-loader.sh"
+    }]
+  }
+]
+```
+
+**skill-rules.json 병합 패턴:**
+```bash
+# 하네스에서 필요한 스킬 항목만 추출하여 기존 파일에 추가
+# 1. 하네스 skill-rules.json에서 원하는 스킬 블록 읽기
+# 2. 기존 파일의 "skills" 객체에 새 항목 추가
+# 3. JSON 문법 검증
+cat .claude/skills/skill-rules.json | python3 -m json.tool > /dev/null && echo "✅ JSON 유효"
+```
+
+### pathPattern 재설정 (신규/기존 공통 중요 사항)
+
+하네스의 기본 pathPattern은 `base/[stack]/` 경로를 참조합니다.
+**내 프로젝트 구조에 맞게 반드시 재설정해야 합니다.**
+
+```bash
+# 내 프로젝트 주요 파일 경로 탐색
+find . -name "*.py" -not -path "./.venv/*" | head -5
+find . -name "*.ts" -not -path "./node_modules/*" | head -5
+```
+
+흔한 pathPattern 패턴:
+```json
+"pathPatterns": ["backend/**/*.py"]          // 백엔드 분리 구조
+"pathPatterns": ["src/**/*.ts"]              // 단순 구조
+"pathPatterns": ["packages/api/**/*.py"]     // 모노레포
+```
+
+### 4문서 체계 적용 (기존 프로젝트)
+
+기존 프로젝트에 4문서 체계가 없으면:
+1. `CLAUDE.md`에 4문서 체계 섹션 추가 (기존 내용 보존)
+2. `docs/` 디렉토리 생성 후 초기 4문서 작성
+
+```
+Claude에게 요청: "현재 프로젝트를 분석해서 docs/ 4문서를 초기화해줘"
+```
+
+---
+
+---
+
 ## Tech Stack Compatibility Check
 
 **CRITICAL:** Before integrating a skill, verify the user's tech stack matches the skill requirements.
@@ -822,6 +931,87 @@ What I kept:
 
 Try editing a .vue file - the skill should activate.
 ```
+
+---
+
+## Base Code Integration (`base/[stack]/`)
+
+### Overview
+
+`base/[stack]/` 디렉토리는 각 기술스택의 **범용 스타터 킷**이다.  
+새 프로젝트를 시작할 때 해당 스택 디렉토리 전체를 복사하여 즉시 사용 가능한 개발 환경을 구성한다.
+
+### 사용 가능한 스택
+
+| 경로 | 스택 | 핵심 구성 |
+|---|---|---|
+| `base/fastapi/` | Python FastAPI | DDD + JWT + S3 + PostgreSQL (읽기/쓰기 분리) |
+| `base/nextjs/` | Next.js 15 | App Router + JWT + shadcn/ui + 미들웨어 |
+| `base/express/` | Express.js | TypeScript + Prisma + JWT + S3 + Docker |
+| `base/django/` | Django 5 | DRF + SimpleJWT + PostgreSQL + S3 + Docker |
+| `base/nestjs/` | NestJS | TypeScript + Prisma + JWT Guards + Docker |
+| `base/spring-boot/` | Spring Boot 3 | Java 21 + Security + JPA + S3 + Docker |
+| `base/react-native/` | React Native | Expo + Router + Zustand + SecureStore |
+| `base/c-embedded/` | C Embedded | C99 + CMake + HAL + FreeRTOS 패턴 |
+| `base/cpp-embedded/` | C++ Embedded | C++17 + CMake + HAL 클래스 + Google Test |
+
+### 새 프로젝트에 베이스 코드 통합하는 방법
+
+**Step 1: 스택 선택 및 복사**
+```bash
+# 예시: FastAPI 스타터 킷 복사
+cp -r base/fastapi/ ~/my-new-project/backend/
+
+# 예시: Next.js 스타터 킷 복사
+cp -r base/nextjs/ ~/my-new-project/frontend/
+```
+
+**Step 2: 환경변수 설정**
+```bash
+cp .env.example .env
+# .env 파일을 열어 실제 값으로 채우기
+```
+
+**Step 3: README.md 참고하여 실행**
+```bash
+# 각 스택의 README.md에 실행 방법이 명시되어 있음
+cat README.md
+```
+
+**Step 4: 커스터마이징**
+- `README.md`의 "커스터마이징 포인트" 섹션 참고
+- 도메인 엔티티 추가: `base/fastapi/backend/domain/` 아래 새 도메인 디렉토리 생성
+- 도메인 페이지 추가: `base/nextjs/src/app/` 아래 새 라우트 추가
+
+### 베이스 코드 디렉토리 구조
+
+각 `base/[stack]/`에는 다음이 포함된다:
+
+```
+base/[stack]/
+├── docs/
+│   ├── plan.md       ← 이 스택 베이스 코드 구성 계획
+│   ├── task.md       ← 세부 작업 항목 및 진행 상태
+│   ├── history.md    ← 작업 맥락 및 주요 결정 사항
+│   └── checklist.md  ← 완료 기준 체크리스트
+├── README.md         ← 구조 설명 + 실행 방법 + 커스터마이징 포인트
+├── .env.example      ← 전체 환경변수 목록 (웹/모바일 스택)
+├── Dockerfile        ← 컨테이너 빌드 설정 (웹 백엔드 스택)
+├── docker-compose.yaml ← 로컬 개발 환경 구성 (웹 백엔드 스택)
+└── ... (스택 소스 코드)
+```
+
+### 베이스 코드에서 Skills/Agents 연계
+
+베이스 코드와 함께 해당 스택에 맞는 Skill을 함께 설정하면 최적의 AI 지원 개발 환경을 구성할 수 있다.
+
+| 스택 | 권장 Skill |
+|---|---|
+| `base/fastapi/` | `fastapi-backend-guidelines` |
+| `base/nextjs/` | `nextjs-frontend-guidelines`, `vercel-react-best-practices` |
+| `base/express/` | `express-backend-guidelines` (추가 예정) |
+| `base/django/` | `django-backend-guidelines` (추가 예정) |
+| `base/nestjs/` | `nestjs-backend-guidelines` (추가 예정) |
 
 ---
 

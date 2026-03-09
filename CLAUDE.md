@@ -306,3 +306,224 @@ pnpm dev
 
 - Thread-based conversations with message history persistence
 - Agentic search using pre-defined DB tools
+
+---
+
+## Agent 작업 문서 체계
+
+모든 Claude Agents는 작업 시 `docs/` 디렉토리의 **4문서 체계**를 기준으로 작업한다.
+
+### 4문서 역할
+
+| 문서 | 역할 |
+|---|---|
+| `docs/plan.md` | 전체 완성 계획 및 기획을 큰 단위로 관리하는 **작업 기획서** |
+| `docs/task.md` | plan.md에서 할당된 작업의 **상세 실행 계획서** |
+| `docs/history.md` | 이전까지 진행된 작업 내용 + 다음 태스크 맥락을 기록하는 **맥락 문서** |
+| `docs/checklist.md` | task.md 작업에서 점검할 완료 기준을 정리한 **작업 확인서** |
+
+### 작업 시작 시 (필수)
+
+```
+1. docs/history.md 읽기  → 이전 맥락 파악
+2. docs/task.md 읽기     → 현재 작업 범위 확인
+3. docs/checklist.md 읽기 → 완료 기준 확인
+```
+
+### 작업 완료 시 (필수)
+
+```
+1. docs/checklist.md 최종 검증 항목 체크
+2. docs/task.md 완료 항목 표시
+3. docs/history.md 업데이트 (완료 내용 + 다음 세션 맥락)
+4. docs/plan.md 해당 Phase 항목 체크
+```
+
+### 문서 업데이트 시점
+
+| 문서 | 업데이트 시점 |
+|---|---|
+| `plan.md` | Phase 완료 시, 새 Phase 시작 시, 큰 방향 변경 시 |
+| `task.md` | 새 Task 시작 시, Task 완료 시 |
+| `history.md` | 세션 종료 전, 컨텍스트 컴팩션 전, Task 완료 시 |
+| `checklist.md` | Task 시작 시(기준 작성), 진행 중(체크), 완료 시(최종 검증) |
+
+### 이 레포의 특성 (중요)
+
+- `backend/`와 `frontend/`는 **실행 가능한 앱이 아니라 Claude가 참고하는 베이스 코드**다.
+- Skills, Agents, Hooks는 새 프로젝트에 복사하여 사용하는 **자산 라이브러리**다.
+- 새 기술스택 베이스 코드는 `base/[stack]/` 디렉토리에 추가한다.
+- 전체 운영 계획은 `base_code_plan.md`를 참고한다.
+
+### base/[stack]/ 작업 시 문서 규칙
+
+`base/[stack]/` 베이스 코드를 작업할 때는 해당 스택 디렉토리 안에 독립적인 4문서를 작성한다.
+
+```
+base/[stack]/
+├── docs/
+│   ├── plan.md       ← 해당 스택 베이스 코드 구성 계획
+│   ├── task.md       ← 세부 작업 항목 및 진행 상태
+│   ├── history.md    ← 작업 맥락 및 주요 결정 사항
+│   └── checklist.md  ← 완료 기준 체크리스트
+```
+
+- 루트 `docs/`는 **하네스 전체 관리용** — 베이스 코드 작업 중 수정하지 않는다.
+- `base/[stack]/docs/`는 **해당 스택 작업 전용** — 세션별 독립 작업 시 충돌 없이 병렬 진행 가능.
+- 작업 시작 시 `base/[stack]/docs/history.md` → `task.md` → `checklist.md` 순서로 읽는다.
+
+### 병렬 세션 작업 규칙 (공유 파일 충돌 방지)
+
+Phase 1-B에서 여러 스택을 병렬 세션으로 작업할 때 반드시 준수한다.
+
+**격리 원칙:**
+- 각 세션은 담당 `base/[stack]/` 디렉토리만 수정한다.
+- 루트 `docs/` (plan.md, task.md, history.md, checklist.md)는 **수정 금지**.
+- 루트 `CLAUDE.md`, `CLAUDE_INTEGRATION_GUIDE.md`, `base_code_plan.md`는 **수정 금지**.
+- 루트 문서 일괄 업데이트는 모든 병렬 세션 완료 후 대표 세션 하나가 진행한다.
+
+**각 세션의 책임 범위:**
+```
+담당 세션  →  base/[stack]/
+                ├── docs/plan.md       ← 직접 작성
+                ├── docs/task.md       ← 직접 작성
+                ├── docs/history.md    ← 직접 작성
+                ├── docs/checklist.md  ← 직접 작성
+                └── ... (스택 소스 코드)
+```
+
+**충돌이 발생하는 패턴 (금지):**
+- 다른 세션의 `base/[otherstack]/` 수정
+- 루트 `docs/` 파일 편집
+- `CLAUDE.md`, `CLAUDE_INTEGRATION_GUIDE.md` 편집
+
+---
+
+### Skills 병렬 세션 작업 규칙 (Phase 2-B / 2-C)
+
+Phase 2에서 여러 스킬을 병렬 세션으로 작업할 때 반드시 준수한다.
+
+**격리 원칙:**
+- 각 세션은 담당 `.claude/skills/[skill-name]/` 디렉토리만 생성·수정한다.
+- `skill-rules.json`은 **수정 금지** — 모든 병렬 세션 완료 후 Phase 2-D 일괄 세션에서만 수정.
+- `.claude/skills/README.md`는 **수정 금지** — Phase 2-D 일괄 세션 전용.
+- 루트 `docs/` (plan.md, task.md, history.md, checklist.md)는 **수정 금지**.
+- `CLAUDE.md`, `base_code_plan.md`는 **수정 금지**.
+- 품질 점검(Phase 2-C) 중 `skill-rules.json` 수정이 필요한 이슈 발견 시 → 스킬 디렉토리 내 `QUALITY_NOTES.md`에 메모만 남기고 Phase 2-D에서 일괄 반영.
+
+**각 세션의 책임 범위:**
+```
+담당 세션  →  .claude/skills/[skill-name]/
+                ├── SKILL.md          ← 직접 작성/수정 (500줄 이하)
+                └── resources/        ← 직접 작성 (필요 시)
+                    └── [topic].md
+```
+
+**Phase 2-D 일괄 세션 전용 파일 (병렬 세션 수정 금지):**
+```
+.claude/skills/skill-rules.json   ← 신규 스킬 트리거 규칙 추가
+.claude/skills/README.md          ← 전체 스킬 목록 갱신
+docs/plan.md / task.md / history.md / checklist.md
+base_code_plan.md
+CLAUDE.md
+```
+
+**충돌이 발생하는 패턴 (금지):**
+- `skill-rules.json`에 직접 스킬 항목 추가
+- 다른 세션의 `.claude/skills/[other-skill]/` 수정
+- 루트 `docs/` 파일 편집
+
+---
+
+### Agents 병렬 세션 작업 규칙 (Phase 3-A)
+
+Phase 3에서 여러 에이전트를 병렬 세션으로 작업할 때 반드시 준수한다.
+
+**격리 원칙:**
+- 각 세션은 담당 `.claude/agents/[agent-name].md` 파일만 생성·수정한다.
+- `.claude/agents/README.md`는 **수정 금지** — 모든 병렬 세션 완료 후 Phase 3-B 일괄 세션에서만 수정.
+- 루트 `docs/` (plan.md, task.md, history.md, checklist.md)는 **수정 금지**.
+- `CLAUDE.md`, `base_code_plan.md`는 **수정 금지**.
+
+**각 세션의 책임 범위:**
+```
+담당 세션  →  .claude/agents/[agent-name].md  ← 직접 작성/수정
+```
+
+**Phase 3-B 일괄 세션 전용 파일 (병렬 세션 수정 금지):**
+```
+.claude/agents/README.md          ← 전체 에이전트 목록 갱신
+docs/plan.md / task.md / history.md / checklist.md
+base_code_plan.md
+CLAUDE.md
+```
+
+**충돌이 발생하는 패턴 (금지):**
+- 다른 세션의 `.claude/agents/[other-agent].md` 수정
+- `.claude/agents/README.md` 편집
+- 루트 `docs/` 파일 편집
+
+---
+
+### 스킬 완성 기준 (Definition of Done — Phase 2-B)
+
+`.claude/skills/[skill-name]/`에 생성된 스킬이 완성으로 인정되려면 아래 기준을 모두 충족해야 한다.
+
+**필수 항목:**
+- [ ] `SKILL.md` 존재 및 **500줄 이하**
+- [ ] YAML frontmatter 포함 (`name`, `description`, `triggers` 최소 3개 필드)
+- [ ] 핵심 패턴 3개 이상 + 각 패턴에 코드 예시
+- [ ] 트리거 키워드 5개 이상 명시
+- [ ] 안티패턴 섹션 포함
+- [ ] `skill-rules.json` 등록은 Phase 2-D에서 일괄 처리 (개별 세션에서 미처리)
+
+**선택 항목:**
+- `resources/` 디렉토리 — SKILL.md 500줄 초과 시 상세 내용 분리
+
+---
+
+### 에이전트 완성 기준 (Definition of Done — Phase 3-A)
+
+`.claude/agents/[agent-name].md`에 생성된 에이전트가 완성으로 인정되려면 아래 기준을 모두 충족해야 한다.
+
+**필수 항목:**
+- [ ] 역할 및 목적 명시 (1-2문장)
+- [ ] 실행 단계 순서 명시 (번호 목록)
+- [ ] 사용 가능 도구 목록 (Read, Write, Edit, Bash 등)
+- [ ] 출력 형식 정의 (결과물 예시 포함)
+- [ ] 실행 예시 1개 이상
+
+---
+
+### 베이스 코드 완성 기준 (Definition of Done)
+
+`base/[stack]/`에 생성된 베이스 코드가 완성으로 인정되려면 아래 기준을 모두 충족해야 한다.
+
+**공통 필수 항목 (전체 스택):**
+- [ ] `base/[stack]/docs/plan.md` 존재 및 내용 채워져 있음
+- [ ] `base/[stack]/docs/task.md` 존재 및 내용 채워져 있음
+- [ ] `base/[stack]/docs/history.md` 존재 및 내용 채워져 있음
+- [ ] `base/[stack]/docs/checklist.md` 존재 및 내용 채워져 있음
+- [ ] `README.md` — 프로젝트 구조, 실행 방법, 커스터마이징 포인트 포함
+
+**웹 백엔드 스택 (fastapi / express / django / nestjs / spring-boot):**
+- [ ] JWT 인증 구현 (access token + refresh token)
+- [ ] 기본 CRUD 예시 1개 이상 (User 엔티티 권장)
+- [ ] `.env.example` — 전체 환경변수 목록 포함
+- [ ] `Dockerfile` + `docker-compose.yaml` 포함
+- [ ] 테스트 템플릿 1개 이상 (단위 or 통합 테스트)
+
+**모바일 스택 (react-native):**
+- [ ] JWT 인증 구현 (Secure Storage 연동)
+- [ ] 기본 화면 예시 1개 이상
+- [ ] `.env.example` — 전체 환경변수 목록 포함
+- [ ] 테스트 템플릿 1개 이상
+
+**임베디드 스택 (c-embedded / cpp-embedded):**
+- [ ] HAL 추상화 레이어 구현 (gpio, uart 등)
+- [ ] `CMakeLists.txt` 또는 `Makefile` 포함 (빌드 가능 구조)
+- [ ] 테스트 템플릿 1개 이상 (Unity or Google Test)
+
+**검증 방법:**
+- 웹/모바일: `README.md`의 실행 방법을 따라 서버/앱이 기동되어야 함
+- 임베디드: `cmake .. && make` 또는 `make` 명령으로 빌드 오류 없이 컴파일되어야 함
