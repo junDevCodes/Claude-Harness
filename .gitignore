@@ -3,6 +3,14 @@
 # Claude session cache (local session flags — not committed)
 .claude/.session-cache/*.loaded
 
+# Temporary downloaded repos for analysis
+agency-agents-main/
+agency-agents/
+
+# Probe / artifact files
+*.taskops-quality-probe.txt
+nul
+
 *.tar.*
 *.tar
 *.pt

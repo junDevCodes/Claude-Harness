@@ -1,78 +1,126 @@
 # Advanced Harness
 
-Claude Code를 위한 고급 스킬/커맨드 모음 모노레포. FastAPI 백엔드 + Next.js 15 프론트엔드 프로젝트에 Claude Code 자동화 스킬, 프레임워크 가이드라인을 통합하여 개발 생산성을 극대화합니다.
+Claude Code 기반 개발 프로젝트를 위한 **공통 자산 라이브러리**.
+Skills, Agents, Hooks, Commands, Base Code를 새 프로젝트에 복사하여 즉시 고생산성 AI 지원 환경을 구성할 수 있습니다.
 
-## 기술 스택
+> **사용 가이드:** `HARNESS_USAGE_GUIDE.md` | **커맨드 레퍼런스:** `HARNESS_COMMANDS_REFERENCE.md`
 
-| 영역 | 기술 |
-|------|------|
-| **Backend** | Python 3.12, FastAPI, SQLModel, PostgreSQL, asyncpg |
-| **Frontend** | Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS 4, MUI |
-| **AI Agent** | Pydantic AI, SSE streaming |
+---
 
-## Skills (15개)
+## 자산 현황
 
-| # | 스킬 | 설명 |
-|---|------|------|
-| 1 | `brand-guidelines` | Anthropic 공식 브랜드 컬러와 타이포그래피(Poppins/Lora) 적용 |
-| 2 | `docx` | Word 문서(.docx) 생성/편집/분석 - docx-js 생성, XML 직접 편집 |
-| 3 | `error-tracking` | Sentry v8 에러 트래킹 및 성능 모니터링 통합 패턴 가이드 |
-| 4 | `fastapi-backend-guidelines` | FastAPI 백엔드 DDD 개발 가이드 - SQLModel ORM, 레포지토리 패턴, async/await |
-| 5 | `frontend-design` | 독창적이고 프로덕션급 프론트엔드 UI 생성 디자인 가이드 |
-| 6 | `mermaid` | Mermaid 다이어그램 생성 - 플로우차트, ER, 간트 등 23종 지원 |
-| 7 | `nextjs-frontend-guidelines` | Next.js 15 프론트엔드 가이드 - App Router, shadcn/ui, Tailwind CSS 4, 한국어 로컬라이제이션 |
-| 8 | `pdf` | PDF 읽기/병합/분할/회전/워터마크/생성/OCR 등 전방위 처리 |
-| 9 | `ppt-brand-guidelines` | VRL 프레젠테이션 브랜드 가이드라인 (라임그린 + 다크네이비) |
-| 10 | `pptx` | PowerPoint 생성/편집/분석 - HTML→PPTX 변환, OOXML 편집 |
-| 11 | `pytest-backend-testing` | FastAPI 백엔드 pytest 테스팅 가이드 - 유닛/통합/비동기/목킹 |
-| 12 | `skill-developer` | Claude Code 스킬 생성/관리 가이드 - 트리거, 훅, 500줄 룰 |
-| 13 | `vercel-react-best-practices` | Vercel 엔지니어링 기준 React/Next.js 성능 최적화 가이드 |
-| 14 | `web-design-guidelines` | Vercel Web Interface Guidelines 기반 UI 코드 접근성/UX 리뷰 |
-| 15 | `yebi-startup-writer` | 예비창업패키지 사업계획서 PSST 프레임워크 기반 docx 직접 작성 |
+| 자산 유형 | 수량 | 비고 |
+|---|---|---|
+| **Skills** | 24개 | skill-rules.json v1.3 전원 등록 |
+| **Agents** | 16개 | Phase 3 완료 |
+| **Slash Commands** | 9개 | Phase 5-B 완료 |
+| **Hooks** | 6종 | 4문서 자동화 + CI/CD 연동 |
+| **Base Stacks** | 9개 | FastAPI/Next.js/Express/Django/NestJS/Spring Boot/React Native/C/C++ |
 
-## Commands (3개)
-
-| 커맨드 | 설명 |
-|--------|------|
-| `/dev-docs-update` | 컨텍스트 컴팩션 전 개발 문서(active task, 세션 상태) 업데이트 |
-| `/dev-docs` | 전략적 개발 계획 생성 - `dev/active/`에 plan/context/tasks 구조화 |
-| `/route-research-for-testing` | 편집된 라우트 자동 감지 후 auth-route-tester로 스모크 테스트 |
-
-## Agents (12개)
-
-자율적으로 복잡한 서브태스크를 수행하는 전문 에이전트입니다.
-
-| # | 에이전트 | 설명 |
-|---|---------|------|
-| 1 | `auth-route-debugger` | 인증 관련 이슈(401/403 에러, 쿠키, JWT, Keycloak) 디버깅 전문 |
-| 2 | `auth-route-tester` | 인증된 API 라우트 테스트 - DB 변경 검증 및 코드 리뷰 |
-| 3 | `auto-error-resolver` | TypeScript 컴파일 에러 자동 감지 및 수정 |
-| 4 | `code-architecture-reviewer` | 코드 품질, 아키텍처 일관성, 시스템 통합 리뷰 |
-| 5 | `code-refactor-master` | 파일 재구성, 의존성 추적, 컴포넌트 추출 등 종합 리팩토링 실행 |
-| 6 | `documentation-architect` | 개발 문서, API 문서, 데이터 플로우 다이어그램 생성 |
-| 7 | `frontend-error-fixer` | 빌드타임/런타임 프론트엔드 에러 진단 및 수정 (browser-tools MCP 활용) |
-| 8 | `plan-reviewer` | 구현 전 개발 계획 리뷰 - 리스크 평가, 갭 분석 |
-| 9 | `planner` | `dev/active/`에 구조화된 개발 계획(plan/context/tasks) 생성 |
-| 10 | `refactor-planner` | 코드 구조 분석 후 단계별 리팩토링 전략 수립 |
-| 11 | `threads-aggro-writer` | 개발자/창업 주제 바이럴 스레드(Threads) 글 작성 (한국어) |
-| 12 | `web-research-specialist` | GitHub Issues, Reddit, SO 등에서 기술 이슈 리서치 |
+---
 
 ## 빠른 시작
 
-### Backend
+### 신규 프로젝트
 
 ```bash
-cd backend
-uv venv && source .venv/bin/activate
-uv pip install -e .[dev]
-./scripts/entrypoint.sh
+bash /path/to/advanced-harness-window/scripts/harness-init.sh
 ```
 
-### Frontend
+### 기존 프로젝트에 적용
 
-```bash
-cd frontend
-pnpm install
-pnpm dev  # http://localhost:3000
+Claude Code 세션에서:
 ```
-# advanced-harness-window
+/harness-apply
+```
+
+---
+
+## 구조
+
+```
+advanced-harness-window/
+├── .claude/
+│   ├── skills/        ← 24개 스킬 (스택별 개발 가이드라인)
+│   ├── agents/        ← 16개 에이전트 (자동화 서브태스크)
+│   ├── commands/      ← 9개 슬래시 커맨드
+│   ├── hooks/         ← 자동화 훅 6종
+│   └── settings.json  ← 훅 등록 설정
+├── base/              ← 9개 스택 베이스 코드
+│   ├── fastapi/       ← Python FastAPI + SQLModel + JWT + S3
+│   ├── nextjs/        ← Next.js 15 + App Router + JWT + shadcn/ui
+│   ├── express/       ← Express.js + TypeScript + Prisma + JWT
+│   ├── django/        ← Django 5 + DRF + SimpleJWT + PostgreSQL
+│   ├── nestjs/        ← NestJS + Prisma + JWT Guards
+│   ├── spring-boot/   ← Spring Boot 3 + Java 21 + Security + JPA
+│   ├── react-native/  ← Expo SDK 52 + Zustand + SecureStore
+│   ├── c-embedded/    ← C99 + CMake + HAL + FreeRTOS
+│   └── cpp-embedded/  ← C++17 + CMake + HAL 클래스 + Google Test
+├── docs/              ← 하네스 4문서 체계 (plan/task/history/checklist)
+├── scripts/
+│   └── harness-init.sh           ← 신규 프로젝트 초기화 스크립트
+├── HARNESS_USAGE_GUIDE.md        ← 신규/기존 프로젝트 적용 가이드
+├── HARNESS_COMMANDS_REFERENCE.md ← 커맨드 + 훅 전체 레퍼런스
+├── CHANGELOG.md                  ← 자산 버전 이력 (현재 v1.5.0)
+└── base_code_plan.md             ← 전체 자산 운영 계획
+```
+
+---
+
+## Skills (24개)
+
+| 카테고리 | 스킬 |
+|---|---|
+| 웹 백엔드 | `fastapi-backend-guidelines`, `express-backend-guidelines`, `django-backend-guidelines`, `nestjs-backend-guidelines`, `spring-boot-guidelines` |
+| 프론트엔드 | `nextjs-frontend-guidelines`, `vercel-react-best-practices`, `frontend-design`, `web-design-guidelines` |
+| 모바일 | `react-native-guidelines` |
+| 임베디드 | `embedded-c-guidelines`, `embedded-cpp-guidelines` |
+| 인프라 | `docker-guidelines`, `aws-guidelines`, `database-guidelines` |
+| 테스팅 | `pytest-backend-testing` |
+| 문서/도구 | `pdf`, `docx`, `pptx`, `mermaid`, `brand-guidelines`, `ppt-brand-guidelines`, `error-tracking`, `skill-developer` |
+
+---
+
+## Agents (16개)
+
+| 에이전트 | 역할 |
+|---|---|
+| `db-migration-agent` | Alembic/Prisma/Django 마이그레이션 자동화 |
+| `api-spec-generator` | OpenAPI 3.0 YAML 스펙 자동 생성 |
+| `test-coverage-agent` | 테스트 커버리지 분석 및 미커버 코드 테스트 작성 |
+| `performance-auditor` | Core Web Vitals + 백엔드 API 성능 점검 |
+| `security-auditor` | OWASP Top 10 기준 인증/인가 취약점 점검 |
+| `code-architecture-reviewer` | 코드 품질, 아키텍처 일관성 리뷰 |
+| `auto-error-resolver` | TypeScript 컴파일 에러 자동 수정 |
+| `planner` | 구조화된 개발 계획 생성 |
+| `plan-reviewer` | 구현 전 개발 계획 리뷰 |
+| `refactor-planner` | 단계별 리팩토링 전략 수립 |
+| `code-refactor-master` | 종합 리팩토링 실행 |
+| `documentation-architect` | 개발 문서, API 문서 생성 |
+| `auth-route-debugger` | 인증 관련 이슈(401/403, JWT) 디버깅 |
+| `auth-route-tester` | 인증된 API 라우트 테스트 |
+| `frontend-error-fixer` | 빌드타임/런타임 프론트엔드 에러 수정 |
+| `web-research-specialist` | 기술 이슈 리서치 |
+
+---
+
+## Slash Commands (9개)
+
+| 커맨드 | 용도 |
+|---|---|
+| `/harness-init` | 신규 프로젝트 초기화 (Claude 세션 내) |
+| `/harness-apply` | 신규/기존 프로젝트 자동 판별 → 하네스 적용 |
+| `/harness-docs-update` | 4문서 체계 업데이트 |
+| `/harness-plan-sync` | plan.md → 다음 Phase task.md 자동 생성 |
+| `/harness-changelog` | 변경 자산 분석 → CHANGELOG.md 항목 생성 |
+| `/harness-backport` | 실 프로젝트 패턴 → 하네스 역전파 |
+| `/dev-docs` | 전략적 구현 계획 + 작업 분해 생성 |
+| `/dev-docs-update` | 컨텍스트 컴팩션 전 docs/ 업데이트 |
+| `/route-research-for-testing` | 편집된 라우트 감지 → 스모크 테스트 |
+
+---
+
+## 현재 적용 중인 프로젝트
+
+`backend/`, `frontend/`는 하네스가 적용된 실제 서비스 코드입니다 (참고용).
+새 프로젝트 시작 시에는 `base/[stack]/`을 사용하세요.
