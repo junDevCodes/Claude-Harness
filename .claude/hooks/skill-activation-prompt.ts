@@ -37,7 +37,7 @@ interface MatchedSkill {
     config: SkillRule;
 }
 
-async function main() {
+function main() {
     try {
         // Read input from stdin
         const input = readFileSync(0, 'utf-8');
@@ -125,13 +125,10 @@ async function main() {
         }
 
         process.exit(0);
-    } catch (err) {
-        console.error('Error in skill-activation-prompt hook:', err);
-        process.exit(1);
+    } catch (_err) {
+        // UserPromptSubmit: always exit 0 to avoid blocking the prompt
+        process.exit(0);
     }
 }
 
-main().catch(err => {
-    console.error('Uncaught error:', err);
-    process.exit(1);
-});
+main();

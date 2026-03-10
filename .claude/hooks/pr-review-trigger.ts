@@ -8,7 +8,7 @@ interface HookInput {
     session_id: string;
 }
 
-async function main() {
+function main() {
     try {
         const input = readFileSync(0, 'utf-8');
         const data: HookInput = JSON.parse(input);
@@ -53,6 +53,4 @@ async function main() {
     }
 }
 
-main().catch(() => {
-    process.exit(0);
-});
+main();
