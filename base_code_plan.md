@@ -1,6 +1,6 @@
 # Advanced Harness — Base Code Plan
 
-**현재 버전: v1.5.0** (2026-03-09)
+**현재 버전: v1.6.1** (2026-03-11)
 
 ## 비전
 
@@ -15,8 +15,8 @@
 advanced-harness-window/
 ├── .claude/
 │   ├── skills/          ← Claude 지식 모듈 라이브러리 (24개)
-│   ├── agents/          ← 전문 서브에이전트 라이브러리 (16개)
-│   ├── commands/        ← 슬래시 커맨드 라이브러리 (9개)
+│   ├── agents/          ← 전문 서브에이전트 라이브러리 (29개)
+│   ├── commands/        ← 슬래시 커맨드 라이브러리 (11개)
 │   └── hooks/           ← 자동화 훅 라이브러리
 ├── base/                ← 기술스택별 베이스 코드 (9개 스택)
 │   ├── fastapi/         ← FastAPI + SQLModel + JWT + S3 + Docker
@@ -65,28 +65,41 @@ advanced-harness-window/
 | **브랜드** | `ppt-brand-guidelines` | VRL PPT 브랜드 |
 | **메타** | `skill-developer` | 스킬 생성/관리 |
 
-### Agents (16개)
+### Agents (29개)
 
 | 카테고리 | 에이전트 | 역할 |
 |---|---|---|
+| **오케스트레이션** | `pipeline-orchestrator` | 멀티 에이전트 파이프라인 조율 마스터 오케스트레이터 *(Phase 6-A)* |
 | **계획** | `planner` | 구현 계획 수립 |
 | **계획** | `plan-reviewer` | 계획 검토 및 피드백 |
 | **계획** | `refactor-planner` | 리팩토링 전략 수립 |
 | **코드 품질** | `code-architecture-reviewer` | 아키텍처 리뷰 |
 | **코드 품질** | `code-refactor-master` | 코드 개선 실행 |
+| **품질 검증** | `reality-checker` | 품질 게이트 — 기본값 NEEDS WORK, 증거 기반 PASS 판정 *(Phase 6-A)* |
+| **품질 검증** | `evidence-collector` | 테스트 증거 수집·정리·문서화 *(Phase 6-A)* |
+| **품질 검증** | `accessibility-auditor` | WCAG 2.2 / ARIA 접근성 점검, Critical/High/Medium/Low 분류 *(Phase 6-A)* |
+| **보안** | `security-auditor` | OWASP Top 10 인증/인가 취약점 점검 |
+| **보안** | `security-engineer` | 보안 취약점 패치 구현, 인증·인가 보안 기능 신규 개발 *(Phase 6-B)* |
+| **성능** | `performance-auditor` | Core Web Vitals + BE API 응답시간 점검, P1/P2/P3 권고 |
+| **성능** | `performance-benchmarker` | API/DB/FE 기준값 측정, 부하 테스트, 회귀 감지 *(Phase 6-B)* |
+| **테스트** | `test-coverage-agent` | 커버리지 측정 및 미커버 테스트 자동 작성 |
+| **테스트** | `api-tester` | 실행 중인 서버 대상 HTTP API E2E 테스트 (외부 블랙박스) *(Phase 6-B)* |
+| **CI/CD & DevOps** | `devops-automator` | GitHub Actions 워크플로우, Dockerfile, ECR/ECS 배포 파이프라인 생성 *(Phase 6-A)* |
+| **프로토타이핑** | `rapid-prototyper` | PoC/MVP 빠른 구현 — "일단 돌아가는 것" 우선 원칙 *(Phase 6-A)* |
+| **데이터베이스** | `db-migration-agent` | DB 마이그레이션 자동화 (Alembic/Prisma/Django/Flyway) |
+| **문서화** | `documentation-architect` | 문서 구조 설계 |
+| **문서화** | `api-spec-generator` | OpenAPI 3.0 스펙 자동 생성 |
+| **문서화** | `technical-writer` | README/API 가이드/ADR/CONTRIBUTING 기술 문서 자동 생성 *(Phase 6-A)* |
+| **UI/UX 설계** | `ui-designer` | 디자인 토큰 + CVA 컴포넌트 + shadcn/ui 기반 UI 구현 *(Phase 6-B)* |
+| **UI/UX 설계** | `ux-researcher` | 사용자 리서치, 페르소나 정의, UX 개선 권고, ui-designer 인계 *(Phase 6-B)* |
+| **제품 관리** | `product-manager` | PRD 작성, RICE/MoSCoW 우선순위, planner 인계 *(Phase 6-B)* |
 | **자동화** | `auto-error-resolver` | TypeScript 컴파일 에러 자동 수정 |
 | **자동화** | `frontend-error-fixer` | 프론트엔드 에러 자동 수정 |
 | **인증** | `auth-route-tester` | 인증 라우트 테스트 |
 | **인증** | `auth-route-debugger` | 인증 라우트 디버깅 |
-| **문서화** | `documentation-architect` | 문서 구조 설계 |
-| **문서화** | `api-spec-generator` | OpenAPI 3.0 스펙 자동 생성 |
 | **리서치** | `web-research-specialist` | 웹 리서치 |
-| **데이터베이스** | `db-migration-agent` | DB 마이그레이션 자동화 (Alembic/Prisma/Django/Flyway) |
-| **테스트** | `test-coverage-agent` | 커버리지 측정 및 미커버 테스트 자동 작성 |
-| **성능** | `performance-auditor` | Core Web Vitals + BE API 응답시간 점검 |
-| **보안** | `security-auditor` | OWASP Top 10 인증/인가 취약점 점검 |
 
-### Slash Commands (9개)
+### Slash Commands (11개)
 
 | 커맨드 | 역할 |
 |---|---|
@@ -99,13 +112,15 @@ advanced-harness-window/
 | `/harness-init` | 새 프로젝트에 하네스 자산 초기화 (스택 선택 → .claude/ + base/ + docs/ 복사) |
 | `/harness-changelog` | 이번 세션 변경 자산 분석 → CHANGELOG.md 항목 자동 생성 + 버전 결정 |
 | `/harness-backport` | 실 프로젝트 패턴 → 하네스 base/ + Skill 역전파 워크플로우 |
+| `/quality-gate` | checklist.md DoD 항목 증거 수집 → PASS / NEEDS WORK 자동 판정 *(Phase 6-C)* |
+| `/dev-qa-loop` | 구현 → quality-gate → NEEDS WORK 수정 루프 (최대 3회) *(Phase 6-C)* |
 
 ### 사용자 가이드 문서
 
 | 문서 | 역할 |
 |---|---|
 | `HARNESS_USAGE_GUIDE.md` | 신규/기존 프로젝트 하네스 적용 통합 가이드 (사용자용) |
-| `HARNESS_COMMANDS_REFERENCE.md` | 전체 커맨드·스크립트·훅 상세 레퍼런스 (9개 커맨드 + 훅 6종) |
+| `HARNESS_COMMANDS_REFERENCE.md` | 전체 커맨드·스크립트·훅 상세 레퍼런스 (11개 커맨드 + 훅 6종) |
 | `CLAUDE_INTEGRATION_GUIDE.md` | Claude Code 하네스 통합 자동화 지침 (Claude용) |
 
 ### 베이스 코드 (9개 스택 전체 완성)
@@ -212,15 +227,9 @@ docs/checklist.md ← 현재 태스크 점검 체크리스트
 
 24개 스킬 전체 완성. skill-rules.json v1.2로 전체 등록 완료.
 
-### Phase 3 — Agents 라이브러리 확충
+### Phase 3 — Agents 라이브러리 확충 ✅ 완료 (29개)
 
-| 에이전트 | 목적 |
-|---|---|
-| `db-migration-agent` | Alembic/Prisma 마이그레이션 자동화 |
-| `api-spec-generator` | OpenAPI 스펙 자동 생성 |
-| `test-coverage-agent` | 테스트 커버리지 분석 및 작성 |
-| `performance-auditor` | Core Web Vitals + 백엔드 성능 점검 |
-| `security-auditor` | 인증/인가 취약점 점검 |
+Phase 3(16개) + Phase 6-A TIER 1(7개) + Phase 6-B TIER 2(6개) = 총 29개 완성.
 
 ### Phase 4 — 자동화 강화
 
@@ -255,4 +264,4 @@ docs/checklist.md ← 현재 태스크 점검 체크리스트
 
 ---
 
-*Last updated: 2026-03-09 (Phase 5-B 완료 — Slash Commands 9개, harness-init.sh + /harness-init + CHANGELOG + /harness-changelog + /harness-backport 추가)*
+*Last updated: 2026-03-10 (Phase 6 완료 — Agents 16→29개, Commands 9→11개; Phase 6-A/B TIER 1/2 에이전트 13개 + quality-gate/dev-qa-loop 커맨드 추가)*

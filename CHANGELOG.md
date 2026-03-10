@@ -18,6 +18,67 @@ patch : 기존 자산 수정/오탐 수정/문서 업데이트
 
 ---
 
+## [v1.6.1] — 2026-03-11
+
+### Fixed
+- Phase 8-A: `base_code_plan.md` — 버전 표기 `v1.5.0` → `v1.6.0` 수정 (CHANGELOG 최신 버전과 불일치)
+- Phase 8-A: `tsc-check.sh` — Stop 훅 → PostToolUse(`Edit|MultiEdit|Write`) 훅 이동. `tool_name` 없는 Stop 페이로드로 TSC 체크 전체 무효화되던 근본 결함 수정. 하드코딩 서비스 목록 제거 → `tsconfig.json` 동적 탐지. `eval` 제거 → `npx tsc --noEmit` 직접 호출.
+- Phase 8-A: `trigger-build-resolver.sh` — 전면 재작성. 매 Stop마다 `/tmp/claude-hook-debug.log` 덤프하던 디버그 코드 제거. 하드코딩 서비스 배열 제거. `claude --agent` 잘못된 CLI 제거. `git status --porcelain` 기반 범용 TS/JS 변경 감지로 교체.
+- Phase 8-A: `session-start-docs-loader.ts` — catch 블록 `process.exit(1)` → `process.exit(0)`. UserPromptSubmit 실패 시 Claude 프롬프트 차단 방지.
+- Phase 8-B: `session-start-docs-loader.sh` — `set -e` 제거 + `|| exit 0` 추가. npx/tsx 실패 시 UserPromptSubmit 차단 방지.
+- Phase 8-B: `skill-activation-prompt.sh` — 동일 패턴 적용 (`set -e` 제거 + `|| exit 0`).
+- Phase 8-B: `post-tool-use-tracker.sh` — `set -e` 제거. 보조 명령 실패 시 PostToolUse 훅 비정상 종료 방지.
+- Phase 8-B: `error-handling-reminder.ts` — 버그 4개 수정: ① 경로 `$HOME/.claude/` → `$CLAUDE_PROJECT_DIR/.claude/` ② `split('\t')` → `split(':')` 파싱 포맷 불일치 ③ `file.path` → `file.filePath` 필드명 불일치 ④ `async function main()` → `function main()`.
+- Phase 8-C: 에이전트 10개 YAML frontmatter `tools:` 필드 추가 (`auth-route-debugger`, `auth-route-tester`, `code-architecture-reviewer`, `code-refactor-master`, `documentation-architect`, `frontend-error-fixer`, `plan-reviewer`, `planner`, `refactor-planner`, `web-research-specialist`). CLAUDE.md 에이전트 DoD 필수 항목 충족.
+- Phase 8-C: `planner.md` — `dev/active/` 경로 참조 5곳 → `docs/plan.md` + `docs/task.md` 전면 교체 (하네스 4문서 체계 정렬).
+- Phase 8-C: `auth-route-debugger.md` — 크리덴셜 하드코딩 범용화: `testuser`/`testpassword` → `$TEST_USER`/`$TEST_PASSWORD`, `yourRealm` → `[your-realm]`, `your-app-client` → `[your-client-id]`, PM2 서비스명 범용화.
+- Phase 8-D: `skill-activation-prompt.ts` — `process.exit(1)` 2곳 → `process.exit(0)`. UserPromptSubmit 훅 catch에서 프롬프트 차단 위험 제거.
+- Phase 8-E: `tsc-check.sh` — `jq` 의존성 → `node` 기반 JSON 파싱으로 교체. Windows/MINGW64 환경에서 `jq` 미설치 시 TSC 체크 전혀 실행 안 되던 결함 수정.
+
+### Changed
+- Phase 8-B: `error-handling-reminder.ts` + `.sh` — 4개 버그 수정 완료 후 Stop 훅 신규 등록 (순서: `trigger-build-resolver.sh` → `error-handling-reminder.sh` → `docs-update-reminder.sh`).
+- Phase 8-B: `stop-build-check-enhanced.sh` — 삭제. 4중 결함(구 tsc-cache 의존 + eval + set -e + tsc-check.sh 기능 중복) 확인 후 제거.
+- Phase 8-B: `session-start-docs-loader.ts` — TTL 7일 자동 정리 로직 추가. `.session-cache/*.loaded` 파일 7일 초과 시 자동 삭제.
+- Phase 8-B: `.mjs` 파일 4개 삭제 (`post-tool-use-tracker.mjs`, `skill-activation-prompt.mjs`, `trigger-build-resolver.mjs`, `tsc-check.mjs`). settings.json 미참조 dead code 정리.
+- Phase 8-D: `docs-update-reminder.ts`, `pr-review-trigger.ts` — `async function main()` → `function main()`, `main().catch(...)` → `main()`. await 없는 불필요한 async 제거.
+- Phase 8-D: `.claude/hooks/pnpm-lock.yaml` — 삭제. `package-lock.json`과의 이중 lock 파일 정리.
+- Phase 8-D: `.claude/settings.json` — `enableAllProjectMcpServers: true` → `false`. `enabledMcpjsonServers` 명시 목록(mysql/sequential-thinking/playwright)과의 모순 해소.
+- Phase 8-D: `.github/workflows/pr-code-review.yaml` — `createComment` 단독 → `listComments` + botComment 탐색 + `updateComment`/`createComment` 분기. PR synchronize 시 중복 댓글 누적 방지.
+
+---
+
+## [v1.6.0] — 2026-03-10
+
+### Added
+- Phase 6-A (TIER 1 에이전트 7개):
+  - `.claude/agents/pipeline-orchestrator.md` — 멀티 에이전트 파이프라인 조율 마스터 오케스트레이터 (5단계 DAG)
+  - `.claude/agents/reality-checker.md` — 품질 게이트 (기본값 NEEDS WORK, 증거 기반 PASS 판정, DoD 1:1 연동)
+  - `.claude/agents/accessibility-auditor.md` — WCAG 2.2 / ARIA 접근성 점검, Critical/High/Medium/Low 심각도 분류
+  - `.claude/agents/evidence-collector.md` — 테스트 증거(로그/빌드/API응답/스크린샷) 수집·정리·문서화
+  - `.claude/agents/devops-automator.md` — GitHub Actions 워크플로우, Dockerfile 최적화, ECR/ECS 배포 파이프라인 자동 생성
+  - `.claude/agents/rapid-prototyper.md` — PoC/MVP 빠른 구현 ("일단 돌아가는 것" 우선, code-refactor-master 인계)
+  - `.claude/agents/technical-writer.md` — README/API 가이드/ADR/CONTRIBUTING 기술 문서 자동 생성
+- Phase 6-B (TIER 2 에이전트 6개):
+  - `.claude/agents/security-engineer.md` — security-auditor 진단 기반 보안 코드 구현 및 패치 (진단/구현 역할 분리)
+  - `.claude/agents/performance-benchmarker.md` — API/DB/FE 기준값 측정, Locust 부하 테스트, 회귀 감지
+  - `.claude/agents/api-tester.md` — 실행 중인 서버 대상 HTTP API E2E 테스트 (외부 블랙박스 관점, Newman/Pact)
+  - `.claude/agents/ui-designer.md` — 디자인 토큰 3계층 + CVA 컴포넌트 + Storybook + shadcn/ui 기반 UI 구현
+  - `.claude/agents/ux-researcher.md` — 사용자 리서치, 페르소나 정의, As-Is/To-Be 흐름 분석, ui-designer 인계
+  - `.claude/agents/product-manager.md` — PRD 작성, RICE/MoSCoW 우선순위 결정, OKR 연계, planner 인계
+- Phase 6-C (커맨드 2개):
+  - `.claude/commands/quality-gate.md` — checklist.md DoD 항목 기반 증거 수집(Glob/Grep/Bash) → PASS/NEEDS WORK 자동 판정 (Pessimistic Default)
+  - `.claude/commands/dev-qa-loop.md` — 구현 → quality-gate → NEEDS WORK 수정 루프 (최대 3회, [Loop N/3] 카운터, 에스컬레이션)
+- Phase 6-C: `docs/history.md` — 에이전트 핸드오프 포맷 가이드 섹션 추가 (6개 필드 템플릿 + ux-researcher → ui-designer 예시)
+
+### Changed
+- Phase 6-D: `.claude/agents/README.md` — Available Agents 16→29개, 16개 카테고리로 전면 재편 (오케스트레이션/품질검증/UI/UX설계/제품관리 신규 카테고리 포함)
+- Phase 6-D: `base_code_plan.md` — Agents 섹션 16→29개 갱신, Commands 섹션 9→11개 갱신, 확장 로드맵 Phase 3 완료 처리
+
+### Removed
+- Phase 6-D: `agency-agents-main/` — agency-agents 분석 완료 후 삭제 (흡수한 에이전트 13개 전원 .claude/agents/에 완성)
+
+---
+
 ## [v1.5.0] — 2026-03-09
 
 ### Added
