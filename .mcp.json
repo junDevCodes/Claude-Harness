@@ -2,14 +2,14 @@
   "mcpServers": {
     "playwright": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["@playwright/mcp@latest", "--save-video=1280x720"],
+      "command": "cmd",
+      "args": ["/c", "npx", "@playwright/mcp@latest", "--save-video=1280x720"],
       "env": {}
     },
     "remotion-documentation": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["@remotion/mcp@latest"],
+      "command": "cmd",
+      "args": ["/c", "npx", "@remotion/mcp@latest"],
       "env": {}
     },
     "elevenlabs": {
