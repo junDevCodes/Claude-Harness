@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync, existsSync, statSync } from 'fs';
+import { readFileSync, existsSync, statSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -11,7 +11,7 @@ interface HookInput {
     [key: string]: unknown;
 }
 
-async function main() {
+function main() {
     try {
         const input = readFileSync(0, 'utf-8');
         const data: HookInput = JSON.parse(input);
@@ -41,6 +41,31 @@ async function main() {
             process.exit(0);
         }
 
+        // checklist.md 완료 여부 감지
+        const checklistPath = join(projectDir, 'docs', 'checklist.md');
+        const flagPath = join(sessionCacheDir, 'next-task-pending.flag');
+        if (existsSync(checklistPath)) {
+            const checklistContent = readFileSync(checklistPath, 'utf-8');
+            const unchecked = (checklistContent.match(/- \[ \]/g) || []).length;
+            const checked = (checklistContent.match(/- \[x\]/gi) || []).length;
+            if (unchecked === 0 && checked > 0) {
+                // 완료 플래그 생성 → 다음 세션에서 session-start-docs-loader가 감지
+                writeFileSync(flagPath, new Date().toISOString(), 'utf-8');
+                const doneOutput = [
+                    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+                    '✅ checklist.md 전부 완료 확인',
+                    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+                    '',
+                    '다음 단계:',
+                    '  1) docs/history.md에 완료 내용 기록',
+                    '  2) /harness-plan-sync 실행하여 다음 task.md 준비',
+                    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+                ].join('\n');
+                console.log(doneOutput);
+                process.exit(0);
+            }
+        }
+
         // Not updated → show reminder
         const output = [
             '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
@@ -65,6 +90,4 @@ async function main() {
     }
 }
 
-main().catch(() => {
-    process.exit(0);
-});
+main();

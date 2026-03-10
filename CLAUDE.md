@@ -318,9 +318,14 @@ pnpm dev
 | 문서 | 역할 |
 |---|---|
 | `docs/plan.md` | 전체 완성 계획 및 기획을 큰 단위로 관리하는 **작업 기획서** |
-| `docs/task.md` | plan.md에서 할당된 작업의 **상세 실행 계획서** |
-| `docs/history.md` | 이전까지 진행된 작업 내용 + 다음 태스크 맥락을 기록하는 **맥락 문서** |
+| `docs/task.md` | plan.md에서 할당된 **바로 다음 진행할 기능 단위** 작업 상세 실행 계획서.<br>복수 기능 동시 기재 금지. 범위 초과 시 plan.md 항목 분리 후 재작성. |
+| `docs/history.md` | 전체 작업 이력을 누적 기록하는 **영구 맥락 문서**.<br>현재 task.md 작업이 왜 이루어지는지 맥락 파악용. plan/task 완료 시 요약 흡수. |
 | `docs/checklist.md` | task.md 작업에서 점검할 완료 기준을 정리한 **작업 확인서** |
+
+### task.md 범위 기준
+
+- checklist.md 미완료 항목이 15개를 초과하면 기능 범위 과다로 판단한다
+- 기능이 복수일 경우 plan.md에서 항목을 먼저 분리한 뒤 task.md를 재작성한다
 
 ### 작업 시작 시 (필수)
 
@@ -334,10 +339,22 @@ pnpm dev
 
 ```
 1. docs/checklist.md 최종 검증 항목 체크
-2. docs/task.md 완료 항목 표시
-3. docs/history.md 업데이트 (완료 내용 + 다음 세션 맥락)
+2. docs/history.md 업데이트 (완료 내용 + 다음 세션 맥락)  ← history 먼저
+3. docs/task.md 완료 항목 표시
 4. docs/plan.md 해당 Phase 항목 체크
+⚠️ checklist 전부 완료 시: task.md는 다음 기능으로 교체, checklist.md도 동시 교체
 ```
+
+### 4문서 생명주기
+
+| 문서 | 성격 | 완료 시 처리 |
+|---|---|---|
+| `plan.md` | 스프린트/마일스톤 계획 | 전체 완료([x]) → history.md 요약 기록 → 새 sprint로 교체 |
+| `task.md` | 현재 기능 단위 작업 | checklist 전부 [x] → history.md 요약 기록 → 다음 기능으로 교체 |
+| `checklist.md` | task.md 검증용 | task.md와 동시 교체 |
+| `history.md` | 영구 이력 | 초기화 없음. plan/task 완료 내용 모두 흡수. |
+
+⚠️ task.md 또는 plan.md 교체 전 반드시 history.md에 완료 내용을 기록해야 한다.
 
 ### 문서 업데이트 시점
 
