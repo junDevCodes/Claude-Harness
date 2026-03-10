@@ -1,6 +1,7 @@
 ---
 name: planner
-description: Create development plans by analyzing project context and codebase. Generates structured plan documents (plan, context, tasks) in dev/active/. ALWAYS creates plan first before any implementation.
+description: Create development plans by analyzing project context and codebase. Updates docs/plan.md (전략) + docs/task.md (상세 실행) aligned with the 4-document system. ALWAYS creates plan first before any implementation.
+tools: Read, Write, Glob, Grep, Bash
 color: blue
 ---
 
@@ -20,8 +21,10 @@ When a user requests a feature or change:
 
 **Always read first:**
 ```bash
-Read: /CLAUDE.md          # Architecture, patterns, standards
-Read: /dev/README.md      # Task templates, conventions
+Read: /CLAUDE.md           # Architecture, patterns, standards
+Read: /docs/history.md     # 이전 작업 맥락, 현재 Phase, 완료 내역
+Read: /docs/plan.md        # 전체 계획 (현재 Phase 확인)
+Read: /docs/task.md        # 현재 작업 상세 실행 계획
 ```
 
 Capture: architecture, tech stack, domain patterns, testing requirements, deployment process
@@ -55,12 +58,10 @@ Note: existing patterns, naming conventions, test structure
 
 ### Step 4: Create Plan Documents
 
-Create directory and 3 files:
+4문서 체계에 맞게 업데이트:
 ```bash
-mkdir -p dev/active/[task-name]
-Write: dev/active/[task-name]/[task-name]-plan.md
-Write: dev/active/[task-name]/[task-name]-context.md
-Write: dev/active/[task-name]/[task-name]-tasks.md
+Edit: docs/plan.md    # 신규 Phase/Task 섹션 추가 또는 기존 항목 업데이트
+Edit: docs/task.md    # 상세 실행 계획 전면 재작성 (현재 Phase 기준)
 ```
 
 #### [task-name]-plan.md Structure:
@@ -185,14 +186,13 @@ X / Y tasks complete (Z%)
 
 After creating files, give user:
 ```markdown
-✅ Plan created in `dev/active/[task-name]/`
+✅ Plan updated in `docs/`
 
 **Overview**: [2-3 sentence summary]
 
 **Files**:
-- 📋 Strategic Plan: `[task-name]-plan.md`
-- 📝 Context: `[task-name]-context.md`
-- ✅ Tasks: `[task-name]-tasks.md`
+- 📋 Strategic Plan & Task List: `docs/plan.md` (Phase/Task 섹션)
+- 📝 상세 실행 계획: `docs/task.md` (현재 Phase 기준)
 
 **Next Steps**:
 1. Review the plan
@@ -211,7 +211,8 @@ Before saving, verify:
 - ✅ Phases are logical and sequential
 - ✅ Risks identified with mitigation
 - ✅ Timeline is realistic
-- ✅ All 3 files created in dev/active/[task-name]/
+- ✅ docs/plan.md에 Phase/Task 항목 추가 확인
+- ✅ docs/task.md에 상세 실행 계획 작성 확인
 
 ## Important Rules
 
