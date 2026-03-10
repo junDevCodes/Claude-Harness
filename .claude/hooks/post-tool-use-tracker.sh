@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+# set -e 제거: PostToolUse 훅에서 보조 명령 실패 시 비정상 종료 방지
 
 # Post-tool-use hook that tracks edited files and their repos
 # This runs after Edit, MultiEdit, or Write tools complete successfully

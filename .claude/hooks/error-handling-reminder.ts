@@ -11,9 +11,9 @@ interface HookInput {
 }
 
 interface EditedFile {
-    path: string;
-    tool: string;
     timestamp: string;
+    filePath: string;
+    repo: string;
 }
 
 interface SessionTracking {
@@ -75,17 +75,16 @@ function analyzeFileContent(filePath: string): {
     };
 }
 
-async function main() {
+function main() {
     try {
         // Read input from stdin
         const input = readFileSync(0, 'utf-8');
         const data: HookInput = JSON.parse(input);
 
         const { session_id } = data;
+        // 버그 1 수정: $HOME → $CLAUDE_PROJECT_DIR (post-tool-use-tracker.sh 실제 기록 경로)
         const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
-
-        // Check for edited files tracking
-        const cacheDir = join(process.env.HOME || '/root', '.claude', 'tsc-cache', session_id);
+        const cacheDir = join(projectDir, '.claude', 'tsc-cache', session_id);
         const trackingFile = join(cacheDir, 'edited-files.log');
 
         if (!existsSync(trackingFile)) {
@@ -100,8 +99,9 @@ async function main() {
             .split('\n')
             .filter(line => line.length > 0)
             .map(line => {
-                const [timestamp, tool, path] = line.split('\t');
-                return { timestamp, tool, path };
+                // 버그 2 수정: split('\t') → split(':') (post-tool-use-tracker.sh 포맷: timestamp:filePath:repo)
+                const [timestamp, filePath, repo] = line.split(':');
+                return { timestamp, filePath, repo } as EditedFile;
             });
 
         if (editedFiles.length === 0) {
@@ -117,19 +117,20 @@ async function main() {
         };
 
         const analysisResults: Array<{
-            path: string;
+            filePath: string;
             category: string;
             analysis: ReturnType<typeof analyzeFileContent>;
         }> = [];
 
         for (const file of editedFiles) {
-            if (!shouldCheckErrorHandling(file.path)) continue;
+            // 버그 3 수정: file.path → file.filePath
+            if (!shouldCheckErrorHandling(file.filePath)) continue;
 
-            const category = getFileCategory(file.path);
-            categories[category].push(file.path);
+            const category = getFileCategory(file.filePath);
+            categories[category].push(file.filePath);
 
-            const analysis = analyzeFileContent(file.path);
-            analysisResults.push({ path: file.path, category, analysis });
+            const analysis = analyzeFileContent(file.filePath);
+            analysisResults.push({ filePath: file.filePath, category, analysis });
         }
 
         // Check if any code that needs error handling was written
@@ -213,10 +214,11 @@ async function main() {
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
         process.exit(0);
-    } catch (err) {
+    } catch (_err) {
         // Silently fail - this is just a reminder, not critical
         process.exit(0);
     }
 }
 
-main().catch(() => process.exit(0));
+// 버그 4 수정: async function main() → function main() (await 없는 순수 동기 로직)
+main();
