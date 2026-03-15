@@ -18,6 +18,40 @@ patch : 기존 자산 수정/오탐 수정/문서 업데이트
 
 ---
 
+## [v1.7.0] — 2026-03-15
+
+### Added
+- Phase 12-A: `/harness-plan-sync` — Step 4.5 "병렬 세션 분석" 로직 신규 삽입. Phase 내 `[ ]` 항목들의 수정 범위를 분석하여 독립/순차/일괄 세션 자동 그룹핑.
+- Phase 12-A: `/harness-plan-sync` — task.md 출력 템플릿에 "세션 전략" 섹션 추가. 병렬 세션 테이블(세션 색상 + 담당 항목 + 수정 범위 + 격리 규칙) 자동 생성.
+- Phase 12-A: `/harness-plan-sync` — 단일 세션 판정 기준 추가. 항목 3개 이하 / 동일 디렉토리 / 순차 의존성 시 병렬 생략.
+- Phase 12-A: `planner.md` — Step 4-1 "Parallel Session Analysis" 선택 단계 추가. 격리 경계 그룹핑 + 일괄 세션 마지막 배치 원칙.
+
+### Changed
+- Phase 12-A: 4문서 축약 정리 — `docs/history.md` 1000줄→175줄 압축, `docs/plan.md` 완료 Phase 축약 테이블화.
+
+---
+
+## [v1.6.2] — 2026-03-11
+
+### Fixed
+- Phase 10-A: `post-tool-use-tracker.sh` — `jq` 의존성 → `node` 기반 JSON 파싱으로 교체. Windows/MINGW64 환경에서 `jq` 미설치 시 `tool_name`/`file_path`/`session_id` 모두 빈 값 → 파일 추적 전체 미작동 → `error-handling-reminder` 기능 무력화 결함 수정. `MultiEdit` 도구의 `edits[0].file_path` 배열 구조 분기 추가.
+
+### Changed
+- Phase 10-B: `error-handling-reminder.sh` — `|| exit 0` 추가. tsx 실패 시 Stop 훅 non-zero 반환 방지 (다른 sh 래퍼 패턴과 통일).
+- Phase 10-B: `docs-update-reminder.sh` — 동일 `|| exit 0` 패턴 적용.
+- Phase 10-B: `planner.md` — Step 4의 구식 3-파일 템플릿(`[task-name]-plan.md`, `[task-name]-context.md`, `[task-name]-tasks.md`) 섹션 전체 제거. 4문서 체계(`docs/plan.md`, `docs/task.md`)와 충돌 해소.
+- Phase 10-B: `.claude/settings.json` — `permissions.allow`에서 `"Bash:*"` 제거. `harness-init.sh`로 신규 프로젝트 복사 시 모든 bash 명령 자동 승인되는 보안 리스크 해소.
+- Phase 10-C: `.claude/settings.json` — `enabledMcpjsonServers`에서 `mysql`, `sequential-thinking` 제거 (`.mcp.json` 미정의 서버). `playwright`만 유지하여 목록 일치.
+- Phase 10-C: `.mcp.json` — `.gitignore`에 추가 (빈 API 키 git 추적 → 실키 커밋 위험 방지). `.mcp.json.example` 템플릿 신규 생성.
+- Phase 10-C: `.github/workflows/pr-code-review.yaml` — `tj-actions/changed-files@v44` → SHA 커밋 핀 (`090894a3c32fd56f3e9a9b85c2d1ab17da84d6c6`). 공급망 공격 이력 대응.
+- Phase 10-C: `.github/workflows/pr-code-review.yaml` — 워크플로우 레벨 `permissions: read-all` 추가.
+- Phase 10-C: `session-start-docs-loader.ts` — task.md 섹션 검증 regex `/^##\s*(작업\s*개요|Task|Phase|개요)/m` → `/^##\s+\S/m` 완화. 한국어 Phase명 오탐 해소.
+- Phase 10-C: `error-handling-reminder.ts` — `line.split(':')` → `indexOf`/`lastIndexOf`/`slice` 기반 파싱으로 교체. Windows 절대 경로(`D:/workspace/...`) 포함 시 `filePath` 잘못 분리되던 문제 수정.
+- Phase 10-C: `skill-activation-prompt.ts` — `new RegExp(pattern, 'i')` → 모듈 레벨 `regexCache` Map + `getRegex()` 헬퍼로 교체. `intentPatterns` 매 프롬프트마다 정규식 재컴파일 방지.
+- Phase 10-C: `tsc-check.sh` — while 루프 내 `cd "$repo_path"` 단독 사용 → `$(cd "$repo_path" && ...)` 서브쉘 패턴으로 교체. 루프 내 작업 디렉토리 부작용 격리.
+
+---
+
 ## [v1.6.1] — 2026-03-11
 
 ### Fixed

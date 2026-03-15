@@ -1,6 +1,6 @@
 # Advanced Harness — Base Code Plan
 
-**현재 버전: v1.6.1** (2026-03-11)
+**현재 버전: v1.7.0** (2026-03-15)
 
 ## 비전
 
@@ -264,4 +264,4 @@ Phase 3(16개) + Phase 6-A TIER 1(7개) + Phase 6-B TIER 2(6개) = 총 29개 완
 
 ---
 
-*Last updated: 2026-03-10 (Phase 6 완료 — Agents 16→29개, Commands 9→11개; Phase 6-A/B TIER 1/2 에이전트 13개 + quality-gate/dev-qa-loop 커맨드 추가)*
+*Last updated: 2026-03-15 (v1.7.0 — 병렬 세션 분석 기능 추가, 4문서 축약 정리)*
