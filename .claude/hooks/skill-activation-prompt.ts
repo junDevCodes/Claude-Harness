@@ -37,6 +37,13 @@ interface MatchedSkill {
     config: SkillRule;
 }
 
+// RegExp 모듈 레벨 캐시 — intentPatterns 매 호출 재컴파일 방지
+const regexCache = new Map<string, RegExp>();
+const getRegex = (p: string): RegExp => {
+    if (!regexCache.has(p)) regexCache.set(p, new RegExp(p, 'i'));
+    return regexCache.get(p)!;
+};
+
 function main() {
     try {
         // Read input from stdin
@@ -73,8 +80,7 @@ function main() {
             // Intent pattern matching
             if (triggers.intentPatterns) {
                 const intentMatch = triggers.intentPatterns.some(pattern => {
-                    const regex = new RegExp(pattern, 'i');
-                    return regex.test(prompt);
+                    return getRegex(pattern).test(prompt);
                 });
                 if (intentMatch) {
                     matchedSkills.push({ name: skillName, matchType: 'intent', config });

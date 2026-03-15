@@ -19,7 +19,8 @@ function main() {
 
         const projectDir = process.env.CLAUDE_PROJECT_DIR || join(__dirname, '..', '..');
         const sessionCacheDir = join(projectDir, '.claude', '.session-cache');
-        const loadedFlagPath = join(sessionCacheDir, `${session_id}.loaded`);
+        const safeSessionId = session_id.replace(/[^a-zA-Z0-9_-]/g, '_');
+        const loadedFlagPath = join(sessionCacheDir, `${safeSessionId}.loaded`);
 
         // Not a 4-doc session → skip
         if (!existsSync(loadedFlagPath)) {

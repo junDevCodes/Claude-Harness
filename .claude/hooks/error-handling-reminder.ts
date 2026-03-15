@@ -84,7 +84,8 @@ function main() {
         const { session_id } = data;
         // 버그 1 수정: $HOME → $CLAUDE_PROJECT_DIR (post-tool-use-tracker.sh 실제 기록 경로)
         const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
-        const cacheDir = join(projectDir, '.claude', 'tsc-cache', session_id);
+        const safeSessionId = (session_id || 'default').replace(/[^a-zA-Z0-9_-]/g, '_');
+        const cacheDir = join(projectDir, '.claude', 'tsc-cache', safeSessionId);
         const trackingFile = join(cacheDir, 'edited-files.log');
 
         if (!existsSync(trackingFile)) {
@@ -99,8 +100,12 @@ function main() {
             .split('\n')
             .filter(line => line.length > 0)
             .map(line => {
-                // 버그 2 수정: split('\t') → split(':') (post-tool-use-tracker.sh 포맷: timestamp:filePath:repo)
-                const [timestamp, filePath, repo] = line.split(':');
+                // 버그 2 수정: split(':') → 인덱스 기반 분리 (Windows 절대경로 D:/... 포함 시 안전)
+                const firstColon = line.indexOf(':');
+                const lastColon = line.lastIndexOf(':');
+                const timestamp = line.slice(0, firstColon);
+                const repo = line.slice(lastColon + 1);
+                const filePath = line.slice(firstColon + 1, lastColon);
                 return { timestamp, filePath, repo } as EditedFile;
             });
 

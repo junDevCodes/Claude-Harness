@@ -9,10 +9,16 @@
 tool_info=$(cat)
 
 
-# Extract relevant data
-tool_name=$(echo "$tool_info" | jq -r '.tool_name // empty')
-file_path=$(echo "$tool_info" | jq -r '.tool_input.file_path // empty')
-session_id=$(echo "$tool_info" | jq -r '.session_id // empty')
+# Extract relevant data — jq 미설치 환경 대응, node 기반 JSON 파싱 (tsc-check.sh 패턴 통일)
+tool_name=$(node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{process.stdout.write(JSON.parse(d).tool_name||'')}catch(e){}})" <<< "$tool_info" 2>/dev/null || echo "")
+session_id=$(node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{process.stdout.write(JSON.parse(d).session_id||'')}catch(e){}})" <<< "$tool_info" 2>/dev/null || echo "")
+
+# tool_name별 file_path 추출 분기 (MultiEdit은 edits[] 배열 구조)
+if [ "$tool_name" = "MultiEdit" ]; then
+    file_path=$(node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{const o=JSON.parse(d);const edits=o.tool_input?.edits||[];process.stdout.write(edits[0]?.file_path||'')}catch(e){}})" <<< "$tool_info" 2>/dev/null || echo "")
+else
+    file_path=$(node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{const o=JSON.parse(d);process.stdout.write(o.tool_input?.file_path||'')}catch(e){}})" <<< "$tool_info" 2>/dev/null || echo "")
+fi
 
 
 # Skip if not an edit tool or no file path
@@ -26,7 +32,8 @@ if [[ "$file_path" =~ \.(md|markdown)$ ]]; then
 fi
 
 # Create cache directory in project
-cache_dir="$CLAUDE_PROJECT_DIR/.claude/tsc-cache/${session_id:-default}"
+safe_session_id=$(echo "${session_id:-default}" | tr -cd 'a-zA-Z0-9_-')
+cache_dir="$CLAUDE_PROJECT_DIR/.claude/tsc-cache/$safe_session_id"
 mkdir -p "$cache_dir"
 
 # Function to detect repo from file path
@@ -95,13 +102,13 @@ get_build_command() {
         if grep -q '"build"' "$repo_path/package.json" 2>/dev/null; then
             # Detect package manager (prefer pnpm, then npm, then yarn)
             if [[ -f "$repo_path/pnpm-lock.yaml" ]]; then
-                echo "cd $repo_path && pnpm build"
+                echo "cd \"$repo_path\" && pnpm build"
             elif [[ -f "$repo_path/package-lock.json" ]]; then
-                echo "cd $repo_path && npm run build"
+                echo "cd \"$repo_path\" && npm run build"
             elif [[ -f "$repo_path/yarn.lock" ]]; then
-                echo "cd $repo_path && yarn build"
+                echo "cd \"$repo_path\" && yarn build"
             else
-                echo "cd $repo_path && npm run build"
+                echo "cd \"$repo_path\" && npm run build"
             fi
             return
         fi
@@ -110,7 +117,7 @@ get_build_command() {
     # Special case for database with Prisma
     if [[ "$repo" == "database" ]] || [[ "$repo" =~ prisma ]]; then
         if [[ -f "$repo_path/schema.prisma" ]] || [[ -f "$repo_path/prisma/schema.prisma" ]]; then
-            echo "cd $repo_path && npx prisma generate"
+            echo "cd \"$repo_path\" && npx prisma generate"
             return
         fi
     fi
@@ -129,9 +136,9 @@ get_tsc_command() {
     if [[ -f "$repo_path/tsconfig.json" ]]; then
         # Check for Vite/React-specific tsconfig
         if [[ -f "$repo_path/tsconfig.app.json" ]]; then
-            echo "cd $repo_path && npx tsc --project tsconfig.app.json --noEmit"
+            echo "cd \"$repo_path\" && npx tsc --project tsconfig.app.json --noEmit"
         else
-            echo "cd $repo_path && npx tsc --noEmit"
+            echo "cd \"$repo_path\" && npx tsc --noEmit"
         fi
         return
     fi

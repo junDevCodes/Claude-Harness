@@ -67,15 +67,18 @@ while IFS= read -r repo; do
 
     echo -n "  Checking $repo... " >&2
 
-    cd "$repo_path" 2>/dev/null || { echo "❌ 디렉토리 없음" >&2; continue; }
+    if [ ! -d "$repo_path" ]; then
+        echo "❌ 디렉토리 없음" >&2
+        continue
+    fi
 
-    # tsconfig 타입 탐지 → 직접 명령 실행 (eval 보안 패턴 제거)
-    if [ -f "tsconfig.app.json" ]; then
-        CHECK_OUTPUT=$(npx tsc --project tsconfig.app.json --noEmit 2>&1)
-    elif [ -f "tsconfig.build.json" ]; then
-        CHECK_OUTPUT=$(npx tsc --project tsconfig.build.json --noEmit 2>&1)
+    # tsconfig 타입 탐지 → 서브쉘 격리 (cd 부작용 방지)
+    if [ -f "$repo_path/tsconfig.app.json" ]; then
+        CHECK_OUTPUT=$(cd "$repo_path" 2>/dev/null && npx tsc --project tsconfig.app.json --noEmit 2>&1)
+    elif [ -f "$repo_path/tsconfig.build.json" ]; then
+        CHECK_OUTPUT=$(cd "$repo_path" 2>/dev/null && npx tsc --project tsconfig.build.json --noEmit 2>&1)
     else
-        CHECK_OUTPUT=$(npx tsc --noEmit 2>&1)
+        CHECK_OUTPUT=$(cd "$repo_path" 2>/dev/null && npx tsc --noEmit 2>&1)
     fi
     CHECK_EXIT_CODE=$?
 

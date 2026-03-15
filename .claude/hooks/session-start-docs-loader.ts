@@ -21,7 +21,8 @@ function main() {
 
         const projectDir = process.env.CLAUDE_PROJECT_DIR || join(__dirname, '..', '..');
         const sessionCacheDir = join(projectDir, '.claude', '.session-cache');
-        const loadedFlagPath = join(sessionCacheDir, `${session_id}.loaded`);
+        const safeSessionId = session_id.replace(/[^a-zA-Z0-9_-]/g, '_');
+        const loadedFlagPath = join(sessionCacheDir, `${safeSessionId}.loaded`);
 
         // Already loaded this session → skip silently
         if (existsSync(loadedFlagPath)) {
@@ -74,8 +75,8 @@ function main() {
             if (!/plan\.md/i.test(taskContent)) {
                 warnings.push('⚠️  task.md에 plan.md 출처 참조 없음');
             }
-            if (!/^##\s*(작업\s*개요|Task|Phase|개요)/m.test(taskContent)) {
-                warnings.push('⚠️  task.md 필수 섹션(## 작업개요 또는 ## Phase) 없음');
+            if (!/^##\s+\S/m.test(taskContent)) {
+                warnings.push('⚠️  task.md 필수 섹션(## 헤딩) 없음');
             }
         }
         if (existsSync(checklistPath)) {
