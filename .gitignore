@@ -4,6 +4,9 @@
 .claude/.session-cache/*.loaded
 .claude/settings.local.json
 
+# MCP 서버 설정 — API 키 포함 위험으로 git 추적 제외 (.mcp.json.example 참조)
+.mcp.json
+
 # Frontend test artifacts
 frontend/playwright-report/
 frontend/test-results/
