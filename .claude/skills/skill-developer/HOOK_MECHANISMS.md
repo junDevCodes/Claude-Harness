@@ -88,9 +88,9 @@ Claude calls Edit/Write tool
     ↓
 .claude/settings.json registers hook (matcher: Edit|Write)
     ↓
-skill-verification-guard.sh executes
+skill-activation-prompt.sh executes
     ↓
-npx tsx skill-verification-guard.ts
+npx tsx skill-activation-prompt.ts
     ↓
 Hook reads stdin (JSON with tool_name, tool_input)
     ↓

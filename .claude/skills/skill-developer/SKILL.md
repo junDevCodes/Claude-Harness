@@ -182,11 +182,10 @@ echo '{"session_id":"test","prompt":"your test prompt"}' | \
   npx tsx .claude/hooks/skill-activation-prompt.ts
 ```
 
-**Test PreToolUse:**
+**Test Stop (Error Handling Reminder):**
 ```bash
-cat <<'EOF' | npx tsx .claude/hooks/skill-verification-guard.ts
-{"session_id":"test","tool_name":"Edit","tool_input":{"file_path":"test.ts"}}
-EOF
+echo '{"session_id":"test","transcript_path":"","cwd":".","permission_mode":"default","hook_event_name":"stop"}' | \
+  npx tsx .claude/hooks/error-handling-reminder.ts
 ```
 
 ### Step 4: Refine Patterns
@@ -466,7 +465,7 @@ Test hooks manually:
 echo '{"prompt":"test"}' | npx tsx .claude/hooks/skill-activation-prompt.ts
 
 # PreToolUse
-cat <<'EOF' | npx tsx .claude/hooks/skill-verification-guard.ts
+cat <<'EOF' | npx tsx .claude/hooks/skill-activation-prompt.ts
 {"tool_name":"Edit","tool_input":{"file_path":"test.ts"}}
 EOF
 ```

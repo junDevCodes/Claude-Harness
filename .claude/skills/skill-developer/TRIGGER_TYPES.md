@@ -288,7 +288,7 @@ echo '{"session_id":"test","prompt":"your test prompt"}' | \
 
 **Test file path/content triggers:**
 ```bash
-cat <<'EOF' | npx tsx .claude/hooks/skill-verification-guard.ts
+cat <<'EOF' | npx tsx .claude/hooks/skill-activation-prompt.ts
 {
   "session_id": "test",
   "tool_name": "Edit",

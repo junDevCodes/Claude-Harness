@@ -234,7 +234,7 @@ unset SKIP_DB_VERIFICATION
 Test the hook manually:
 
 ```bash
-cat <<'EOF' | npx tsx .claude/hooks/skill-verification-guard.ts 2>&1
+cat <<'EOF' | npx tsx .claude/hooks/skill-activation-prompt.ts 2>&1
 {
   "session_id": "debug",
   "tool_name": "Edit",
@@ -497,7 +497,7 @@ Content pattern matching reads entire file - slow for large files.
 time echo '{"prompt":"test"}' | npx tsx .claude/hooks/skill-activation-prompt.ts
 
 # PreToolUse
-time cat <<'EOF' | npx tsx .claude/hooks/skill-verification-guard.ts
+time cat <<'EOF' | npx tsx .claude/hooks/skill-activation-prompt.ts
 {"tool_name":"Edit","tool_input":{"file_path":"test.ts"}}
 EOF
 ```
