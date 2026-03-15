@@ -90,7 +90,7 @@ Grep: "[핵심 키워드]"     # 관련 파일 위치 파악
 ```
 오케스트레이터 → planner 위임:
   입력: 탐색 결과 요약, 작업 요구사항
-  출력: dev/active/[task-name]/ 3문서 (plan, context, tasks)
+  출력: docs/plan.md + docs/task.md (4문서 체계)
 
 오케스트레이터 → plan-reviewer 위임:
   입력: planner 결과물 경로
@@ -259,7 +259,7 @@ Grep: "[핵심 키워드]"     # 관련 파일 위치 파악
 
 | 에이전트 | 역할 | 파이프라인 단계 |
 |---|---|---|
-| `planner` | 구현 계획 수립, dev/active/ 3문서 생성 | 단계 2 |
+| `planner` | 구현 계획 수립, docs/ 4문서 체계 갱신 | 단계 2 |
 | `plan-reviewer` | 계획 검토, 리스크 식별 | 단계 2 |
 | `refactor-planner` | 리팩토링 전략 수립 | 단계 2 (리팩토링 파이프라인) |
 | `rapid-prototyper` | PoC/MVP 빠른 구현, poc/[name]/ 저장 | 단계 3 (신기능 PoC) |
@@ -380,7 +380,7 @@ Grep: "[핵심 키워드]"     # 관련 파일 위치 파악
 단계 2 — 계획 (Sequential)
   → planner 위임
     입력: 탐색 결과, "구독 기능" 요구사항
-    출력: dev/active/subscription-feature/ 3문서
+    출력: docs/plan.md + docs/task.md 갱신 (4문서 체계)
 
   → plan-reviewer 위임
     입력: planner 결과물
@@ -474,7 +474,7 @@ Grep: "[핵심 키워드]"     # 관련 파일 위치 파악
 | 실패 지점 | 롤백 방법 | 재시도 조건 |
 |---|---|---|
 | 단계 1 탐색 실패 | 없음 (탐색만, 코드 변경 없음) | 즉시 재시도 |
-| 단계 2 계획 실패 | `rm -rf dev/active/[task-name]/` | 요구사항 명확화 후 |
+| 단계 2 계획 실패 | `git stash` 기반 안전 롤백 | 요구사항 명확화 후 |
 | DB 마이그레이션 실패 | `alembic downgrade -1` / `prisma migrate rollback` | 모델 수정 후 |
 | 빌드 에러 발생 | `git stash` + `auto-error-resolver` 호출 | 에러 수정 후 |
 | 단계 4 NEEDS WORK | 미충족 항목만 재실행 (전체 재시작 아님) | 즉시 (자동 Loop) |

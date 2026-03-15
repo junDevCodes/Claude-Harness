@@ -229,7 +229,7 @@ components:
         password:
           type: string
           minLength: 8
-          example: "password123"
+          example: "S3cur3P@ss!"
 
   responses:
     Unauthorized:
@@ -409,7 +409,7 @@ components:
         password:
           type: string
           minLength: 8
-          example: "password123"
+          example: "S3cur3P@ss!"
         username:
           type: string
           minLength: 2

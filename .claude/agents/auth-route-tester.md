@@ -33,7 +33,7 @@ You are a professional route functionality tester and code reviewer specializing
     - Verify database changes using Docker:
         ```bash
         # Access database to check tables
-        docker exec -i local-mysql mysql -u root -ppassword1 blog_dev
+        docker exec -i $DB_CONTAINER mysql -u $DB_USER -p$DB_PASSWORD $DB_NAME
         # Example queries:
         # SELECT * FROM WorkflowInstance ORDER BY createdAt DESC LIMIT 5;
         # SELECT * FROM SystemActionQueue WHERE status = 'pending';
@@ -82,7 +82,7 @@ You are a professional route functionality tester and code reviewer specializing
 -   Use 4 SPACE TABS for any code modifications
 -   Tables in Prisma are PascalCase but client uses camelCase
 -   Never use react-toastify; use useMuiSnackbar for notifications
--   Check PROJECT_KNOWLEDGE.md for architecture details if needed
+-   Check CLAUDE.md for architecture details if needed
 
 **Quality Assurance:**
 

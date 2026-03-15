@@ -64,123 +64,14 @@ Edit: docs/plan.md    # 신규 Phase/Task 섹션 추가 또는 기존 항목 업
 Edit: docs/task.md    # 상세 실행 계획 전면 재작성 (현재 Phase 기준)
 ```
 
-#### [task-name]-plan.md Structure:
+### Step 4-1: Parallel Session Analysis (Optional)
 
-```markdown
-# [Task Name] - Strategic Plan
-
-## Executive Summary
-[2-3 sentence overview]
-
-## Current State
-[What exists today, limitations, technical debt]
-
-## Proposed Solution
-[Architecture, technology choices, design approach]
-
-## Implementation Phases
-
-### Phase 1: Foundation (X days)
-**Goal**: [What this phase delivers]
-**Tasks**:
-- [ ] Task 1 - File: `path/to/file` - Size: S/M/L/XL
-- [ ] Task 2 - File: `path/to/file` - Size: S/M/L/XL
-
-### Phase 2: Core Logic (X days)
-[Repeat structure]
-
-### Phase 3: Integration (X days)
-[Repeat structure]
-
-## Risk Assessment
-- **High Risk**: [issues] - Mitigation: [strategy]
-- **Medium Risk**: [issues] - Mitigation: [strategy]
-
-## Success Metrics
-- Test coverage: X%
-- Performance: [targets]
-- User impact: [expected improvements]
-
-## Dependencies
-- Code: [what must be built first]
-- External: [APIs, services, infrastructure]
-
-## Timeline
-Total: X days/weeks across Y phases
-```
-
-#### [task-name]-context.md Structure:
-
-```markdown
-# [Task Name] - Context & Decisions
-
-## Status
-- Phase: [current phase]
-- Progress: X / Y tasks complete
-- Last Updated: YYYY-MM-DD
-
-## Key Files
-**Modified**:
-- `path/to/file1` - [purpose]
-- `path/to/file2` - [purpose]
-
-**New**:
-- `path/to/file3` - [purpose]
-
-## Key Decisions
-1. **[Decision]** (YYYY-MM-DD)
-   - Rationale: [why]
-   - Alternatives: [what was considered]
-   - Trade-offs: [pros/cons]
-
-## Database Schema
-[If applicable - tables, columns, indexes]
-
-## API Endpoints
-[If applicable - routes, methods, auth]
-
-## Testing Notes
-[Test data setup, coverage approach]
-
-## Known Issues
-[Blockers, workarounds, future enhancements]
-```
-
-#### [task-name]-tasks.md Structure:
-
-```markdown
-# [Task Name] - Task Checklist
-
-## Status Legend
-- [ ] Not started
-- [🔄] In progress
-- [✅] Complete
-- [❌] Blocked
-- [⏭️] Skipped
-
-## Progress Summary
-X / Y tasks complete (Z%)
-
-## Phase 1: [Name]
-- [ ] Specific task description
-  - File: `path/to/file`
-  - Details: [requirements]
-  - Acceptance: [how to verify]
-  - Size: S/M/L/XL
-  - Dependencies: [other tasks]
-
-## Phase 2: [Name]
-[Repeat structure for each phase]
-
-## Deployment Checklist
-- [ ] Database migrations tested
-- [ ] Environment variables added
-- [ ] Tests passing
-- [ ] Documentation updated
-
-## Notes
-[Blockers, questions, discoveries during implementation]
-```
+Phase 내 항목이 4개 이상이고 수정 범위가 분산될 경우:
+- 항목별 수정 파일 범위를 분석
+- 격리 경계(`base/`, `skills/`, `agents/`, `hooks/`, `src/`)로 그룹핑
+- 공유 파일 수정은 "일괄 세션" 마지막 배치
+- task.md에 "세션 전략" 테이블 포함
+- 항목 3개 이하 또는 동일 디렉토리 → "단일 세션 권장" 간략 출력
 
 ### Step 5: Provide Summary
 
