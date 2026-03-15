@@ -5,32 +5,141 @@
 
 ---
 
-## Quick Start
+## 핵심 개념: 하네스는 어디서 실행하는가?
 
-### 경로 A: 신규 프로젝트 시작
+**Advanced Harness는 독립된 자산 라이브러리 레포입니다.**
+프로젝트 안에 넣는 것이 아니라, 별도 경로에 두고 여러 프로젝트에 재사용합니다.
+
+```
+C:\workspace\
+├── advanced-harness-window/   ← 하네스 레포 (여기서 Claude Code 실행)
+├── my-project-a/              ← 대상 프로젝트 A
+├── my-project-b/              ← 대상 프로젝트 B
+└── ...
+```
+
+### 왜 하네스 레포에서 실행해야 하나?
+
+`/harness-apply`, `/harness-init` 등 슬래시 커맨드는 `.claude/commands/` 안에 정의되어 있습니다.
+Claude Code는 **현재 작업 디렉토리**의 `.claude/commands/`를 읽어 커맨드를 등록하므로,
+하네스 레포 디렉토리에서 Claude Code를 실행해야 모든 커맨드가 사용 가능합니다.
+
+> **흔한 실수:** 하네스 폴더를 내 프로젝트 안에 넣고 프로젝트 루트에서 Claude Code를 실행하면
+> 커맨드가 인식되지 않습니다.
+
+---
+
+## Quick Start — 3단계 워크플로우
+
+### 전체 흐름
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Step 1. 하네스 레포에서 Claude Code 실행             │
+│          cd advanced-harness-window && claude         │
+│                                                       │
+│  Step 2. /harness-apply <대상 프로젝트 경로>           │
+│          → 스택 감지, 모드 판별, 자산 복사/병합         │
+│                                                       │
+│  Step 3. 대상 프로젝트로 이동해서 Claude Code 실행     │
+│          cd my-project && claude                      │
+│          → 스킬, 훅, 에이전트, 4문서 모두 동작          │
+└─────────────────────────────────────────────────────┘
+```
+
+### Step 1: 하네스 레포에서 Claude Code 실행
 
 ```bash
-# 1. 초기화 스크립트 실행 (스택 선택 → .claude/ + base/ + docs/ 자동 복사)
+cd /path/to/advanced-harness-window
+claude
+```
+
+이 디렉토리에서 실행해야 `/harness-apply`, `/harness-init` 등 모든 커맨드가 등록됩니다.
+
+### Step 2: `/harness-apply`로 대상 프로젝트에 적용
+
+Claude Code 세션에서:
+
+```
+/harness-apply /path/to/my-project
+```
+
+이 커맨드가 자동으로:
+1. 대상 프로젝트의 기술 스택 감지 (package.json, pyproject.toml 등)
+2. `.claude/` 존재 여부로 신규/기존 모드 자동 판별
+3. 스킬, 에이전트, 훅, 커맨드를 복사/병합
+4. `pathPattern`을 프로젝트 구조에 맞게 설정
+5. 최종 검증 체크리스트 출력
+
+### Step 3: 대상 프로젝트에서 개발 시작
+
+적용이 완료되면 대상 프로젝트에 `.claude/`가 복사되어 있으므로:
+
+```bash
+cd /path/to/my-project
+claude
+```
+
+이제 모든 하네스 기능(스킬, 훅, 에이전트, 4문서)이 동작합니다.
+
+---
+
+### 경로 A: 신규 프로젝트 시작 (대안)
+
+터미널에서 바로 초기화하려면 쉘 스크립트도 사용 가능합니다:
+
+```bash
+# 쉘 스크립트로 초기화 (Claude Code 없이 단독 실행)
 bash /path/to/advanced-harness-window/scripts/harness-init.sh
 
-# 또는 Claude Code 세션에서 실행
+# 또는 하네스 레포에서 Claude Code 실행 후
 /harness-init
-
-# 2. Claude Code에서 /harness-apply 실행 → 설정 검증
 ```
 
 ### 경로 B: 기존 프로젝트에 적용
 
 ```bash
-# 1. Claude Code에서 /harness-apply 실행
-#    → 기존 설정 분석 + 충돌 없는 병합 전략 제시
+# 1. 하네스 레포에서 Claude Code 실행
+cd /path/to/advanced-harness-window
+claude
 
-# 2. 제시된 병합 전략에 따라 파일 병합
+# 2. 기존 프로젝트 경로를 인자로 넘기기
+/harness-apply /path/to/my-existing-project
 
-# 3. /harness-docs-update 실행 → 4문서 체계 초기화
+# 3. 기존 설정 분석 + 충돌 없는 병합 전략 제시 → 확인 후 적용
 ```
 
 > **핵심 원칙:** 기존 프로젝트에는 `.claude/`를 **복사하지 않고 병합**합니다. 기존 설정을 보존하면서 하네스 자산을 추가합니다.
+
+---
+
+## FAQ
+
+### Q: 하네스 폴더를 프로젝트 안에 넣어야 하나요?
+
+**아닙니다.** 하네스는 어디에 있든 상관없습니다. `/harness-apply`에 경로만 정확히 넘기면 됩니다.
+오히려 하네스 레포는 별도 위치에 두고 여러 프로젝트에 재사용하는 것이 권장됩니다.
+
+### Q: 적용 후 하네스 폴더는 삭제해도 되나요?
+
+적용이 완료되면 대상 프로젝트에 `.claude/`가 복사되므로, 하네스 폴더가 없어도 됩니다.
+하지만 업데이트나 다른 프로젝트에 재적용할 수 있으므로 **보관을 권장**합니다.
+
+### Q: 기존 `.claude/` 설정이 있으면 덮어쓰나요?
+
+아닙니다. 기존 모드로 진입하여 충돌 분석 후 병합 전략을 제시합니다.
+기존 설정을 보존하면서 새 자산만 추가합니다.
+
+### Q: 프로젝트 안에 하네스 폴더를 넣었는데 커맨드가 안 돼요
+
+Claude Code는 **현재 작업 디렉토리**의 `.claude/commands/`만 인식합니다.
+프로젝트 안에 하네스 폴더를 넣어도 그 안의 커맨드는 등록되지 않습니다.
+반드시 하네스 레포 디렉토리에서 Claude Code를 실행하세요.
+
+### Q: 하네스 업데이트 후 이미 적용한 프로젝트에 재적용할 수 있나요?
+
+네. 하네스 레포에서 Claude Code를 실행하고 다시 `/harness-apply /path/to/project`를 실행하면
+기존 모드로 진입하여 새로 추가된 자산만 병합합니다.
 
 ---
 
@@ -84,7 +193,7 @@ bash /path/to/advanced-harness-window/scripts/harness-init.sh --help
 | `docs/` 4문서 | `plan.md` / `task.md` / `history.md` / `checklist.md` stub 생성 |
 | `CLAUDE.md` | 스택 기반 템플릿 자동 생성 |
 
-> **Claude 세션에서 실행하려면:** `/harness-init` 커맨드를 사용하세요.
+> **Claude 세션에서 실행하려면:** 하네스 레포에서 Claude Code를 실행한 뒤 `/harness-init` 커맨드를 사용하세요.
 > `harness-init.sh` 실행 후 바로 Step 3으로 이동합니다.
 
 ---
@@ -198,7 +307,26 @@ ls docs/  # plan.md task.md history.md checklist.md
 > 기존 프로젝트는 이미 `.claude/`가 있을 수 있습니다.
 > **절대 덮어쓰지 않고**, 병합 방식으로 진행합니다.
 
-### Step 1: 현재 상태 점검
+### 권장 방법: `/harness-apply` 사용
+
+```bash
+# 1. 하네스 레포에서 Claude Code 실행
+cd /path/to/advanced-harness-window
+claude
+
+# 2. 대상 프로젝트 경로를 인자로 넘기기
+/harness-apply /path/to/my-existing-project
+```
+
+`/harness-apply`가 아래 전체 과정을 자동으로 분석하고 안내합니다.
+
+---
+
+### 수동 방법 (상세)
+
+`/harness-apply`를 사용하지 않고 직접 병합하려면 아래 단계를 따릅니다.
+
+#### Step 1: 현재 상태 점검
 
 ```bash
 # .claude/ 구조 확인
@@ -214,7 +342,7 @@ cat .claude/settings.json 2>/dev/null || echo "settings.json 없음"
 cat .claude/skills/skill-rules.json 2>/dev/null || echo "skill-rules.json 없음"
 ```
 
-### Step 2: Skills 병합
+#### Step 2: Skills 병합
 
 ```bash
 # 기존 skills/ 디렉토리가 없으면 전체 복사
@@ -229,7 +357,7 @@ cp -r /path/to/harness/.claude/skills/nextjs-frontend-guidelines .claude/skills/
 # ... 필요한 스킬만 선택적으로 복사
 ```
 
-### Step 3: skill-rules.json 병합
+#### Step 3: skill-rules.json 병합
 
 **기존 `skill-rules.json`이 없는 경우:**
 ```bash
@@ -257,7 +385,7 @@ cp /path/to/harness/.claude/skills/skill-rules.json .claude/skills/
 
 **⚠️ 중복 스킬 주의:** 같은 이름의 스킬이 있으면 기존 설정을 유지하거나 신중히 병합합니다.
 
-### Step 4: pathPattern을 내 프로젝트 구조에 맞게 재설정
+#### Step 4: pathPattern을 내 프로젝트 구조에 맞게 재설정
 
 **이것이 가장 중요한 단계입니다.** 하네스의 기본 pathPattern은 `base/[stack]/` 경로를 가리키므로, 내 프로젝트 구조에 맞게 반드시 수정해야 합니다.
 
@@ -299,7 +427,7 @@ find . -name "*.ts" -not -path "./node_modules/*" | head -10
 }
 ```
 
-### Step 5: settings.json 병합
+#### Step 5: settings.json 병합
 
 **기존 `settings.json`이 없는 경우:**
 ```bash
@@ -354,7 +482,7 @@ cp /path/to/harness/.claude/settings.json .claude/settings.json
 
 > **주의:** 기존 훅 배열에 새 항목을 **추가**합니다. 기존 항목을 삭제하거나 교체하지 마세요.
 
-### Step 6: Agents 복사
+#### Step 6: Agents 복사
 
 Agents는 독립적으로 동작하므로 그냥 복사합니다:
 
@@ -368,7 +496,7 @@ cp /path/to/harness/.claude/agents/api-spec-generator.md .claude/agents/
 # ... 필요한 에이전트만 선택
 ```
 
-### Step 7: Hooks 복사
+#### Step 7: Hooks 복사
 
 ```bash
 # hooks/ 디렉토리가 없는 경우
@@ -386,7 +514,21 @@ chmod +x .claude/hooks/*.sh
 cd .claude/hooks && npm install
 ```
 
-### Step 8: CLAUDE.md에 4문서 체계 추가
+#### Step 8: Commands 복사
+
+```bash
+# commands/ 디렉토리가 없는 경우 전체 복사
+cp -r /path/to/harness/.claude/commands .claude/
+
+# commands/ 디렉토리가 있는 경우 — 필요한 커맨드만 추가
+cp /path/to/harness/.claude/commands/dev-docs.md .claude/commands/
+cp /path/to/harness/.claude/commands/dev-docs-update.md .claude/commands/
+# ... 필요한 커맨드만 선택
+```
+
+> **참고:** Commands를 복사해야 대상 프로젝트에서도 `/dev-docs`, `/dev-docs-update` 등이 동작합니다.
+
+#### Step 9: CLAUDE.md에 4문서 체계 추가
 
 기존 `CLAUDE.md`에 아래 섹션을 **추가**합니다 (기존 내용 유지):
 
@@ -410,7 +552,7 @@ cd .claude/hooks && npm install
 3. docs/checklist.md 읽기 → 완료 기준 확인
 ```
 
-### Step 9: docs/ 4문서 초기화
+#### Step 10: docs/ 4문서 초기화
 
 기존 코드를 기반으로 초기 4문서를 작성합니다. Claude Code에서:
 
@@ -422,7 +564,7 @@ cd .claude/hooks && npm install
 - docs/checklist.md: 현재 작업의 완료 기준
 ```
 
-### Step 10: 검증
+#### Step 11: 검증
 
 ```bash
 # 훅 실행 권한 확인
@@ -513,7 +655,23 @@ ls docs/  # plan.md task.md history.md checklist.md 모두 존재해야 함
 
 ## 5부: 트러블슈팅
 
-### 문제 1: 훅이 실행되지 않음
+### 문제 1: `/harness-apply` 커맨드가 인식되지 않음
+
+**증상:** `/harness-apply` 입력 시 "unknown command" 오류
+
+**원인:** 하네스 레포가 아닌 다른 디렉토리에서 Claude Code를 실행했습니다.
+
+**해결:**
+```bash
+# 반드시 하네스 레포 디렉토리에서 Claude Code 실행
+cd /path/to/advanced-harness-window
+claude
+
+# 그 다음 대상 프로젝트 경로를 인자로 넘기기
+/harness-apply /path/to/my-project
+```
+
+### 문제 2: 훅이 실행되지 않음
 
 **증상:** `UserPromptSubmit` 후 아무 출력 없음
 
@@ -529,7 +687,7 @@ grep "command" .claude/settings.json
 # $CLAUDE_PROJECT_DIR 변수가 올바르게 사용되고 있는지 확인
 ```
 
-### 문제 2: 스킬이 활성화되지 않음
+### 문제 3: 스킬이 활성화되지 않음
 
 **증상:** 관련 프롬프트 입력해도 스킬 제안 없음
 
@@ -545,7 +703,7 @@ ls .claude/skills/[스킬명]/
 # 예: "backend/**/*.py"가 실제 파일 경로 backend/app/main.py와 매칭되는지
 ```
 
-### 문제 3: TypeScript 훅 실행 오류
+### 문제 4: TypeScript 훅 실행 오류
 
 **증상:** `npx tsx` 오류 발생
 
@@ -561,7 +719,7 @@ cd .claude/hooks && npm install
 npx tsx .claude/hooks/skill-activation-prompt.ts
 ```
 
-### 문제 4: settings.json 병합 후 JSON 오류
+### 문제 5: settings.json 병합 후 JSON 오류
 
 **증상:** Claude Code 시작 시 settings.json 파싱 오류
 
@@ -574,7 +732,7 @@ cat .claude/settings.json | python3 -m json.tool
 # 흔한 실수: 배열 마지막 항목 후 쉼표, 중괄호 불일치
 ```
 
-### 문제 5: skill-rules.json 중복 스킬 오류
+### 문제 6: skill-rules.json 중복 스킬 오류
 
 **증상:** 같은 스킬 이름이 두 번 등록됨
 
@@ -591,7 +749,7 @@ print('중복:', dupes)
 # 중복 항목 하나를 삭제 (기존 설정 유지 권장)
 ```
 
-### 문제 6: 4문서 로더 훅이 항상 실행됨 (캐시 미작동)
+### 문제 7: 4문서 로더 훅이 항상 실행됨 (캐시 미작동)
 
 **증상:** 매번 세션 시작 시 4문서 로드 메시지 출력
 
@@ -627,7 +785,7 @@ echo ".claude/.session-cache/*.loaded" >> .gitignore
 | `.claude/` 또는 `base/` 전체 구조 변경 | `major` (X+1.0.0) |
 
 ```bash
-# Claude Code 세션에서 실행
+# Claude Code 세션에서 실행 (하네스 레포에서)
 /harness-changelog
 
 # 버전 직접 지정
@@ -653,7 +811,7 @@ echo ".claude/.session-cache/*.loaded" >> .gitignore
 | 라이브러리 업그레이드 대응 패턴 | 프로젝트 특화 도메인명 |
 
 ```bash
-# 실행 예시
+# 실행 예시 (하네스 레포에서)
 /harness-backport FastAPI JWT 슬라이딩 윈도우 갱신 패턴 역전파
 /harness-backport NestJS Redis 캐싱 전략 역전파
 ```
@@ -687,13 +845,15 @@ bash scripts/harness-init.sh --help
 
 ```
 1. 신규 프로젝트 시작
-   bash scripts/harness-init.sh  (또는 /harness-init)
-   → .claude/ + base/ + docs/ 자동 구성
+   bash scripts/harness-init.sh  (또는 하네스 레포에서 /harness-init)
+   → .claude/ + base/ + docs/ + CLAUDE.md 자동 구성
 
 2. 기능 개발
+   cd my-project && claude
    → 실 프로젝트에서 유용한 패턴 발견 시 메모
 
 3. 패턴 역전파 (해당 시)
+   cd advanced-harness-window && claude
    /harness-backport [패턴 설명]
    → base/[stack]/ + SKILL.md 업데이트
 
@@ -712,9 +872,9 @@ bash scripts/harness-init.sh --help
 advanced-harness-window/
 ├── .claude/
 │   ├── skills/        ← 24개 스킬 (스택별 개발 가이드라인)
-│   ├── agents/        ← 16개 에이전트 (자동화 서브태스크)
-│   ├── commands/      ← 9개 슬래시 커맨드
-│   ├── hooks/         ← 자동화 훅 (훅 3종 6개 파일)
+│   ├── agents/        ← 29개 에이전트 (자동화 서브태스크)
+│   ├── commands/      ← 11개 슬래시 커맨드
+│   ├── hooks/         ← 자동화 훅 6종
 │   └── settings.json  ← 훅 등록 설정
 ├── base/              ← 9개 스택 베이스 코드 (신규 프로젝트용)
 │   ├── fastapi/       ← Python FastAPI + SQLModel + JWT + S3
@@ -726,9 +886,13 @@ advanced-harness-window/
 │   ├── react-native/  ← Expo SDK 52 + Zustand + SecureStore
 │   ├── c-embedded/    ← C99 + CMake + HAL + FreeRTOS
 │   └── cpp-embedded/  ← C++17 + CMake + HAL 클래스 + Google Test
-└── docs/              ← 하네스 자체 관리 문서 (참고용)
+├── scripts/
+│   └── harness-init.sh           ← 신규 프로젝트 초기화 스크립트
+├── HARNESS_USAGE_GUIDE.md        ← 이 문서
+├── HARNESS_COMMANDS_REFERENCE.md ← 커맨드 + 훅 전체 레퍼런스
+└── docs/                         ← 하네스 자체 관리 문서 (참고용)
 ```
 
 ---
 
-*Last updated: 2026-03-09*
+*Last updated: 2026-03-15*
