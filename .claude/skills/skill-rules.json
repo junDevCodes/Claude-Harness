@@ -1,5 +1,5 @@
 {
-    "version": "1.3",
+    "version": "1.4",
     "description": "Skill activation triggers for Claude Code. Controls when skills automatically suggest or block actions.",
     "skills": {
         "skill-developer": {
@@ -764,6 +764,100 @@
                     "JwtAuthenticationFilter"
                 ]
             }
+        },
+        "react-vite-pwa-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "React 19 + Vite + TypeScript + PWA frontend patterns. Vite build config, vite-plugin-pwa, React Router v6, WebSocket client, Capacitor conversion. For non-Next.js React SPA/PWA projects.",
+            "promptTriggers": {
+                "keywords": [
+                    "vite",
+                    "Vite",
+                    "vite.config",
+                    "vite-plugin-pwa",
+                    "PWA",
+                    "progressive web app",
+                    "service worker",
+                    "manifest.json",
+                    "workbox",
+                    "react-router-dom",
+                    "createBrowserRouter",
+                    "Capacitor"
+                ],
+                "intentPatterns": [
+                    "(create|setup|configure).*?(vite|PWA|service worker|manifest)",
+                    "(install|enable).*?(progressive web app|offline)",
+                    "(react router|browser router).*?(setup|config|guard)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "vite.config.ts",
+                    "vite.config.js",
+                    "src/pwa/**/*.ts",
+                    "src/main.tsx",
+                    "src/main.jsx"
+                ],
+                "contentPatterns": [
+                    "from 'vite'",
+                    "vite-plugin-pwa",
+                    "VitePWA\\(",
+                    "registerSW\\(",
+                    "createBrowserRouter\\(",
+                    "import.meta.env"
+                ]
+            }
+        },
+        "threejs-realtime-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Three.js + React Three Fiber (R3F) real-time 3D visualization. Scene/Camera/Renderer lifecycle, useFrame 60FPS loop, InstancedMesh for mass rendering, frustum culling/LOD performance, Raycaster interaction, WebSocket data binding (heatmap/markers/point clouds).",
+            "promptTriggers": {
+                "keywords": [
+                    "three.js",
+                    "threejs",
+                    "Three.js",
+                    "WebGL",
+                    "react-three-fiber",
+                    "@react-three/fiber",
+                    "@react-three/drei",
+                    "r3f",
+                    "useFrame",
+                    "useThree",
+                    "InstancedMesh",
+                    "Raycaster",
+                    "OrbitControls",
+                    "heatmap 3d",
+                    "point cloud"
+                ],
+                "intentPatterns": [
+                    "(create|render|build).*?(3d|webgl|scene|mesh)",
+                    "(optimize|improve).*?(three.js|webgl|fps|frame rate)",
+                    "(realtime|live).*?(3d|visualization|heatmap|point cloud)",
+                    "(integrate|connect).*?(websocket|stream).*?(three|3d|scene)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "src/components/**/*3d*.tsx",
+                    "src/components/**/*3D*.tsx",
+                    "src/scenes/**/*.tsx",
+                    "src/three/**/*.ts",
+                    "src/three/**/*.tsx"
+                ],
+                "contentPatterns": [
+                    "from 'three'",
+                    "@react-three/fiber",
+                    "@react-three/drei",
+                    "useFrame\\(",
+                    "useThree\\(",
+                    "<Canvas",
+                    "InstancedMesh",
+                    "Raycaster"
+                ]
+            }
         }
     },
     "notes": {
@@ -784,6 +878,7 @@
             "intentPatterns": "Use regex for flexible user intent matching"
         },
         "changelog": {
+            "v1.4": "2026-04-13 — Phase 12-B 실 프로젝트 적용 중 발견. 신규 2개 스킬 등록: react-vite-pwa-guidelines (Vite + React 19 + PWA + React Router v6, Next.js App Router 미사용 SPA용), threejs-realtime-guidelines (Three.js + R3F 실시간 3D 시각화). 전체 등록 스킬: 26개. T3 스켈레톤 버전 — 실 프로젝트 사용 후 패턴 보강 예정.",
             "v1.3": "2026-03-09 — Phase 4-B 오탐 수정 (5건). fastapi: async/await 키워드 제거 + (async|await) intentPattern 제거 (JS/TS async/await 오탐 방지). database: migration → database migration+schema migration 구체화 + intentPattern 설계 관점으로 한정 (db-migration-agent 중복 방지). skill-developer: hook system → claude hook system 구체화 (React hooks/git hooks 오탐 방지). pytest: test/tests/testing/mock/mocking/fixture 일반 키워드 제거, python test/pytest mock/pytest fixture/MagicMock/AsyncMock으로 교체 (Jest/Vitest 오탐 방지). error-tracking: monitoring → error monitoring 구체화 (CloudWatch/Prometheus 오탐 방지).",
             "v1.2": "2026-03-08 — Phase 2-D 일괄 통합. 신규 10개 스킬 트리거 규칙 추가 (aws-guidelines, database-guidelines, django-backend-guidelines, docker-guidelines, embedded-c-guidelines, embedded-cpp-guidelines, express-backend-guidelines, nestjs-backend-guidelines, react-native-guidelines, spring-boot-guidelines). 전체 등록 스킬: 24개.",
             "v1.1": "2026-03-02 — 유령 항목 13개 제거 (route-tester, reel-creator 계열, handwriting-beautifier, copyright-safe-style-transfer, product-display-video, evan-insight-blog-writer, youtube-editor 계열, detailed-page-writer, threads-writer, cliwant-brand-guidelines). 미등록 스킬 9개 규칙 추가 (brand-guidelines, docx, frontend-design, mermaid, pdf, ppt-brand-guidelines, pptx, vercel-react-best-practices, web-design-guidelines). fastapi/nextjs 트리거 정밀화.",

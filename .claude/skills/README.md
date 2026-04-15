@@ -18,7 +18,7 @@ Skills are modular knowledge bases that Claude loads when needed. They provide:
 
 ---
 
-## Available Skills (24개)
+## Available Skills (26개)
 
 ### 웹 백엔드 스킬 (6개)
 
@@ -31,11 +31,13 @@ Skills are modular knowledge bases that Claude loads when needed. They provide:
 | `spring-boot-guidelines` | Spring Boot 3 + Java 21 + JPA | 499 |
 | `pytest-backend-testing` | pytest + FastAPI TestClient | 403 |
 
-### 프론트엔드 스킬 (4개)
+### 프론트엔드 스킬 (6개)
 
 | 스킬 | 대상 스택 | 줄수 |
 |---|---|---|
 | `nextjs-frontend-guidelines` | Next.js 15 + React 19 + App Router | 415 |
+| `react-vite-pwa-guidelines` | React 19 + Vite + PWA + React Router v6 (T3 스켈레톤) | ~340 |
+| `threejs-realtime-guidelines` | Three.js + R3F 실시간 3D 시각화 (T3 스켈레톤) | ~360 |
 | `vercel-react-best-practices` | React/Next.js 성능 최적화 | 365 |
 | `web-design-guidelines` | UI/UX 접근성 감사 | 295 |
 | `frontend-design` | 프로덕션 UI 컴포넌트 제작 | 292 |

@@ -3,6 +3,7 @@
 # Claude session cache (local session flags — not committed)
 .claude/.session-cache/*.loaded
 .claude/settings.local.json
+.claude/tsc-cache/
 
 # MCP 서버 설정 — API 키 포함 위험으로 git 추적 제외 (.mcp.json.example 참조)
 .mcp.json

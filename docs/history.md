@@ -31,8 +31,8 @@
 
 ## 현재 상태 요약
 
-- **현재 Phase:** Phase 12-B — 실 프로젝트 적용
-- **직전 완료:** Phase 12-A (2026-03-15) — 병렬 세션 분석 기능 + v1.7.0 릴리즈
+- **현재 Phase:** Phase 12-B — 실 프로젝트 적용 (1차 사례 완료, 2차 적용 대기)
+- **직전 완료:** Phase 12-B 1차 적용 (2026-04-13) — see-through (S14P31A206) 적용 + 신규 스킬 2개 역전파
 - **방침:** 실 프로젝트 적용 피드백 기반 개선
 
 ### 자산 현황 (v1.7.0)
@@ -40,7 +40,7 @@
 | 자산 | 수량 | 비고 |
 |---|---|---|
 | 베이스 코드 | 9개 | FastAPI/Next.js/Django/NestJS/Spring Boot/Express/React Native/C/C++ |
-| Skills | 24개 | skill-rules.json v1.3 |
+| Skills | 26개 | skill-rules.json v1.4 (Phase 12-B 역전파로 +2: react-vite-pwa, threejs-realtime) |
 | Agents | 29개 | Phase 11-A P0 수정 완료 |
 | Commands | 11개 | quality-gate + dev-qa-loop 포함 |
 | Hooks | 3종 | 4문서 자동화 2 + CI/CD 1 |
@@ -127,6 +127,30 @@
 
 ---
 
+## Phase 12-B 첫 적용 (2026-04-13) — see-through (S14P31A206)
+
+**대상:** SSAFY 14기 자율 프로젝트, 복합 스택 모노레포 (Spring Boot + FastAPI + ESP-IDF + React/Vite/PWA/Three.js)
+
+**적용 결과:**
+- `.claude/` 전체 + 베이스 코드 3개(spring-boot/fastapi/c-embedded) 복사
+- 디렉토리명 옵션 C 채택: `api/csi/esp-node/dashboard`
+- 4문서 병행 운영 (A안): SSAFY 팀 기획(`docs/projects/`) + Claude 작업(`docs/`)
+- 8개 훅 정상 권한 + npm install 완료
+- 세션 시작 훅 시뮬레이션 통과 ("Phase 1 — 스캐폴딩 검증" 정확 출력)
+
+**역전파 (즉시 반영):**
+- 신규 스킬 2개: `react-vite-pwa-guidelines`, `threejs-realtime-guidelines` (T3 스켈레톤)
+- `skill-rules.json` v1.3 → v1.4 (트리거 2개 추가)
+- `.claude/skills/README.md` 24개 → 26개
+
+**발견 이슈 (Phase 12-C 백로그):**
+- Vite 기반 React PWA용 베이스 코드 부재 → `base/react-vite-pwa/` 신설 검토 필요
+- `nextjs-frontend-guidelines`가 React+Vite 프로젝트를 잘못 트리거할 위험 — pathPattern을 `_disabled_`로 우회했지만, 키워드 트리거(`React`)가 광범위 → 정밀화 필요
+- 하네스 적용 시 `.session-cache/`, `tsc-cache/`, `settings.local.json` 같은 작업 캐시가 함께 복사됨 → `harness-init.sh` / `/harness-apply` 커맨드에 자동 제외 로직 필요
+- 복합 스택(4개) 모노레포의 `CLAUDE.md` 작성에 표준 템플릿 부재 — `base_code_plan.md`에 "복합 스택 CLAUDE.md 패턴" 섹션 추가 검토
+
+---
+
 ## Phase 12-A 완료 (2026-03-15) — 병렬 세션 분석 + v1.7.0
 
 **수정 파일:**
@@ -177,4 +201,4 @@
 
 ---
 
-*Last updated: 2026-03-15 (Phase 12-A 완료 — 병렬 세션 분석 + v1.7.0 릴리즈)*
+*Last updated: 2026-04-13 (Phase 12-B 1차 적용 완료 — see-through 적용 + 신규 스킬 2개 역전파)*
