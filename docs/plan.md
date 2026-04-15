@@ -29,7 +29,7 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 | **10-A~D** | 2차 코드리뷰 수정 13건 + v1.6.2 | 2026-03-11 |
 | **11-A** | 3차 심층 리뷰 P0 보안/기능 결함 7건 수정 | 2026-03-11 |
 
-> **현재 자산:** 베이스 코드 9개 / Skills 24개 / Agents 29개 / Commands 11개 / Hooks 3종 / v1.6.2
+> **현재 자산:** 베이스 코드 9개 / Skills 26개 / Agents 29개 / Commands 11개 / Hooks 3종 / v1.7.0
 
 ---
 
@@ -144,7 +144,7 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 
 | 자산 유형 | 현재 | 비고 |
 |---|---|---|
-| Skills | **24** | skill-rules.json v1.3 |
+| Skills | **26** | skill-rules.json v1.4 |
 | Agents | **29** | planner.md 병렬 분석 추가 |
 | 베이스 코드 스택 | **9** | FastAPI / Next.js / Django / NestJS / Spring Boot / Express / React Native / C / C++ |
 | Slash Commands | **11** | quality-gate + dev-qa-loop 포함 |

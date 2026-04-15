@@ -36,7 +36,7 @@ advanced-harness-window/
 
 ## 현재 보유 자산 현황
 
-### Skills (24개)
+### Skills (26개)
 
 | 카테고리 | 스킬 | 트리거 방식 |
 |---|---|---|
@@ -48,6 +48,8 @@ advanced-harness-window/
 | **웹 백엔드** | `pytest-backend-testing` | pytest, 테스트, coverage |
 | **웹 백엔드** | `error-tracking` | Sentry, 에러 핸들링 |
 | **프론트엔드** | `nextjs-frontend-guidelines` | Next.js, React, App Router |
+| **프론트엔드** | `react-vite-pwa-guidelines` | vite, PWA, service worker, react router |
+| **프론트엔드** | `threejs-realtime-guidelines` | three.js, WebGL, react-three-fiber, r3f |
 | **프론트엔드** | `vercel-react-best-practices` | React 성능, 최적화 |
 | **프론트엔드** | `web-design-guidelines` | UI 리뷰, 접근성 감사 |
 | **프론트엔드** | `frontend-design` | UI 컴포넌트, 페이지 제작 |

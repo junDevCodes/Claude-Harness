@@ -273,4 +273,4 @@ Update skill-rules.json:
 
 ---
 
-*Last updated: 2026-03-08 (Phase 2-D 완료 — 전체 24개 스킬 목록 최신화, skill-rules.json v1.2)*
+*Last updated: 2026-04-13 (Phase 12-B 1차 적용 — react-vite-pwa / threejs-realtime 2개 역전파, 총 26개, skill-rules.json v1.4)*

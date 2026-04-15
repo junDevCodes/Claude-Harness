@@ -871,7 +871,7 @@ bash scripts/harness-init.sh --help
 ```
 advanced-harness-window/
 ├── .claude/
-│   ├── skills/        ← 24개 스킬 (스택별 개발 가이드라인)
+│   ├── skills/        ← 26개 스킬 (스택별 개발 가이드라인)
 │   ├── agents/        ← 29개 에이전트 (자동화 서브태스크)
 │   ├── commands/      ← 11개 슬래시 커맨드
 │   ├── hooks/         ← 자동화 훅 6종
