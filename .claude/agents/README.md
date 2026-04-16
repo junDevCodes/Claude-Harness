@@ -16,7 +16,7 @@ Agents are autonomous Claude instances that handle specific complex tasks. Unlik
 
 ---
 
-## Available Agents (29)
+## Available Agents (33)
 
 ---
 
@@ -472,6 +472,70 @@ Agents are autonomous Claude instances that handle specific complex tasks. Unlik
 - Finding solutions to problems
 - Researching best practices
 - Comparing implementation approaches
+
+**Integration:** ✅ Copy as-is
+
+---
+
+### 📊 데이터 / AI (v1.5 신규)
+
+---
+
+### data-analyst
+**Purpose:** 데이터셋 탐색적 분석(EDA) — 품질 점검, 기술통계, 분포/상관 분석, 인사이트 리포트 생성. *(Phase 13 추가)*
+
+**When to use:**
+- 새 데이터셋 투입 시 초기 탐색
+- 모델링 전 특징 설계 근거 확보
+- 이상 현상/품질 문제 진단
+- 통계 요약 리포트 작성
+
+**Output:** `reports/eda_{dataset}_{date}.md` + 시각화 PNG + 재현 가능한 `scripts/analyze_*.py`
+
+**Integration:** ✅ Copy as-is
+
+---
+
+### data-pipeline-architect
+**Purpose:** 데이터 파이프라인 설계 — Mermaid 아키텍처, Bronze/Silver/Gold 메달리온, Prefect/Airflow DAG 스캐폴드, Great Expectations suite. *(Phase 13 추가)*
+
+**When to use:**
+- 새 데이터 소스 통합
+- Batch + Stream 혼합 파이프라인 설계
+- 데이터 품질 게이트 추가
+- Idempotent 재처리·백필 전략 수립
+
+**Output:** `docs/02-설계/pipeline-{name}.md` + DAG 파일 + 스키마 계약 (Pydantic) + GE suite
+
+**Integration:** ✅ Copy as-is
+
+---
+
+### ml-engineer
+**Purpose:** ML 모델 학습·구축 — sklearn/LightGBM/PyTorch, MLflow 추적, Optuna 튜닝, FastAPI 추론 엔드포인트, Model Card 작성. *(Phase 13 추가)*
+
+**When to use:**
+- 새 ML 모델 학습 파이프라인 구축
+- 실험 추적/하이퍼파라미터 튜닝
+- 모델 레지스트리 등록 + 서빙 준비
+- 재학습 자동화
+
+**Output:** 학습 스크립트 + MLflow run + Model Card + 추론 API 엔드포인트
+
+**Integration:** ✅ Copy as-is
+
+---
+
+### ml-evaluator
+**Purpose:** 학습 모델 평가·검증 — holdout 평가, 누수 검증, threshold 최적화, McNemar/5x2 CV 유의성 검정, baseline 회귀 감지, calibration & drift 점검. *(Phase 13 추가)*
+
+**When to use:**
+- 학습 후 holdout 평가
+- 모델 버전 간 통계적 비교
+- 운영 전 회귀(regression) 검출
+- 평가 리포트 작성
+
+**Output:** `reports/eval_{model}_{date}.md` + confusion matrix/ROC/PR/calibration PNG + baseline.json 업데이트 제안
 
 **Integration:** ✅ Copy as-is
 

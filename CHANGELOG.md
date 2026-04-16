@@ -18,6 +18,24 @@ patch : 기존 자산 수정/오탐 수정/문서 업데이트
 
 ---
 
+## [v1.8.0] — 2026-04-16
+
+### Added
+- Phase 13 (데이터/AI 트랙): 신규 4개 스킬 추가 — `data-analysis-guidelines` (pandas/polars EDA, 결측/이상치, 기술통계, 상관 분석, 시각화), `data-pipeline-guidelines` (Batch/Stream 선택, Airflow/Prefect/Dagster 비교, 메달리온 Bronze/Silver/Gold, Great Expectations, idempotency, feature store), `ml-training-guidelines` (sklearn/LightGBM/PyTorch 단계별 매트릭스, MLflow 실험 추적, Optuna 튜닝, GroupKFold 세션 누수 방지, 재현성·Model Card), `ml-evaluation-guidelines` (분류/회귀/시계열 지표, holdout vs CV 전략, threshold 최적화, McNemar/5x2 CV 유의성 검정, baseline 회귀 감지, calibration).
+- Phase 13: 신규 4개 에이전트 추가 — `data-analyst` (EDA 수행 → 인사이트 리포트 생성), `data-pipeline-architect` (Mermaid 아키텍처 + DAG 스캐폴드 + GE suite), `ml-engineer` (학습 스크립트 + MLflow + FastAPI 추론 엔드포인트 + Model Card), `ml-evaluator` (holdout 평가 + 누수 검증 + baseline 회귀 감지 + 통계 유의성 검정).
+- Phase 13: `skill-rules.json` v1.5 — 4개 신규 스킬 트리거 규칙 등록 (pathPatterns 범용화: `ml/**`, `backend/pipelines/**`, `notebooks/**`, `base/ml/**`). 전체 등록 스킬: 26→30개.
+- Phase 13: `.claude/agents/README.md` — "📊 데이터 / AI" 카테고리 섹션 신규 추가 (4개 에이전트 상세 설명 포함). Available Agents 29→33개.
+- Phase 13: `.claude/skills/README.md` — "데이터 / AI 스킬 (4개)" 카테고리 섹션 신규 추가. Available Skills 26→30개.
+
+### Changed
+- Phase 13: `README.md`, `HARNESS_USAGE_GUIDE.md`, `base_code_plan.md` — 자산 수 업데이트 (스킬 26→30개, 에이전트 29→33개).
+
+### Context
+- 출처: HERE:O (S14P31A206) 프로젝트에서 CSI 신호처리 → 데이터 파이프라인 → ML 모델 학습 → 평가 전주기 필요성 발견. 5개 스킬 + 4개 에이전트 중 범용 가능한 4+4를 하네스로 역전파.
+- 프로젝트 전용 `csi-signal-processing-guidelines`는 S14P31A206에만 유지 (WiFi CSI 특화 - 범용성 낮음).
+
+---
+
 ## [v1.7.0] — 2026-03-15
 
 ### Added

@@ -18,7 +18,7 @@ Skills are modular knowledge bases that Claude loads when needed. They provide:
 
 ---
 
-## Available Skills (26개)
+## Available Skills (30개)
 
 ### 웹 백엔드 스킬 (6개)
 
@@ -74,6 +74,15 @@ Skills are modular knowledge bases that Claude loads when needed. They provide:
 | `brand-guidelines` | Anthropic 브랜드 색상/타이포그래피 | 243 |
 | `ppt-brand-guidelines` | VRL PPT 브랜드 가이드라인 | 267 |
 | `error-tracking` | Sentry v8 에러 추적/성능 모니터링 | 404 |
+
+### 데이터 / AI 스킬 (4개) — v1.5 신규
+
+| 스킬 | 목적 | 줄수 |
+|---|---|---|
+| `data-analysis-guidelines` | pandas/polars EDA, 결측/이상치, 기술통계, 상관 분석, 시각화 | ~260 |
+| `data-pipeline-guidelines` | Batch/Stream, Airflow/Prefect/Dagster, 메달리온(Bronze/Silver/Gold), Great Expectations, idempotency | ~330 |
+| `ml-training-guidelines` | sklearn/LightGBM/PyTorch 단계별, MLflow, Optuna, GroupKFold, 재현성 | ~370 |
+| `ml-evaluation-guidelines` | 분류/회귀/시계열 지표, 누수 방지, threshold 최적화, McNemar, baseline 회귀 감지 | ~370 |
 
 ### 메타 스킬 (1개)
 

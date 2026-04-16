@@ -52,8 +52,8 @@ bash /path/to/advanced-harness-window/scripts/harness-init.sh
 ```
 advanced-harness-window/
 ├── .claude/
-│   ├── skills/        ← 26개 스킬 (스택별 개발 가이드라인)
-│   ├── agents/        ← 16개 에이전트 (자동화 서브태스크)
+│   ├── skills/        ← 30개 스킬 (스택별 개발 가이드라인 + 데이터/AI)
+│   ├── agents/        ← 33개 에이전트 (자동화 서브태스크 + 데이터/AI 4종)
 │   ├── commands/      ← 9개 슬래시 커맨드
 │   ├── hooks/         ← 자동화 훅 6종
 │   └── settings.json  ← 훅 등록 설정

@@ -1,5 +1,5 @@
 {
-    "version": "1.4",
+    "version": "1.5",
     "description": "Skill activation triggers for Claude Code. Controls when skills automatically suggest or block actions.",
     "skills": {
         "skill-developer": {
@@ -809,6 +809,166 @@
                 ]
             }
         },
+        "data-analysis-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "데이터 분석(EDA) 가이드라인. pandas/polars/numpy 탐색적 분석, 결측·이상치 처리, 기술통계, 분포·상관 분석, 시각화 패턴",
+            "promptTriggers": {
+                "keywords": [
+                    "pandas", "polars", "numpy", "jupyter",
+                    "EDA", "데이터 분석", "exploratory data analysis",
+                    "DataFrame", "describe", "value_counts",
+                    "결측", "missing value", "outlier", "이상치"
+                ],
+                "intentPatterns": [
+                    "(analyze|explore|profile).*?(data|dataset|distribution)",
+                    "(데이터|dataset).*?(분석|탐색|EDA|프로파일)",
+                    "(find|detect).*?(outlier|missing|duplicate|이상치)",
+                    "(visualize|plot).*?(distribution|correlation|histogram)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "notebooks/**/*.ipynb",
+                    "analysis/**/*.py",
+                    "scripts/analyze_*.py",
+                    "reports/eda_*.md",
+                    "base/ml/analysis/**/*.py"
+                ],
+                "contentPatterns": [
+                    "import pandas",
+                    "import polars",
+                    "\\.describe\\(\\)",
+                    "sns\\.",
+                    "plt\\.hist",
+                    "value_counts\\("
+                ]
+            }
+        },
+        "data-pipeline-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "데이터 파이프라인 설계 가이드라인. Batch(ETL/ELT) vs Stream, Airflow/Prefect/Dagster, Great Expectations, idempotency, 스키마 진화, feature store",
+            "promptTriggers": {
+                "keywords": [
+                    "data pipeline", "데이터 파이프라인",
+                    "ETL", "ELT", "airflow", "prefect", "dagster",
+                    "kafka", "streaming", "Great Expectations",
+                    "feature store", "DAG", "medallion",
+                    "bronze silver gold", "idempotent"
+                ],
+                "intentPatterns": [
+                    "(design|build|create).*?(pipeline|DAG|workflow)",
+                    "(ETL|ELT|ingest|transform|load).*?(data|table)",
+                    "(파이프라인|데이터 흐름).*?(설계|구축)",
+                    "(stream|batch).*?(processing|ingestion)",
+                    "(data quality|validate).*?(pipeline|stage)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "pipelines/**/*.py",
+                    "backend/pipelines/**/*.py",
+                    "pipelines/flows/**/*.py",
+                    "pipelines/expectations/**/*.json",
+                    "**/dags/**/*.py",
+                    "**/prefect.yaml",
+                    "base/ml/pipelines/**/*.py"
+                ],
+                "contentPatterns": [
+                    "@flow",
+                    "@task",
+                    "from prefect",
+                    "from airflow",
+                    "great_expectations",
+                    "AIOKafkaConsumer",
+                    "AIOKafkaProducer"
+                ]
+            }
+        },
+        "ml-training-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "AI/ML 모델 학습 가이드라인. scikit-learn/LightGBM/PyTorch, MLflow 실험 추적, Optuna 튜닝, 교차검증, 재현성, 클래스 불균형 처리",
+            "promptTriggers": {
+                "keywords": [
+                    "scikit-learn", "sklearn", "lightgbm", "xgboost", "pytorch", "torch",
+                    "mlflow", "optuna", "model training", "모델 학습", "머신러닝",
+                    "machine learning", "train model", "hyperparameter tuning",
+                    "feature engineering", "cross validation", "GroupKFold"
+                ],
+                "intentPatterns": [
+                    "(train|fit|학습).*?(model|classifier|regressor)",
+                    "(tune|optimize).*?(hyperparameter|lr|learning rate)",
+                    "(track|log).*?(experiment|run|mlflow)",
+                    "(분류|회귀).*?(모델|학습)",
+                    "(feature engineering|피처 엔지니어링)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "ml/**/*.py",
+                    "ml/train/**/*.py",
+                    "ml/tune/**/*.py",
+                    "ml/models/**/*.py",
+                    "base/ml/train/**/*.py",
+                    "base/ml/models/**/*.py"
+                ],
+                "contentPatterns": [
+                    "import sklearn",
+                    "import lightgbm",
+                    "import torch",
+                    "import mlflow",
+                    "import optuna",
+                    "\\.fit\\(",
+                    "GroupKFold",
+                    "StratifiedKFold",
+                    "mlflow\\.start_run"
+                ]
+            }
+        },
+        "ml-evaluation-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "ML 모델 평가지표 가이드라인. 분류/회귀/시계열 지표, holdout/CV 전략, 데이터 누수 방지, threshold 최적화, baseline 회귀 감지, 통계적 유의성",
+            "promptTriggers": {
+                "keywords": [
+                    "confusion matrix", "accuracy", "precision", "recall",
+                    "f1 score", "roc auc", "pr auc", "mae", "rmse",
+                    "평가지표", "evaluation metrics", "classification report",
+                    "model comparison", "threshold tuning", "baseline regression",
+                    "mcnemar", "calibration", "brier"
+                ],
+                "intentPatterns": [
+                    "(evaluate|measure|assess).*?(model|performance|metric)",
+                    "(평가|검증).*?(모델|지표|metric)",
+                    "(compare|benchmark).*?(model|version|A vs B)",
+                    "(detect|check).*?(regression|drift|누수)",
+                    "(precision|recall|f1|auc).*?(compute|report)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "ml/eval/**/*.py",
+                    "ml/evaluate.py",
+                    "reports/eval_*.md",
+                    "base/ml/eval/**/*.py",
+                    "**/baseline.json"
+                ],
+                "contentPatterns": [
+                    "classification_report",
+                    "confusion_matrix",
+                    "roc_auc_score",
+                    "average_precision_score",
+                    "calibration_curve",
+                    "mcnemar"
+                ]
+            }
+        },
         "threejs-realtime-guidelines": {
             "type": "domain",
             "enforcement": "suggest",
@@ -878,6 +1038,7 @@
             "intentPatterns": "Use regex for flexible user intent matching"
         },
         "changelog": {
+            "v1.5": "2026-04-16 — Phase 13 데이터/AI 트랙 보강 (HERE:O S14P31A206 프로젝트 역전파). 신규 4개 스킬 등록: data-analysis-guidelines (pandas/polars EDA), data-pipeline-guidelines (Prefect/Airflow/Dagster + 메달리온 + Great Expectations), ml-training-guidelines (sklearn/LightGBM/PyTorch + MLflow + Optuna), ml-evaluation-guidelines (분류/회귀/시계열 지표 + 누수 방지 + McNemar). 동반 4개 에이전트(data-analyst, data-pipeline-architect, ml-engineer, ml-evaluator) 추가. 프로젝트 전용 csi-signal-processing-guidelines는 S14P31A206에서만 유지. 전체 등록 스킬: 30개.",
             "v1.4": "2026-04-13 — Phase 12-B 실 프로젝트 적용 중 발견. 신규 2개 스킬 등록: react-vite-pwa-guidelines (Vite + React 19 + PWA + React Router v6, Next.js App Router 미사용 SPA용), threejs-realtime-guidelines (Three.js + R3F 실시간 3D 시각화). 전체 등록 스킬: 26개. T3 스켈레톤 버전 — 실 프로젝트 사용 후 패턴 보강 예정.",
             "v1.3": "2026-03-09 — Phase 4-B 오탐 수정 (5건). fastapi: async/await 키워드 제거 + (async|await) intentPattern 제거 (JS/TS async/await 오탐 방지). database: migration → database migration+schema migration 구체화 + intentPattern 설계 관점으로 한정 (db-migration-agent 중복 방지). skill-developer: hook system → claude hook system 구체화 (React hooks/git hooks 오탐 방지). pytest: test/tests/testing/mock/mocking/fixture 일반 키워드 제거, python test/pytest mock/pytest fixture/MagicMock/AsyncMock으로 교체 (Jest/Vitest 오탐 방지). error-tracking: monitoring → error monitoring 구체화 (CloudWatch/Prometheus 오탐 방지).",
             "v1.2": "2026-03-08 — Phase 2-D 일괄 통합. 신규 10개 스킬 트리거 규칙 추가 (aws-guidelines, database-guidelines, django-backend-guidelines, docker-guidelines, embedded-c-guidelines, embedded-cpp-guidelines, express-backend-guidelines, nestjs-backend-guidelines, react-native-guidelines, spring-boot-guidelines). 전체 등록 스킬: 24개.",

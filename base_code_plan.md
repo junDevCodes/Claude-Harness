@@ -14,8 +14,8 @@
 ```
 advanced-harness-window/
 ├── .claude/
-│   ├── skills/          ← Claude 지식 모듈 라이브러리 (24개)
-│   ├── agents/          ← 전문 서브에이전트 라이브러리 (29개)
+│   ├── skills/          ← Claude 지식 모듈 라이브러리 (30개)
+│   ├── agents/          ← 전문 서브에이전트 라이브러리 (33개)
 │   ├── commands/        ← 슬래시 커맨드 라이브러리 (11개)
 │   └── hooks/           ← 자동화 훅 라이브러리
 ├── base/                ← 기술스택별 베이스 코드 (9개 스택)
