@@ -598,7 +598,7 @@ That's it! Agents work immediately.
 
 ---
 
-## Agent Quick Reference (29)
+## Agent Quick Reference (33)
 
 | Agent | Category | Complexity | Customization | Phase |
 |-------|----------|-----------|---------------|-------|
@@ -631,6 +631,10 @@ That's it! Agents work immediately.
 | `auth-route-tester` | 인증 | Medium | ⚠️ Auth setup | 기존 |
 | `auth-route-debugger` | 인증 | Medium | ⚠️ Auth setup | 기존 |
 | `web-research-specialist` | 리서치 | Low | ✅ None | 기존 |
+| `data-analyst` | 데이터 / AI | Medium | ✅ None | 13 |
+| `data-pipeline-architect` | 데이터 / AI | High | ✅ None | 13 |
+| `ml-engineer` | 데이터 / AI | High | ✅ None | 13 |
+| `ml-evaluator` | 데이터 / AI | Medium | ✅ None | 13 |
 
 ---
 

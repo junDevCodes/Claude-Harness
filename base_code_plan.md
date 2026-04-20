@@ -1,6 +1,6 @@
 # Advanced Harness — Base Code Plan
 
-**현재 버전: v1.7.0** (2026-03-15)
+**현재 버전: v1.8.1** (2026-04-20)
 
 ## 비전
 
@@ -36,7 +36,7 @@ advanced-harness-window/
 
 ## 현재 보유 자산 현황
 
-### Skills (26개)
+### Skills (30개)
 
 | 카테고리 | 스킬 | 트리거 방식 |
 |---|---|---|
@@ -65,9 +65,13 @@ advanced-harness-window/
 | **문서/다이어그램** | `docx` | Word 문서 제작 |
 | **브랜드** | `brand-guidelines` | Anthropic 브랜드 스타일 |
 | **브랜드** | `ppt-brand-guidelines` | VRL PPT 브랜드 |
+| **데이터/AI** | `data-analysis-guidelines` | pandas/polars EDA, 결측·이상치, 상관 분석, 시각화 *(Phase 13)* |
+| **데이터/AI** | `data-pipeline-guidelines` | Batch/Stream, Airflow/Prefect/Dagster, 메달리온, GE *(Phase 13)* |
+| **데이터/AI** | `ml-training-guidelines` | sklearn/LightGBM/PyTorch, MLflow, Optuna *(Phase 13)* |
+| **데이터/AI** | `ml-evaluation-guidelines` | 분류/회귀/시계열 지표, McNemar, baseline 회귀 감지 *(Phase 13)* |
 | **메타** | `skill-developer` | 스킬 생성/관리 |
 
-### Agents (29개)
+### Agents (33개)
 
 | 카테고리 | 에이전트 | 역할 |
 |---|---|---|
@@ -100,6 +104,10 @@ advanced-harness-window/
 | **인증** | `auth-route-tester` | 인증 라우트 테스트 |
 | **인증** | `auth-route-debugger` | 인증 라우트 디버깅 |
 | **리서치** | `web-research-specialist` | 웹 리서치 |
+| **데이터/AI** | `data-analyst` | EDA 수행 → 인사이트 리포트 생성 *(Phase 13)* |
+| **데이터/AI** | `data-pipeline-architect` | Mermaid 아키텍처 + DAG 스캐폴드 + GE suite *(Phase 13)* |
+| **데이터/AI** | `ml-engineer` | 학습 스크립트 + MLflow + 추론 엔드포인트 + Model Card *(Phase 13)* |
+| **데이터/AI** | `ml-evaluator` | holdout 평가 + 누수 검증 + baseline 회귀 감지 *(Phase 13)* |
 
 ### Slash Commands (11개)
 
@@ -229,9 +237,9 @@ docs/checklist.md ← 현재 태스크 점검 체크리스트
 
 24개 스킬 전체 완성. skill-rules.json v1.2로 전체 등록 완료.
 
-### Phase 3 — Agents 라이브러리 확충 ✅ 완료 (29개)
+### Phase 3 — Agents 라이브러리 확충 ✅ 완료 (33개)
 
-Phase 3(16개) + Phase 6-A TIER 1(7개) + Phase 6-B TIER 2(6개) = 총 29개 완성.
+Phase 3(16개) + Phase 6-A TIER 1(7개) + Phase 6-B TIER 2(6개) + Phase 13 데이터/AI(4개) = 총 33개 완성.
 
 ### Phase 4 — 자동화 강화
 
@@ -266,4 +274,4 @@ Phase 3(16개) + Phase 6-A TIER 1(7개) + Phase 6-B TIER 2(6개) = 총 29개 완
 
 ---
 
-*Last updated: 2026-03-15 (v1.7.0 — 병렬 세션 분석 기능 추가, 4문서 축약 정리)*
+*Last updated: 2026-04-20 (v1.8.1 — Phase 13 데이터/AI 트랙 역전파 + 정합성 동기화 패치)*

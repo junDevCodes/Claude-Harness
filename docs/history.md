@@ -31,17 +31,17 @@
 
 ## 현재 상태 요약
 
-- **현재 Phase:** Phase 12-B — 실 프로젝트 적용 (1차 사례 완료, 2차 적용 대기)
-- **직전 완료:** Phase 12-B 1차 적용 (2026-04-13) — see-through (S14P31A206) 적용 + 신규 스킬 2개 역전파
+- **현재 Phase:** Phase 13 완료 + 정합성 동기화 (2026-04-20, v1.8.1) — 다음 작업 대기
+- **직전 완료:** Phase 13 (2026-04-16, v1.8.0) — 데이터/AI 트랙 역전파 (스킬 4개 + 에이전트 4개)
 - **방침:** 실 프로젝트 적용 피드백 기반 개선
 
-### 자산 현황 (v1.7.0)
+### 자산 현황 (v1.8.1)
 
 | 자산 | 수량 | 비고 |
 |---|---|---|
 | 베이스 코드 | 9개 | FastAPI/Next.js/Django/NestJS/Spring Boot/Express/React Native/C/C++ |
-| Skills | 26개 | skill-rules.json v1.4 (Phase 12-B 역전파로 +2: react-vite-pwa, threejs-realtime) |
-| Agents | 29개 | Phase 11-A P0 수정 완료 |
+| Skills | 30개 | skill-rules.json v1.5 (Phase 13 데이터/AI +4: data-analysis, data-pipeline, ml-training, ml-evaluation) |
+| Agents | 33개 | Phase 13 데이터/AI +4: data-analyst, data-pipeline-architect, ml-engineer, ml-evaluator |
 | Commands | 11개 | quality-gate + dev-qa-loop 포함 |
 | Hooks | 3종 | 4문서 자동화 2 + CI/CD 1 |
 
@@ -151,6 +151,49 @@
 
 ---
 
+## Phase 13 완료 (2026-04-16, v1.8.0) — 데이터/AI 트랙 역전파
+
+**대상:** HERE:O (S14P31A206) — CSI 신호처리 기반 실내 위치 추정 시스템에서 EDA → 파이프라인 → 학습 → 평가 전주기 패턴 발견
+
+**역전파 자산 (4+4):**
+
+| 카테고리 | 신규 자산 | 핵심 패턴 |
+|---|---|---|
+| Skill | `data-analysis-guidelines` | pandas/polars EDA, 결측/이상치, 시각화 |
+| Skill | `data-pipeline-guidelines` | Batch/Stream, Airflow/Prefect/Dagster, 메달리온 Bronze/Silver/Gold, GE |
+| Skill | `ml-training-guidelines` | sklearn/LightGBM/PyTorch, MLflow, Optuna, GroupKFold 누수 방지 |
+| Skill | `ml-evaluation-guidelines` | 분류/회귀/시계열 지표, McNemar/5x2 CV, baseline 회귀 감지 |
+| Agent | `data-analyst` | EDA → 인사이트 리포트 + 시각화 PNG 생성 |
+| Agent | `data-pipeline-architect` | Mermaid 아키텍처 + DAG 스캐폴드 + GE suite |
+| Agent | `ml-engineer` | 학습 + MLflow + 추론 엔드포인트 + Model Card |
+| Agent | `ml-evaluator` | holdout 평가 + 누수 검증 + baseline 회귀 감지 |
+
+**유보:** `csi-signal-processing-guidelines` (WiFi CSI 특화, 범용성 낮음 → S14P31A206 전용 유지)
+
+**`skill-rules.json` 갱신:** v1.4 → v1.5 (4개 신규 트리거 등록, pathPatterns 범용화: `ml/**`, `notebooks/**`, `pipelines/**`, `base/ml/**`)
+
+---
+
+## 정합성 동기화 (2026-04-20, v1.8.1)
+
+**배경:** Phase 13 commit (5cada71)에서 일부 메타 문서 갱신 누락 — 사용자 "스킬/에이전트 상세 재검증" 요청 시 정합성 점검 중 발견.
+
+**진단 결과:**
+- ✅ 자산 본체 — Skills 30개 + Agents 33개 + skill-rules.json v1.5 모두 DoD PASS
+- ❌ 메타 문서 — 6 위치에 v1.7.0 / 26개 / 29개 / v1.4 잔존
+
+**일괄 동기화:**
+- `base_code_plan.md`: 버전 v1.7.0 → v1.8.1, "Skills (26개)" → "(30개)", "Agents (29개)" → "(33개)" + 표에 데이터/AI 4+4행 추가, Phase 3 완료 (29) → (33)
+- `.claude/agents/README.md`: "Quick Reference (29)" → "(33)" + 표 4행 추가
+- `docs/history.md`: 자산 현황 + 현재 상태 요약 + Phase 13 섹션 + 본 정합성 섹션 추가
+- `docs/plan.md`: Phase 12-B 체크 + Phase 13 섹션 + 대시보드 갱신
+- `docs/task.md` / `checklist.md`: Phase 13 완료 + 정합성 동기화 완료 → 다음 작업 대기 상태 교체
+- `CHANGELOG.md`: v1.8.1 정합성 패치 항목 추가
+
+**교훈:** Phase 완료 commit 시 메타 문서 정합성 자동 검증 훅 도입 검토 필요 → Phase 7 상시 운영 항목 추가
+
+---
+
 ## Phase 12-A 완료 (2026-03-15) — 병렬 세션 분석 + v1.7.0
 
 **수정 파일:**
@@ -201,4 +244,4 @@
 
 ---
 
-*Last updated: 2026-04-13 (Phase 12-B 1차 적용 완료 — see-through 적용 + 신규 스킬 2개 역전파)*
+*Last updated: 2026-04-20 (Phase 13 + 정합성 동기화 완료 — Skills 30 / Agents 33 / v1.8.1)*

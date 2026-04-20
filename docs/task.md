@@ -1,59 +1,45 @@
 # Task — 현재 작업 상세 계획서
 
-> **현재 Phase:** Phase 12-B — 실 프로젝트 적용
-> **출처:** docs/plan.md Phase 12-B
-> **선행 완료:** Phase 12-A (2026-03-15) — 병렬 세션 분석 기능 + v1.7.0 릴리즈
-> **방침:** 실 프로젝트에 하네스를 적용하고, 실사용 피드백을 수집한다.
+> **현재 Phase:** 다음 적용 대기 (Phase 7 상시 운영 or 다음 실 프로젝트 사이클)
+> **출처:** docs/plan.md Phase 7 / Phase 12-C 잔여 / Phase 11 백로그
+> **선행 완료:** Phase 13 (2026-04-16, v1.8.0) — 데이터/AI 트랙 4+4 역전파 + 정합성 동기화 (2026-04-20)
+> **방침:** 다음 실 프로젝트 적용 사이클 또는 백로그 항목 처리 대기
 
 ---
 
-## Phase 12-B — 실 프로젝트 적용
+## 다음 작업 후보
 
-### B-1: 대상 프로젝트 선정
+### A. 다음 실 프로젝트 사이클 (Phase 12-B 2차 적용)
 
-| 확인 항목 | 내용 |
+| 단계 | 내용 |
 |---|---|
-| 기술 스택 | base/ 9개 중 해당 스택 확인 |
-| `.claude/` 존재 여부 | 신규(harness-init) vs 기존(harness-apply) 판별 |
-| 프로젝트 규모 | 적용 범위 결정 |
+| 1 | 새 대상 프로젝트 선정 (스택, 규모) |
+| 2 | `/harness-apply` 또는 `/harness-init` 실행 |
+| 3 | 적용 결과 검증 (4문서 훅, 스킬 트리거, 에이전트 실행) |
+| 4 | 발견 이슈 → `/harness-backport`로 역전파 + `/harness-changelog` 릴리즈 |
 
-### B-2: 하네스 적용 실행
+### B. Phase 11 백로그 처리 (실 사용 우선순위 기반)
 
-| 방법 | 명령 | 상황 |
+| 그룹 | 잔여 건수 | 우선순위 |
 |---|---|---|
-| CLI 스크립트 | `bash scripts/harness-init.sh` | 새 프로젝트 |
-| Claude 커맨드 | `/harness-apply` | 기존 프로젝트, 선택적 병합 |
+| 11-B 훅/CI/CD 신뢰성 | 6건 | 🟠 P1 |
+| 11-C 에이전트/스킬 참조 수정 | 9건 | 🟠 P1 |
+| 11-D 문서 drift | 5건 | 🟠 P1 |
+| 11-E 코드 품질 | 10건 | 🟡 P2 |
 
-**적용 대상 자산:**
-- `.claude/settings.json` — 훅 등록
-- `.claude/skills/` — 해당 스택 스킬 + 공통 스킬
-- `.claude/agents/` — 필요 에이전트 선택
-- `skill-rules.json` — 트리거 규칙
-- `docs/` — 4문서 체계 초기화
+### C. Phase 7 상시 운영
 
-### B-3: 적용 후 검증
-
-1. **settings.json 훅 등록** — session-start-docs-loader, tsc-check, docs-update-reminder
-2. **skill-rules.json 트리거** — 해당 스택 키워드로 프롬프트 입력 시 스킬 활성화 확인
-3. **4문서 자동화** — 세션 시작 시 docs 읽기 지시 출력 확인
-4. **에이전트 실행** — planner, test-coverage-agent, security-auditor 중 3개 테스트
-5. **병렬 세션 전략** — `/harness-plan-sync` 실행 시 세션 전략 섹션 자동 생성 확인
-
-### B-4: 이슈 수집
-
-- 발견 이슈 → 해당 프로젝트 `docs/history.md`에 기록
-- Phase 11 백로그 중 실 사용에서 문제된 항목 식별
-- 범용 패턴 발견 시 → Phase 12-C에서 `/harness-backport` 실행
+- `skill-rules.json` 오탐/미탐 패턴 수집 → 키워드 정제
+- `/harness-changelog`로 패치 릴리즈
+- 자산 카운트 정합성 자동 검증 훅 도입 검토
 
 ---
 
-## 완료 후 처리
+## 착수 조건
 
-1. `docs/checklist.md` 항목 체크
-2. `docs/history.md` 적용 결과 + 발견 이슈 기록
-3. `docs/plan.md` Phase 12-B 완료 처리
-4. Phase 12-C (역전파) 착수 여부 결정
+- 사용자가 다음 작업 방향 지정 시 본 task.md 교체
+- 또는 `/harness-plan-sync` 실행으로 다음 Phase 자동 탐색
 
 ---
 
-*Last updated: 2026-03-15 (Phase 12-B 실 프로젝트 적용 계획)*
+*Last updated: 2026-04-20 (Phase 13 + 정합성 동기화 완료 — 다음 작업 대기)*

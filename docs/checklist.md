@@ -1,39 +1,44 @@
 # Checklist — 작업 확인서
 
-> **현재 Phase:** Phase 12-B — 실 프로젝트 적용
-> **출처:** docs/plan.md Phase 12-B, docs/task.md Phase 12-B
-> **선행 완료:** Phase 12-A (2026-03-15) — 병렬 세션 분석 + v1.7.0 릴리즈
+> **현재 Phase:** 대기 (Phase 13 + 정합성 동기화 완료)
+> **선행 완료:** Phase 13 (2026-04-16, v1.8.0) + 정합성 동기화 (2026-04-20)
 
 ---
 
-## Phase 12-B DoD — 실 프로젝트 적용
+## Phase 13 완료 이력 (2026-04-16, v1.8.0)
 
-### 적용 실행
+### 데이터/AI 트랙 역전파 (HERE:O S14P31A206 출처)
 
-- [ ] 대상 프로젝트 선정 완료 (스택, 규모 확인)
-- [ ] harness-apply 또는 harness-init.sh 실행 완료
-- [ ] settings.json 훅 등록 정상 (충돌 없이 병합)
-- [ ] skill-rules.json 적용 완료
-
-### 동작 검증
-
-- [ ] 4문서 자동화 훅 동작 (session-start-docs-loader 출력 확인)
-- [ ] 스킬 트리거 정확도 (해당 스택 키워드 → 스킬 활성화)
-- [ ] 스킬 트리거 오탐 3건 이하
-- [ ] 에이전트 3개 이상 실행 테스트
-- [ ] `/harness-plan-sync` 실행 시 세션 전략 자동 생성
-
-### 이슈 수집
-
-- [ ] 발견 이슈 해당 프로젝트 history.md에 기록
-- [ ] Phase 11 백로그 중 실 사용 문제 항목 식별
+- [x] 4개 스킬 추가 (data-analysis, data-pipeline, ml-training, ml-evaluation)
+- [x] 4개 에이전트 추가 (data-analyst, data-pipeline-architect, ml-engineer, ml-evaluator)
+- [x] `skill-rules.json` v1.5 등록 (4개 신규 트리거)
+- [x] CHANGELOG v1.8.0 릴리즈
 
 ---
 
-## Phase 12-A 완료 이력
+## 정합성 동기화 완료 이력 (2026-04-20, v1.8.1)
 
-> Phase 12-A (2026-03-15): 병렬 세션 분석 + v1.7.0 릴리즈 — 전항목 PASS
+### 자산 본체 — 전수 PASS
+
+- [x] Skills 30개 SKILL.md 존재 + ≤500줄 + frontmatter (name+description+triggers) 보유
+- [x] Agents 33개 .md 존재 + frontmatter (name+description+tools) 보유
+- [x] `skill-rules.json` v1.5 등록 키 30개 = 실제 디렉토리 30개 1:1 매칭
+
+### 메타 문서 동기화
+
+- [x] `base_code_plan.md` — 버전 v1.7.0 → v1.8.0, Skills/Agents 라벨, 표에 데이터/AI 4+4행 추가
+- [x] `.claude/agents/README.md` — Quick Reference 표 (29 → 33행)
+- [x] `docs/history.md` — 자산 현황 + 현재 상태 + Phase 13 섹션 + 정합성 섹션
+- [x] `docs/plan.md` — Phase 12-B 체크 + Phase 13 섹션 + 대시보드
+- [x] `docs/task.md` / `checklist.md` — 다음 작업 대기 상태로 교체
+- [x] `CHANGELOG.md` — v1.8.1 정합성 패치 항목 추가
 
 ---
 
-*Phase 12-B 체크리스트 — 2026-03-15 작성*
+## 다음 작업 DoD
+
+> 다음 Phase 착수 시 task.md → 본 checklist.md를 함께 교체 (CLAUDE.md 4문서 생명주기 준수)
+
+---
+
+*Phase 13 + 정합성 동기화 완료 — 2026-04-20*

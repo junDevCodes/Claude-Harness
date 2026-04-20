@@ -18,6 +18,22 @@ patch : 기존 자산 수정/오탐 수정/문서 업데이트
 
 ---
 
+## [v1.8.1] — 2026-04-20
+
+### Fixed
+- 정합성 동기화 패치 — Phase 13 commit (5cada71)에서 일부 메타 문서 갱신 누락된 항목 일괄 동기화.
+- `base_code_plan.md`: 버전 표기 v1.7.0 → v1.8.0, "Skills (26개)" → "(30개)", "Agents (29개)" → "(33개)" 라벨 수정 + 표에 데이터/AI 4+4행 추가, Phase 3 완료 표기 (29개) → (33개), Last updated 갱신.
+- `.claude/agents/README.md`: "Agent Quick Reference (29)" → "(33)" + 표에 데이터/AI 4행 추가 (data-analyst, data-pipeline-architect, ml-engineer, ml-evaluator).
+- `docs/history.md`: 자산 현황 표 (26→30, 29→33, v1.4→v1.5, v1.7.0→v1.8.0), 현재 상태 요약 갱신, Phase 13 완료 섹션 + 정합성 동기화 섹션 추가.
+- `docs/plan.md`: Phase 12-B 체크박스 표시, Phase 13 섹션 신설, 자산 현황 대시보드 갱신.
+- `docs/task.md` / `docs/checklist.md`: Phase 12-B 진행 중 → Phase 13 완료 + 정합성 동기화 완료 → 다음 작업 대기 상태로 교체.
+
+### Context
+- 발견 시점: 2026-04-20 사용자가 "현재 보유중인 스킬 및 에이전트 상세 재검증" 요청 시 메타 문서 정합성 점검 중 발견.
+- 자산 본체(SKILL.md 30개, agent .md 33개, skill-rules.json v1.5)는 모두 DoD PASS — 메타 카운트만 동기화.
+
+---
+
 ## [v1.8.0] — 2026-04-16
 
 ### Added

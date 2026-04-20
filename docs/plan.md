@@ -29,7 +29,7 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 | **10-A~D** | 2차 코드리뷰 수정 13건 + v1.6.2 | 2026-03-11 |
 | **11-A** | 3차 심층 리뷰 P0 보안/기능 결함 7건 수정 | 2026-03-11 |
 
-> **현재 자산:** 베이스 코드 9개 / Skills 26개 / Agents 29개 / Commands 11개 / Hooks 3종 / v1.7.0
+> **현재 자산:** 베이스 코드 9개 / Skills 30개 / Agents 33개 / Commands 11개 / Hooks 3종 / v1.8.1 (Phase 13 + 정합성 동기화 완료)
 
 ---
 
@@ -123,20 +123,30 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 - [x] CHANGELOG v1.7.0 반영
 - [x] base_code_plan.md 버전 갱신 (v1.6.2 → v1.7.0)
 
-### Phase 12-B — 실 프로젝트 적용
+### Phase 12-B — 실 프로젝트 적용 ✅ 1차 완료 (2026-04-13)
 
-- [ ] 대상 프로젝트 선정 + 기술 스택 확인
-- [ ] `/harness-apply` 또는 `harness-init.sh` 실행
-- [ ] settings.json / skill-rules.json 충돌 해결
-- [ ] 스킬 트리거 정확도 검증 + 훅 동작 검증
-- [ ] 에이전트 최소 3개 실행 테스트
+- [x] 대상 프로젝트 선정 + 기술 스택 확인 (see-through, S14P31A206)
+- [x] `/harness-apply` 또는 `harness-init.sh` 실행
+- [x] settings.json / skill-rules.json 충돌 해결
+- [x] 스킬 트리거 정확도 검증 + 훅 동작 검증
+- [x] 에이전트 최소 3개 실행 테스트 (시뮬레이션 통과)
+- [x] 신규 스킬 2개 즉시 역전파 (react-vite-pwa, threejs-realtime)
 
-### Phase 12-C — 역전파 + 피드백 반영
+### Phase 12-C — 역전파 + 피드백 반영 (2차 적용 시 재가동)
 
-- [ ] 실 적용 중 발견 이슈 수집
+- [ ] 다음 실 적용 중 발견 이슈 수집
 - [ ] `/harness-backport`로 유용 패턴 역전파
 - [ ] Phase 11 백로그 중 실 사용에서 문제된 항목 우선 수정
 - [ ] `/harness-changelog`로 패치 릴리즈
+
+### Phase 13 — 데이터/AI 트랙 역전파 ✅ 완료 (2026-04-16, v1.8.0)
+
+- [x] HERE:O (S14P31A206)에서 데이터/AI 패턴 식별 (CSI EDA → 파이프라인 → 학습 → 평가 전주기)
+- [x] 4개 스킬 추가 (data-analysis, data-pipeline, ml-training, ml-evaluation)
+- [x] 4개 에이전트 추가 (data-analyst, data-pipeline-architect, ml-engineer, ml-evaluator)
+- [x] `skill-rules.json` v1.5 등록
+- [x] CHANGELOG v1.8.0 릴리즈
+- [x] 정합성 동기화 패치 v1.8.1 (2026-04-20) — base_code_plan / history / plan / agents README / task / checklist / CHANGELOG 7개 메타 문서 일괄 갱신
 
 ---
 
@@ -144,13 +154,13 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 
 | 자산 유형 | 현재 | 비고 |
 |---|---|---|
-| Skills | **26** | skill-rules.json v1.4 |
-| Agents | **29** | planner.md 병렬 분석 추가 |
+| Skills | **30** | skill-rules.json v1.5 (Phase 13 데이터/AI 4개 추가) |
+| Agents | **33** | Phase 13 데이터/AI 4개 추가 |
 | 베이스 코드 스택 | **9** | FastAPI / Next.js / Django / NestJS / Spring Boot / Express / React Native / C / C++ |
 | Slash Commands | **11** | quality-gate + dev-qa-loop 포함 |
 | Hooks | **3종** | 4문서 자동화 2 + CI/CD 1 |
 | 사용자 가이드 | **2** | USAGE_GUIDE + COMMANDS_REFERENCE |
-| CHANGELOG | **v1.7.0** | Phase 12-A 릴리즈 완료 |
+| CHANGELOG | **v1.8.1** | Phase 13 데이터/AI 트랙 + 정합성 동기화 패치 |
 
 ---
 
@@ -165,4 +175,4 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 
 ---
 
-*Last updated: 2026-03-15 (Phase 12-A 완료 — 병렬 세션 분석 + v1.7.0 릴리즈)*
+*Last updated: 2026-04-20 (Phase 13 + 정합성 동기화 완료 — v1.8.1, Skills 30 / Agents 33)*
