@@ -18,6 +18,27 @@ patch : 기존 자산 수정/오탐 수정/문서 업데이트
 
 ---
 
+## [v1.9.2] — 2026-04-20
+
+### Fixed
+- v1.9.1 정합성 패치 후 잔존한 `docs/` 4문서 내부 "현재 상태" 버전 참조 동기화 (v1.9.0 → v1.9.1 → v1.9.2):
+  - `docs/plan.md:32` 대시보드 인용 블록
+  - `docs/plan.md:206` 대시보드 테이블 CHANGELOG 행
+  - `docs/plan.md:221` Last updated
+  - `docs/history.md:288` Last updated
+  - `docs/task.md:3` 현재 Phase
+  - `docs/checklist.md:3` 현재 Phase
+- `base_code_plan.md` 버전 v1.9.1 → **v1.9.2**
+- plan.md 대시보드에 `Hooks 3종 (8 스크립트)` 표기 추가 (README와 용어 통일)
+
+### Context
+- v1.9.1 후 "전체 상세 검토 + 자동화 테스트"(8 카테고리) 수행 결과 LOW 수준 드리프트 6곳 발견.
+- 자산 본체(Skills 30 frontmatter / Agents 33 model tier / skill-rules v1.6 / 훅 13 스크립트 실행 가능)는 전수 PASS였으나, `docs/` 4문서의 "현재 상태" 표기만 v1.9.0 잔존.
+- "Phase 14 완료 시점 = v1.9.0"은 **역사적 기록**으로 보존, "현재 상태" 표기만 **v1.9.2**로 통일.
+- 크로스 참조 매칭 (skill-rules ↔ 디렉토리, agents/README ↔ 실제 파일) 유령/미등록 **0건** 재확인.
+
+---
+
 ## [v1.9.1] — 2026-04-20
 
 ### Fixed

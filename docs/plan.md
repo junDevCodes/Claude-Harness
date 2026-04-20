@@ -29,7 +29,7 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 | **10-A~D** | 2차 코드리뷰 수정 13건 + v1.6.2 | 2026-03-11 |
 | **11-A** | 3차 심층 리뷰 P0 보안/기능 결함 7건 수정 | 2026-03-11 |
 
-> **현재 자산:** 베이스 코드 9개 / Skills 30개 / Agents 33개 / Commands 11개 / Hooks 3종 / v1.9.0 (Phase 14 Opus 4.7 최적화 완료)
+> **현재 자산:** 베이스 코드 9개 / Skills 30개 / Agents 33개 / Commands 11개 / Hooks 3종 (8 스크립트) / v1.9.2 (Phase 14 완료 + 정합성 패치 2회)
 
 ---
 
@@ -203,7 +203,7 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 | Slash Commands | **11** | quality-gate + dev-qa-loop 포함 |
 | Hooks | **3종** | 4문서 자동화 2 + CI/CD 1 |
 | 사용자 가이드 | **2** | USAGE_GUIDE + COMMANDS_REFERENCE |
-| CHANGELOG | **v1.9.0** | Phase 14 Opus 4.7 자산 최적화 |
+| CHANGELOG | **v1.9.2** | Phase 14 Opus 4.7 자산 최적화 + 정합성 패치 (v1.9.1 README, v1.9.2 4문서) |
 
 ---
 
@@ -218,4 +218,4 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 
 ---
 
-*Last updated: 2026-04-20 (Phase 14 Opus 4.7 최적화 완료 — v1.9.0, Agents model tier 33 명시)*
+*Last updated: 2026-04-20 (v1.9.2 — Phase 14 완료 + 정합성 패치 2회 — Agents model tier 33 명시)*
