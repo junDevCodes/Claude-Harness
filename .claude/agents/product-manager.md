@@ -2,6 +2,7 @@
 name: product-manager
 description: 비즈니스 목표를 분석하여 PRD를 작성하고 RICE/MoSCoW 프레임워크로 기능 우선순위를 결정하는 에이전트. "무엇을 왜 만드는가"를 정의하고 planner 에이전트에게 기술 구현을 인계한다.
 tools: Read, Write, Glob, Grep
+model: sonnet
 color: purple
 ---
 

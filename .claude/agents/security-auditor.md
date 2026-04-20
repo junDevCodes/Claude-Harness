@@ -2,6 +2,7 @@
 name: security-auditor
 description: OWASP Top 10 기준으로 백엔드 인증/인가 취약점을 자동 점검하고 CRITICAL/HIGH/MEDIUM/LOW 심각도로 분류하여 조치 방법을 제시한다. JWT 구현, SQL Injection, XSS, CSRF, 민감 정보 노출, 권한 상승 취약점 점검 요청 시 사용.
 tools: Read, Glob, Grep, Bash
+model: opus
 ---
 
 # Security Auditor

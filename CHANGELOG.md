@@ -18,6 +18,39 @@ patch : 기존 자산 수정/오탐 수정/문서 업데이트
 
 ---
 
+## [v1.9.0] — 2026-04-20
+
+### Added
+- **Phase 14 Opus 4.7 자산 최적화** — 전 에이전트·스킬을 Opus 4.7 특성에 맞춰 정밀 최적화.
+- `docs/phase-14-diagnosis.md` — Phase 14-A 진단 리포트 신규 생성 (자산 현황 갭 분석 + Model Tier 매트릭스 + 실행 계획).
+- `.claude/agents/README.md` — **Opus 4.7 Operating Principles** 섹션 신규 추가 (Model Tier 배정표, Extended Thinking 활용 지침, 병렬 tool calls 원칙, 출력 형식 표준).
+
+### Changed
+- **Agents 33개에 `model:` 필드 전수 명시** (이전: 명시 6 / 미명시 27):
+  - `opus` (11): pipeline-orchestrator, reality-checker, security-auditor, security-engineer, code-architecture-reviewer(sonnet→opus 승격), code-refactor-master, planner, plan-reviewer, refactor-planner, ml-evaluator, ml-engineer
+  - `sonnet` (17): data-analyst, data-pipeline-architect, product-manager, ux-researcher, ui-designer, devops-automator, rapid-prototyper, api-spec-generator, api-tester, test-coverage-agent, accessibility-auditor, performance-auditor, performance-benchmarker, db-migration-agent, technical-writer, documentation-architect(inherit→sonnet), evidence-collector
+  - `haiku` (5): auto-error-resolver, frontend-error-fixer, auth-route-debugger, auth-route-tester(sonnet→haiku 강등), web-research-specialist(sonnet→haiku 강등)
+- **Agents tools YAGNI 3건**: `plan-reviewer`(WebSearch/WebFetch 제거), `frontend-error-fixer`(Grep 추가), `auto-error-resolver`(Glob/Grep 추가).
+- **Skills 5개 description 간결화** (라우터 매칭 정확도 향상): `docx`(904자→280자), `pdf`(500자→85자), `skill-developer`(500자→280자), `embedded-c-guidelines`(500자→290자), `spring-boot-guidelines`(500자→180자).
+- `.claude/skills/skill-rules.json` — v1.5 → **v1.6** (구조 안정화, enforcement=block은 Next.js 1개 유지).
+- `base_code_plan.md` — 버전 v1.8.1 → **v1.9.0**, Last updated 갱신.
+
+### Decided (토의 결과)
+- **Model Tier 배정 기준**: 3-tier 전수 명시 (비용·속도·정확도 최적 매칭).
+- **500줄 룰**: 엄격 유지 + 포화 스킬은 `resources/` 분리 (Anthropic progressive disclosure 원칙).
+- **Block Enforcement 범위**: 현행 유지 (Next.js 1개). 다른 영역 오탐률 실측 결과 block 필요성 없음.
+
+### Deferred (Phase 14-B2 — 후속 세션)
+- 500줄 포화 4개 스킬 `resources/` 분리: `react-native-guidelines`, `pptx`, `express-backend-guidelines`, `django-backend-guidelines`.
+- 이유: 리팩토링 공수 대비 당면 이익 제한적. `/harness-plan-sync` 재가동 시 병렬 세션으로 처리.
+
+### Context
+- 발단: 사용자 "opus 4.7 기준으로 스킬 및 에이전트 최적화 하려고 하는데, 계획 한번 세워줘" (2026-04-20).
+- 진단: Phase 14-A에서 자산 현황 갭 분석 → Model Tier 매트릭스 확정.
+- 실행: 이 세션에서 14-A/B/C/D/E를 단일 흐름으로 완료.
+
+---
+
 ## [v1.8.1] — 2026-04-20
 
 ### Fixed

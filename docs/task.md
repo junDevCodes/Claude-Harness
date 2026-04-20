@@ -1,45 +1,45 @@
 # Task — 현재 작업 상세 계획서
 
-> **현재 Phase:** 다음 적용 대기 (Phase 7 상시 운영 or 다음 실 프로젝트 사이클)
-> **출처:** docs/plan.md Phase 7 / Phase 12-C 잔여 / Phase 11 백로그
-> **선행 완료:** Phase 13 (2026-04-16, v1.8.0) — 데이터/AI 트랙 4+4 역전파 + 정합성 동기화 (2026-04-20)
-> **방침:** 다음 실 프로젝트 적용 사이클 또는 백로그 항목 처리 대기
+> **현재 Phase:** Phase 14 완료 (2026-04-20, v1.9.0) — 다음 작업 대기
+> **출처:** docs/plan.md
+> **선행 완료:** Phase 14 Opus 4.7 자산 최적화 (2026-04-20)
+> **유보:** Phase 14-B2 (500줄 포화 스킬 resources/ 분리 4개)
 
 ---
 
 ## 다음 작업 후보
 
-### A. 다음 실 프로젝트 사이클 (Phase 12-B 2차 적용)
+### A. Phase 14-B2 — Skills resources/ 분리 (유보 항목)
 
-| 단계 | 내용 |
+| 스킬 | 분리 대상 섹션 |
 |---|---|
-| 1 | 새 대상 프로젝트 선정 (스택, 규모) |
-| 2 | `/harness-apply` 또는 `/harness-init` 실행 |
-| 3 | 적용 결과 검증 (4문서 훅, 스킬 트리거, 에이전트 실행) |
-| 4 | 발견 이슈 → `/harness-backport`로 역전파 + `/harness-changelog` 릴리즈 |
+| `react-native-guidelines` | 네비게이션/인증/상태관리 → `resources/navigation.md`, `resources/auth.md` |
+| `pptx` | 레이아웃/테이블/차트 → `resources/examples.md` |
+| `express-backend-guidelines` | Prisma/JWT → `resources/prisma.md`, `resources/jwt.md` |
+| `django-backend-guidelines` | ViewSet/DRF → `resources/drf.md` |
 
-### B. Phase 11 백로그 처리 (실 사용 우선순위 기반)
+### B. 실 프로젝트 적용 2차 사이클 (Phase 12-B)
 
-| 그룹 | 잔여 건수 | 우선순위 |
+- `/harness-apply` 또는 `/harness-init` 신규 프로젝트 적용
+- Opus 4.7 model tier 실적 측정 (opus 11 / sonnet 17 / haiku 5 호출 비율)
+- 오탐/미탐 실측 → `/harness-backport` 역전파
+
+### C. Phase 11 백로그 처리
+
+| 그룹 | 건수 | 우선순위 |
 |---|---|---|
-| 11-B 훅/CI/CD 신뢰성 | 6건 | 🟠 P1 |
-| 11-C 에이전트/스킬 참조 수정 | 9건 | 🟠 P1 |
-| 11-D 문서 drift | 5건 | 🟠 P1 |
-| 11-E 코드 품질 | 10건 | 🟡 P2 |
-
-### C. Phase 7 상시 운영
-
-- `skill-rules.json` 오탐/미탐 패턴 수집 → 키워드 정제
-- `/harness-changelog`로 패치 릴리즈
-- 자산 카운트 정합성 자동 검증 훅 도입 검토
+| 11-B 훅/CI/CD 신뢰성 | 6 | P1 |
+| 11-C 에이전트/스킬 참조 수정 | 9 | P1 |
+| 11-D 문서 drift | 5 | P1 |
+| 11-E 코드 품질 | 10 | P2 |
 
 ---
 
 ## 착수 조건
 
-- 사용자가 다음 작업 방향 지정 시 본 task.md 교체
+- 사용자가 다음 작업 방향 지정 시 task.md 교체
 - 또는 `/harness-plan-sync` 실행으로 다음 Phase 자동 탐색
 
 ---
 
-*Last updated: 2026-04-20 (Phase 13 + 정합성 동기화 완료 — 다음 작업 대기)*
+*Last updated: 2026-04-20 (Phase 14 완료 — 다음 작업 대기)*

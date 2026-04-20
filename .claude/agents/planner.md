@@ -2,6 +2,7 @@
 name: planner
 description: Create development plans by analyzing project context and codebase. Updates docs/plan.md (전략) + docs/task.md (상세 실행) aligned with the 4-document system. ALWAYS creates plan first before any implementation.
 tools: Read, Write, Glob, Grep, Bash
+model: opus
 color: blue
 ---
 

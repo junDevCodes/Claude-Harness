@@ -31,17 +31,18 @@
 
 ## 현재 상태 요약
 
-- **현재 Phase:** Phase 13 완료 + 정합성 동기화 (2026-04-20, v1.8.1) — 다음 작업 대기
-- **직전 완료:** Phase 13 (2026-04-16, v1.8.0) — 데이터/AI 트랙 역전파 (스킬 4개 + 에이전트 4개)
-- **방침:** 실 프로젝트 적용 피드백 기반 개선
+- **현재 Phase:** Phase 14 완료 (2026-04-20, v1.9.0) — 다음 작업 대기
+- **직전 완료:** Phase 14 Opus 4.7 자산 최적화 (2026-04-20, v1.9.0)
+- **방침:** Opus 4.7 특성 기반 자산 정밀 최적화 완료, 후속 Phase 14-B2(resources/ 분리)는 별도 세션
+- **확정 원칙:** 3-tier model 명시 / 500줄 엄격 + resources 분리 / block 현행 유지
 
-### 자산 현황 (v1.8.1)
+### 자산 현황 (v1.9.0)
 
 | 자산 | 수량 | 비고 |
 |---|---|---|
 | 베이스 코드 | 9개 | FastAPI/Next.js/Django/NestJS/Spring Boot/Express/React Native/C/C++ |
-| Skills | 30개 | skill-rules.json v1.5 (Phase 13 데이터/AI +4: data-analysis, data-pipeline, ml-training, ml-evaluation) |
-| Agents | 33개 | Phase 13 데이터/AI +4: data-analyst, data-pipeline-architect, ml-engineer, ml-evaluator |
+| Skills | 30개 | skill-rules.json **v1.6**. description 간결화 5개(docx/pdf/skill-developer/embedded-c/spring-boot) |
+| Agents | 33개 | **model tier 전수 명시** (opus 11 / sonnet 17 / haiku 5). tools YAGNI 3건 정리 |
 | Commands | 11개 | quality-gate + dev-qa-loop 포함 |
 | Hooks | 3종 | 4문서 자동화 2 + CI/CD 1 |
 
@@ -174,6 +175,46 @@
 
 ---
 
+## Phase 14 완료 (2026-04-20, v1.9.0) — Opus 4.7 자산 최적화
+
+**배경:** 사용자 "opus 4.7 기준으로 스킬 및 에이전트 최적화 하려고 하는데, 계획 한번 세워줘" 요청. 에이전트 주도 합리적 근거 기반 의사결정 + 토의 형식 근거 공개 + 결론 바로 실행 방식으로 진행.
+
+**확정 원칙 (토의 결과):**
+
+| 포인트 | 결정 | 근거 |
+|---|---|---|
+| Model Tier | 3-tier 전수 명시 (opus/sonnet/haiku) | Opus 4.7 subagent 라우터의 model hint 활용 |
+| 500줄 룰 | 엄격 유지 + 포화 스킬 `resources/` 분리 | Anthropic progressive disclosure 공식 원칙 |
+| Block Enforcement | Next.js 1개 유지 | 다른 영역 오탐 위험 > 실수 방지 이익 |
+
+**Phase 14-A 진단:** `docs/phase-14-diagnosis.md` 작성 — 자산 현황 갭 분석 + tier 매트릭스 확정
+
+**Phase 14-B 경량 최적화 (5건):**
+- Skills description 간결화: `docx`(904자→280자), `pdf`(500자→85자), `skill-developer`(500자→280자), `embedded-c-guidelines`(500자→290자), `spring-boot-guidelines`(500자→180자)
+- 500줄 포화 4개 스킬(`react-native`, `pptx`, `express`, `django`) `resources/` 분리는 공수 대비 효용 제한으로 **Phase 14-B2(후속 세션) 유보**
+
+**Phase 14-C Agents 최적화:**
+- **33개 agent `model:` 필드 전수 명시** (32회 Edit 성공 + code-refactor-master 1개는 이미 opus 명시 유지)
+- tools YAGNI 3건: `plan-reviewer`(WebSearch/WebFetch 제거), `frontend-error-fixer`(Grep 추가), `auto-error-resolver`(Glob/Grep 추가)
+- `agents/README.md` "Opus 4.7 Operating Principles" 섹션 신규 추가 (Model Tier / Extended Thinking / 병렬 tool calls / 출력 형식 표준)
+
+**Phase 14-D skill-rules.json v1.6:**
+- 버전 bump. enforcement=block은 Next.js 1개 유지.
+- 오탐 실측 결과 다른 영역 block 필요성 없음 확인
+
+**Phase 14-E 릴리즈:**
+- `CHANGELOG v1.9.0` 작성 (Added / Changed / Decided / Deferred / Context 섹션)
+- `base_code_plan.md` v1.8.1 → v1.9.0
+- 4문서(plan/task/checklist/history) 갱신
+- git commit + push
+
+**효과:**
+- Opus 4.7 subagent 라우터가 tier에 맞게 model 선택 → 비용·속도 최적화
+- 복잡 추론은 opus, 표준 업무는 sonnet, 단순 조회는 haiku로 분산
+- description 간결화로 라우터 매칭 정확도 향상
+
+---
+
 ## 정합성 동기화 (2026-04-20, v1.8.1)
 
 **배경:** Phase 13 commit (5cada71)에서 일부 메타 문서 갱신 누락 — 사용자 "스킬/에이전트 상세 재검증" 요청 시 정합성 점검 중 발견.
@@ -244,4 +285,4 @@
 
 ---
 
-*Last updated: 2026-04-20 (Phase 13 + 정합성 동기화 완료 — Skills 30 / Agents 33 / v1.8.1)*
+*Last updated: 2026-04-20 (Phase 14 완료 — Opus 4.7 자산 최적화, v1.9.0)*

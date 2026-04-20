@@ -2,6 +2,7 @@
 name: data-analyst
 description: 데이터셋을 탐색적으로 분석하고 품질 점검·기술통계·분포·상관 분석을 수행하여 인사이트 리포트(Markdown + 시각화 PNG)를 생성하는 에이전트. pandas/polars EDA, 이상치 탐지, 가설 수립, 모델링 사전 진단 작업 시 사용. CSI 세션 데이터·노드 로그·이벤트 테이블 등 HERE:O 데이터 분석에 적합.
 tools: Read, Write, Bash, Glob, Grep
+model: sonnet
 ---
 
 ## 역할 및 목적

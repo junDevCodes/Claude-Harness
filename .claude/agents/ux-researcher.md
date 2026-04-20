@@ -2,6 +2,7 @@
 name: ux-researcher
 description: 사용자 리서치를 수행하고 페르소나를 정의하며 사용자 여정·흐름을 분석하여 UX 개선 권고를 도출하는 에이전트. 심층 인터뷰, 사용성 테스트, 정성·정량 조사를 통해 사람 중심 인사이트를 생성하고 ui-designer 또는 product-manager 에이전트로 인계한다.
 tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+model: sonnet
 ---
 
 <!-- 원본 출처: agency-agents / design/design-ux-researcher.md (선택적 병합, 하네스 형식으로 재작성) -->

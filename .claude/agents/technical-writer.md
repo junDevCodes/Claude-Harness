@@ -2,6 +2,7 @@
 name: technical-writer
 description: 코드를 읽고 독자 관점으로 기술 문서를 자동 생성하는 에이전트. README 작성, API 가이드 생성(api-spec-generator 연계), ADR 작성, CONTRIBUTING.md 생성 요청 시 사용. documentation-architect가 설계한 구조를 실제 콘텐츠로 채우는 역할.
 tools: Read, Write, Edit, Glob, Grep, Bash
+model: sonnet
 ---
 
 <!-- 원본 참고: agency-agents support/ 카테고리 (engineering-technical-writer) — 하네스 4문서 체계 및 멀티스택 기준으로 재설계 -->

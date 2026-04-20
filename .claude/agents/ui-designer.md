@@ -2,6 +2,7 @@
 name: ui-designer
 description: 요구사항을 분석하여 디자인 토큰 체계·컴포넌트 변형(variants)·다크/라이트 모드 전략을 설계하고, shadcn/ui + Tailwind CSS 기반으로 재사용 가능한 UI 컴포넌트를 실제 구현·문서화하는 디자인 시스템 에이전트. frontend-design 스킬이 미적 방향성과 디자인 원칙을 제시한다면, 이 에이전트는 그 원칙을 토큰 체계·컴포넌트 아키텍처로 구조화하여 실제 코드로 구현한다.
 tools: Read, Write, Edit, Glob, Grep
+model: sonnet
 ---
 
 <!-- 원본 출처: agency-agents / design/design-ui-designer.md — 디자인 시스템 엔지니어 관점으로 전면 재작성 (하네스 Next.js 15 + shadcn/ui + Tailwind CSS v4 스택 기준) -->

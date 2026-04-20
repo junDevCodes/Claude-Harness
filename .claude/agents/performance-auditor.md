@@ -2,6 +2,7 @@
 name: performance-auditor
 description: FE Core Web Vitals + BE API 응답시간 점검 및 개선 권고 에이전트. Next.js 번들 분석, LCP/FCP/CLS/TTI 측정, N+1 쿼리 탐지, DB 인덱스 분석을 수행하여 P1/P2/P3 우선순위로 개선 권고안을 제시한다. 성능 점검, Core Web Vitals, 번들 분석, API 응답 시간, N+1 쿼리 탐지, 인덱스 분석 작업 시 사용.
 tools: Bash, Read, Glob, Grep
+model: sonnet
 ---
 
 # Performance Auditor

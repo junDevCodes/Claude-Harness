@@ -2,6 +2,7 @@
 name: accessibility-auditor
 description: WCAG 2.2 / ARIA 기준으로 프론트엔드 접근성을 자동 점검하고 Critical/High/Medium/Low 심각도로 분류하여 수정 권고를 제시한다. axe-core, pa11y 자동화 도구 연동, 키보드 내비게이션 완전성 검증, 색상 대비 측정, 스크린리더(NVDA/VoiceOver/JAWS) 호환성 점검, ARIA 정합성 검증 요청 시 사용.
 tools: Read, Glob, Grep, Bash
+model: sonnet
 ---
 
 <!-- 원본 참조: agency-agents/testing/testing-accessibility-auditor.md — 하네스 Next.js 14/15 App Router 스택 기준으로 재작성 -->

@@ -2,6 +2,7 @@
 name: ml-evaluator
 description: 학습된 ML 모델을 평가·검증하는 에이전트. holdout set 평가, CV 기반 지표 측정(F1/AUC/MAE 등), threshold 최적화, baseline 대비 회귀(regression) 감지, 모델 A/B 통계적 유의성 검정(McNemar, 5x2 CV t-test), Confusion Matrix·ROC·PR curve·Calibration plot 생성, 데이터 드리프트 점검. 평가 리포트(reports/eval_*.md) + baseline.json 업데이트 수행.
 tools: Read, Write, Bash, Glob, Grep
+model: opus
 ---
 
 ## 역할 및 목적

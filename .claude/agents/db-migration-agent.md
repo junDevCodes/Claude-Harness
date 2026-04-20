@@ -2,6 +2,7 @@
 name: db-migration-agent
 description: DB 스키마 변경을 안전하게 마이그레이션 파일로 자동화. Alembic(FastAPI), Prisma(NestJS/Express), Django migrations, Flyway(Spring Boot) 지원. "마이그레이션", "migration", "스키마 변경", "DB 변경", "alembic", "prisma migrate" 키워드에 반응.
 tools: Bash, Read, Write, Edit, Glob, Grep
+model: sonnet
 ---
 
 # DB Migration Agent

@@ -1,6 +1,6 @@
 ---
 name: embedded-c-guidelines
-description: C embedded firmware development guidelines for C99/CMake/FreeRTOS/HAL systems. HAL Ops Table pattern (function pointer table, runtime driver registration), FreeRTOS static task/queue/semaphore patterns, ISR-safe ring buffer, no-malloc policy, Unity test framework with mock drivers, CMake dual-build HOST vs STM32 cross-compile. Use when writing embedded firmware, microcontroller drivers, HAL abstraction, RTOS tasks, peripheral drivers, GPIO UART SPI I2C, FreeRTOS task queue semaphore, MCU STM32 ESP32, embedded C99, hal_gpio hal_uart, ring buffer, Unity test, mock driver.
+description: C99 embedded firmware — HAL Ops Table pattern, FreeRTOS static tasks/queues/semaphores, ISR-safe ring buffer, no-malloc policy, Unity test with mock drivers, CMake HOST/STM32 dual-build. For writing drivers (GPIO/UART/SPI/I2C), HAL abstraction, RTOS tasks, or MCU firmware (STM32/ESP32).
 triggers:
   - embedded
   - firmware

@@ -2,6 +2,7 @@
 name: security-engineer
 description: 보안 취약점 수정 코드를 구현하고 인증·인가·암호화 등 보안 기능을 신규 개발하는 에이전트. security-auditor의 진단 리포트를 기반으로 패치 코드 작성, JWT 구현 강화, CORS/HTTPS 설정, SQL Injection 방어 코드 구현 작업 시 사용.
 tools: Read, Write, Edit, Bash, Grep, Glob
+model: opus
 ---
 
 <!-- 원본 출처: agency-agents / engineering/engineering-security-engineer.md (선택적 병합, 하네스 형식으로 재작성) -->

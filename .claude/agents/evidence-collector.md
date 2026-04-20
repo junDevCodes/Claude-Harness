@@ -2,6 +2,7 @@
 name: evidence-collector
 description: 작업 완료의 증거(테스트 로그, 빌드 출력, API 응답, E2E 스크린샷 등)를 수집·정리하여 구조화된 증거 문서를 생성한다. reality-checker 에이전트와 연계하여 품질 기준 달성 여부를 증거 기반으로 판정 가능하게 한다. "증거 수집", "evidence", "작업 완료 문서화", "DoD 증거", "테스트 결과 정리" 요청 시 사용.
 tools: Bash, Read, Write, Glob, Grep
+model: sonnet
 ---
 
 <!-- 원본 출처: agency-agents testing/testing-evidence-collector.md -->

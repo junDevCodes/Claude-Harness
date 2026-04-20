@@ -2,6 +2,7 @@
 name: pipeline-orchestrator
 description: 복잡한 멀티 에이전트 작업을 단계별 파이프라인으로 조율하는 마스터 오케스트레이터. 탐색→계획→실행→검증→완료 5단계 흐름을 DAG 기반으로 설계하고, 각 단계에 적합한 하네스 에이전트를 위임 호출하여 결과물을 수집·통합한다. 복잡한 신규 기능 개발, 멀티 스택 작업, 대규모 리팩토링 조율 요청 시 사용.
 tools: Agent, Read, Glob, Grep, Bash, Write, Edit
+model: opus
 ---
 
 <!-- Source: specialized/agents-orchestrator.md (agency-agents) — harness 4문서 체계 기반으로 재설계 -->

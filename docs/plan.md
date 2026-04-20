@@ -29,7 +29,7 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 | **10-A~D** | 2차 코드리뷰 수정 13건 + v1.6.2 | 2026-03-11 |
 | **11-A** | 3차 심층 리뷰 P0 보안/기능 결함 7건 수정 | 2026-03-11 |
 
-> **현재 자산:** 베이스 코드 9개 / Skills 30개 / Agents 33개 / Commands 11개 / Hooks 3종 / v1.8.1 (Phase 13 + 정합성 동기화 완료)
+> **현재 자산:** 베이스 코드 9개 / Skills 30개 / Agents 33개 / Commands 11개 / Hooks 3종 / v1.9.0 (Phase 14 Opus 4.7 최적화 완료)
 
 ---
 
@@ -150,17 +150,60 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 
 ---
 
+## Phase 14 — Opus 4.7 기준 자산 최적화 ← 현재 (2026-04-20 ~, v1.9.0 목표)
+
+> **목표:** 30 skills + 33 agents + skill-rules.json을 Opus 4.7 특성에 맞게 정밀 최적화.
+> **원칙 결정 (토의 결과):**
+> - Model Tier: 3-tier (opus/sonnet/haiku) 명시
+> - 500줄 룰: 엄격 유지 + 포화 스킬은 `resources/` 분리
+> - Block Enforcement: 현행 유지 (Next.js 1개), 14-D에서 오탐률 실측 후 재검토
+
+### Phase 14-A — 진단 + 매트릭스 작성 ✅ 완료
+
+- [x] Skills 30개 frontmatter 표준 갭 분석
+- [x] Agents 33개 `model` / `tools` 갭 분석
+- [x] `skill-rules.json` 오탐 의심 영역 도출
+- [x] Model Tier 매트릭스 확정 (opus 11 / sonnet 17 / haiku 5)
+- [x] 500줄 포화 스킬 resources/ 분리 대상 목록 (Phase 14-B2로 유보)
+- [x] 산출물: `docs/phase-14-diagnosis.md`
+
+### Phase 14-B — Skills 경량 최적화 ✅ 완료
+
+- [x] description 간결화 5건 (docx/pdf/skill-developer/embedded-c/spring-boot)
+- [x] triggers 누락 진단 오진 확인 (vercel-react, web-design 이미 triggers 있음)
+- [ ] **Phase 14-B2 (후속 세션)**: 500줄 포화 스킬 `resources/` 분리 4개
+
+### Phase 14-C — Agents 최적화 ✅ 완료
+
+- [x] 33개 `model:` 필드 전수 명시 (opus 11 / sonnet 17 / haiku 5)
+- [x] `tools:` YAGNI 3건 (plan-reviewer 축소, frontend-error-fixer/auto-error-resolver 추가)
+- [x] agents/README.md "Opus 4.7 Operating Principles" 섹션 신규 (Extended Thinking + 병렬 tool calls + 출력 표준)
+
+### Phase 14-D — skill-rules.json 재조정 ✅ 완료
+
+- [x] `skill-rules.json` v1.5 → v1.6 bump
+- [x] enforcement=block 재검토 (Next.js 1개 유지 — 다른 영역 오탐 위험 > 이익)
+
+### Phase 14-E — 통합 + v1.9.0 릴리즈 ✅ 완료
+
+- [x] `base_code_plan.md` v1.8.1 → v1.9.0
+- [x] CHANGELOG v1.9.0 작성 (Added/Changed/Decided/Deferred/Context)
+- [x] 4문서 (plan/task/checklist/history) 갱신
+- [x] git commit + push
+
+---
+
 ## 자산 현황 대시보드
 
 | 자산 유형 | 현재 | 비고 |
 |---|---|---|
-| Skills | **30** | skill-rules.json v1.5 (Phase 13 데이터/AI 4개 추가) |
-| Agents | **33** | Phase 13 데이터/AI 4개 추가 |
+| Skills | **30** | skill-rules.json **v1.6** (Phase 14 description 간결화 5건) |
+| Agents | **33** | **Phase 14 model tier 전수 명시** (opus 11 / sonnet 17 / haiku 5) |
 | 베이스 코드 스택 | **9** | FastAPI / Next.js / Django / NestJS / Spring Boot / Express / React Native / C / C++ |
 | Slash Commands | **11** | quality-gate + dev-qa-loop 포함 |
 | Hooks | **3종** | 4문서 자동화 2 + CI/CD 1 |
 | 사용자 가이드 | **2** | USAGE_GUIDE + COMMANDS_REFERENCE |
-| CHANGELOG | **v1.8.1** | Phase 13 데이터/AI 트랙 + 정합성 동기화 패치 |
+| CHANGELOG | **v1.9.0** | Phase 14 Opus 4.7 자산 최적화 |
 
 ---
 
@@ -175,4 +218,4 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 
 ---
 
-*Last updated: 2026-04-20 (Phase 13 + 정합성 동기화 완료 — v1.8.1, Skills 30 / Agents 33)*
+*Last updated: 2026-04-20 (Phase 14 Opus 4.7 최적화 완료 — v1.9.0, Agents model tier 33 명시)*

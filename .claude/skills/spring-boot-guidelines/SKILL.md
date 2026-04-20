@@ -1,6 +1,6 @@
 ---
 name: spring-boot-guidelines
-description: Spring Boot 3 + Java 21 백엔드 개발 가이드라인. Controller→Service→Repository 계층 구조, JPA Entity(Lombok+@PrePersist), Spring Security JWT Filter 인증(jjwt 0.12.x, Refresh Token Rotation), ErrorCode+BusinessException+GlobalExceptionHandler 예외 처리, ApiResponse<T> 표준 응답 래퍼, @Transactional(readOnly) 분리, @PreAuthorize 메서드 인가. Spring Boot API, Spring Security, JPA, Hibernate, JWT, Controller, Service, Repository, Entity, Bean Validation, GlobalExceptionHandler, RestControllerAdvice 작업 시 사용.
+description: Spring Boot 3 + Java 21 백엔드 — Controller→Service→Repository 계층, JPA Entity(Lombok+@PrePersist), Spring Security JWT Filter(jjwt 0.12.x + Refresh Rotation), GlobalExceptionHandler, ApiResponse<T>, @Transactional(readOnly), @PreAuthorize 메서드 인가.
 triggers:
   - spring boot
   - spring security

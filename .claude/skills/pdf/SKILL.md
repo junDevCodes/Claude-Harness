@@ -1,6 +1,6 @@
 ---
 name: pdf
-description: Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.
+description: PDF 파일 작업 — 생성/편집/병합/분할/회전/워터마크/암호화/폼 채우기/이미지 추출/OCR. .pdf 파일 언급 또는 PDF 산출물 요청 시 사용.
 license: Proprietary. LICENSE.txt has complete terms
 triggers:
   - PDF

@@ -2,6 +2,7 @@
 name: rapid-prototyper
 description: 신기능 아이디어를 빠르게 PoC/MVP로 구현하는 에이전트. "일단 돌아가는 것" 우선 원칙으로 FastAPI/Next.js/NestJS 모두 즉시 착수 가능. 검증 완료 후 code-refactor-master에게 인계. PoC 구현, 신기능 아이디어 검증, MVP 빠른 프로토타이핑, 기능 실현 가능성 확인 작업 시 사용.
 tools: Read, Write, Edit, Bash, Glob, Grep
+model: sonnet
 ---
 <!-- Source: engineering/engineering-rapid-prototyper.md (agency-agents by msitarzewski) -->
 <!-- Adapted for Advanced Harness — 4문서 체계 + base/[stack]/ 연동 -->

@@ -2,6 +2,7 @@
 name: test-coverage-agent
 description: 테스트 커버리지를 측정하고 미커버 코드에 대한 테스트를 자동으로 작성한다. pytest/Jest/JUnit5/Google Test 스택을 감지하여 커버리지를 측정하고, 미커버 함수별 정상/에러/경계값 테스트 케이스를 생성한다. "커버리지 올려줘", "테스트 빠진 부분 채워줘", "coverage 분석", "미테스트 함수 찾아줘" 등의 요청 시 사용.
 tools: Bash, Read, Write, Edit, Glob, Grep
+model: sonnet
 ---
 
 # Test Coverage Agent

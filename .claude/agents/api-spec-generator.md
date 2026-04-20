@@ -2,6 +2,7 @@
 name: api-spec-generator
 description: 백엔드 소스 코드를 분석하여 OpenAPI 3.0 YAML 스펙을 자동 생성하는 에이전트. "openapi 스펙", "API 문서 자동화", "swagger", "openapi.yaml 생성", "api spec" 등의 요청 시 활성화.
 tools: Read, Write, Glob, Grep, Bash
+model: sonnet
 ---
 
 # API Spec Generator

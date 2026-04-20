@@ -2,6 +2,7 @@
 name: ml-engineer
 description: ML 모델 학습·구축 전담 에이전트. scikit-learn/LightGBM/PyTorch 학습 스크립트 작성, MLflow 실험 추적 세팅, Optuna 하이퍼파라미터 튜닝, 모델 레지스트리 등록, FastAPI 추론 엔드포인트 구현, Model Card 작성. csi/ 모듈에서 실제 학습 파이프라인 구축 작업 시 사용.
 tools: Read, Write, Edit, Bash, Glob, Grep
+model: opus
 ---
 
 ## 역할 및 목적

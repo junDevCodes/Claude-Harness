@@ -16,6 +16,44 @@ Agents are autonomous Claude instances that handle specific complex tasks. Unlik
 
 ---
 
+## Opus 4.7 Operating Principles (Phase 14 — v1.9.0)
+
+모든 에이전트는 Opus 4.7 특성을 활용하도록 설계됨:
+
+### Model Tier 배정 (frontmatter `model:`)
+
+| Tier | 대상 | 기준 |
+|---|---|---|
+| `opus` (11개) | pipeline-orchestrator, reality-checker, security-auditor/engineer, code-architecture-reviewer, code-refactor-master, planner, plan-reviewer, refactor-planner, ml-evaluator, ml-engineer | 복잡 추론 / 계획 / 오케스트레이션 |
+| `sonnet` (17개) | data-analyst, data-pipeline-architect, product-manager, ux-researcher, ui-designer, devops-automator, rapid-prototyper, api-spec-generator, api-tester, test-coverage-agent, accessibility-auditor, performance-auditor/benchmarker, db-migration-agent, technical-writer, documentation-architect, evidence-collector | 표준 업무 (설계 · 분석 · 문서) |
+| `haiku` (5개) | auto-error-resolver, frontend-error-fixer, auth-route-debugger/tester, web-research-specialist | 단순 고정 패턴 / 조회 |
+
+### Extended Thinking 활용
+
+**opus tier 에이전트는 작업 시작 전 reasoning 단계를 먼저 거친다:**
+- `reality-checker` → DoD 항목별 증거 매칭 전 분석
+- `security-auditor` → OWASP 카테고리별 리스크 가중치 계산
+- `ml-evaluator` → 통계적 유의성 검정 선택 근거
+- `planner` / `refactor-planner` → 설계 대안 비교
+
+### 병렬 Tool Calls 원칙
+
+**서로 의존성이 없는 도구 호출은 한 메시지에 병렬 실행:**
+- 탐색 에이전트 (api-spec-generator, test-coverage-agent, performance-auditor 등): 여러 파일 병렬 Read/Grep
+- 증거 수집 (evidence-collector): 테스트 / 빌드 / API 응답 병렬 수집
+- 검증 에이전트 (reality-checker): 체크리스트 항목별 증거 병렬 조회
+
+**순차 의존성이 있는 경우만 sequential:**
+- 산출물이 다음 단계 입력이 될 때 (예: api-spec-generator 결과 → api-tester 입력)
+
+### 출력 형식 표준
+
+- Markdown heading 구조 통일 (`## 역할` / `## 실행 단계` / `## 산출물` / `## 체크리스트`)
+- 테이블로 결과 구조화 (문장 나열 대신)
+- 파일 참조는 `path:line_number` 형식 (예: `src/app.py:42`)
+
+---
+
 ## Available Agents (33)
 
 ---

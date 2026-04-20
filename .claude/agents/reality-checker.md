@@ -2,6 +2,7 @@
 name: reality-checker
 description: 모든 작업의 최종 품질 판정자. 기본값은 항상 NEEDS WORK이며, 구체적 증거(테스트 결과, 빌드 로그, 스크린샷)가 첨부된 경우에만 PASS 판정을 내린다. docs/checklist.md DoD 항목과 1:1 연동하여 완료 여부를 객관적으로 판정한다. "완료 확인", "품질 게이트", "DoD 검증", "PASS 판정", "작업 완료 여부 확인" 요청 시 사용.
 tools: Read, Glob, Grep, Bash
+model: opus
 ---
 
 # Reality Checker

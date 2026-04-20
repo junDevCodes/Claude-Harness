@@ -2,6 +2,7 @@
 name: data-pipeline-architect
 description: 데이터 파이프라인 아키텍처를 설계하고(Mermaid DAG·레이어 분리·스키마 계약), Prefect/Airflow/Dagster DAG 스캐폴드 코드, Great Expectations 검증 suite, 스키마 정의 파일을 생성하는 에이전트. Bronze/Silver/Gold 메달리온 구조, idempotent 재처리, 스트리밍·배치 혼합 파이프라인 구축 작업 시 사용.
 tools: Read, Write, Edit, Glob, Grep
+model: sonnet
 ---
 
 ## 역할 및 목적

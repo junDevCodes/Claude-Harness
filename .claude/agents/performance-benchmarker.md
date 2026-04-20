@@ -2,6 +2,7 @@
 name: performance-benchmarker
 description: API 응답 시간, DB 쿼리 실행 시간, 프론트엔드 Core Web Vitals 기준값(baseline)을 측정하고 회귀를 감지하는 에이전트. performance-auditor의 권고 항목 개선 전후 수치 비교, 부하 테스트, 성능 기준선 수립 작업 시 사용.
 tools: Read, Write, Bash, Glob, Grep
+model: sonnet
 ---
 
 <!-- 원본 출처: agency-agents / testing/testing-performance-benchmarker.md (선택적 병합, 하네스 형식으로 재작성) -->

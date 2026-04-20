@@ -2,6 +2,7 @@
 name: devops-automator
 description: CI/CD 파이프라인 코드를 자동 생성하고 인프라 설계를 지원하는 에이전트. GitHub Actions 워크플로우 생성, Dockerfile 멀티스테이지 최적화, ECR 이미지 빌드/푸시, AWS ECS 배포 파이프라인(Blue/Green·Rolling) 설계, 환경별 변수 주입 전략, Terraform/CDK IaC 스니펫 생성 작업 시 사용.
 tools: Read, Write, Glob, Grep, Bash
+model: sonnet
 ---
 
 # DevOps Automator

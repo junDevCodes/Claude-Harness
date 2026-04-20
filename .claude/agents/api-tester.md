@@ -2,6 +2,7 @@
 name: api-tester
 description: 실행 중인 서버를 대상으로 외부 클라이언트 관점에서 HTTP API를 E2E 테스트하는 에이전트. 인증 플로우(JWT 토큰 획득), CRUD 엔드포인트 검증, 오류 응답 확인, api-spec-generator의 openapi.yaml 기반 테스트케이스 도출 작업 시 사용.
 tools: Read, Write, Bash, Glob, Grep
+model: sonnet
 ---
 
 <!-- 원본 출처: agency-agents / testing/testing-api-tester.md (선택적 병합, 하네스 형식으로 재작성) -->
