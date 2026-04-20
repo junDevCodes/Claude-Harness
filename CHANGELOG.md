@@ -18,6 +18,28 @@ patch : 기존 자산 수정/오탐 수정/문서 업데이트
 
 ---
 
+## [v1.9.1] — 2026-04-20
+
+### Fixed
+- **루트 `README.md` 대규모 드리프트 전면 수정** — Phase 5 시점(v1.5.0) 상태로 남아있던 자산 카운트 및 목록 전면 갱신:
+  - Skills 26개 → **30개** (+ `skill-rules.json` v1.4 → v1.6)
+  - Agents 16개 → **33개** (Phase 6-A/B TIER 1·2 + Phase 13 데이터/AI 17개 누락분 보강)
+  - Slash Commands 9개 → **11개** (`/quality-gate`, `/dev-qa-loop` 누락 해소)
+  - Hooks 분류 기준 통일 — "3종 (8 스크립트)" 명시 + 분류별 스크립트 매트릭스 테이블 신규
+  - CHANGELOG 참조 v1.5.0 → **v1.9.1**
+  - Agents 카테고리별 `model tier` 병기 (opus / sonnet / haiku)
+  - Skills 데이터/AI 카테고리 섹션 분리
+- `docs/plan.md` "← 현재" 마커 2곳 제거 (Phase 12 / Phase 14 완료 표기 — 후속 세션 plan.md 파싱 시 "현재 Phase 2개 충돌" 해소).
+- `base_code_plan.md` 버전 v1.9.0 → **v1.9.1**.
+
+### Context
+- Phase 14 완료 후 사용자가 "critical 혹은 별도 이슈 있는지 확인" 요청.
+- 자산 본체(Agents 33 model tier 명시 + Skills 30 frontmatter + skill-rules.json v1.6) 정합성은 **전수 PASS** 확인.
+- 루트 README만 Phase 5 시대 상태로 잔존 → 신규 사용자가 자산의 약 절반만 인식하는 문제 해소.
+- MEDIUM 이슈(plan.md "← 현재" 2곳)는 후속 세션 plan.md 자동 파싱 오류 유발 가능성 제거 목적으로 동반 수정.
+
+---
+
 ## [v1.9.0] — 2026-04-20
 
 ### Added

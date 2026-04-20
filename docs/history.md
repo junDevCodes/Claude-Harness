@@ -31,12 +31,12 @@
 
 ## 현재 상태 요약
 
-- **현재 Phase:** Phase 14 완료 (2026-04-20, v1.9.0) — 다음 작업 대기
-- **직전 완료:** Phase 14 Opus 4.7 자산 최적화 (2026-04-20, v1.9.0)
+- **현재 Phase:** Phase 14 완료 + v1.9.1 정합성 패치 (2026-04-20) — 다음 작업 대기
+- **직전 완료:** v1.9.1 루트 README 드리프트 수정 (2026-04-20) + Phase 14 Opus 4.7 자산 최적화 (2026-04-20, v1.9.0)
 - **방침:** Opus 4.7 특성 기반 자산 정밀 최적화 완료, 후속 Phase 14-B2(resources/ 분리)는 별도 세션
 - **확정 원칙:** 3-tier model 명시 / 500줄 엄격 + resources 분리 / block 현행 유지
 
-### 자산 현황 (v1.9.0)
+### 자산 현황 (v1.9.1)
 
 | 자산 | 수량 | 비고 |
 |---|---|---|
@@ -44,7 +44,7 @@
 | Skills | 30개 | skill-rules.json **v1.6**. description 간결화 5개(docx/pdf/skill-developer/embedded-c/spring-boot) |
 | Agents | 33개 | **model tier 전수 명시** (opus 11 / sonnet 17 / haiku 5). tools YAGNI 3건 정리 |
 | Commands | 11개 | quality-gate + dev-qa-loop 포함 |
-| Hooks | 3종 | 4문서 자동화 2 + CI/CD 1 |
+| Hooks | 3종 (8 스크립트) | 4문서 자동화 2 + CI/CD 1 + 보조 5 |
 
 ---
 
