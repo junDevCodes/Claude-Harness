@@ -18,7 +18,7 @@ Skills are modular knowledge bases that Claude loads when needed. They provide:
 
 ---
 
-## Available Skills (30개)
+## Available Skills (32개)
 
 ### 웹 백엔드 스킬 (6개)
 
@@ -83,6 +83,13 @@ Skills are modular knowledge bases that Claude loads when needed. They provide:
 | `data-pipeline-guidelines` | Batch/Stream, Airflow/Prefect/Dagster, 메달리온(Bronze/Silver/Gold), Great Expectations, idempotency | ~330 |
 | `ml-training-guidelines` | sklearn/LightGBM/PyTorch 단계별, MLflow, Optuna, GroupKFold, 재현성 | ~370 |
 | `ml-evaluation-guidelines` | 분류/회귀/시계열 지표, 누수 방지, threshold 최적화, McNemar, baseline 회귀 감지 | ~370 |
+
+### 🤝 협업 스킬 (2개) — v1.7 신규 (Phase 15-A)
+
+| 스킬 | 목적 | 줄수 |
+|---|---|---|
+| `git-workflow-guidelines` | Conventional Commits, GitFlow vs Trunk-based vs Feature Branch 선택, 브랜치 네이밍 + Jira 이슈 키 연계, Rebase/Merge/Squash 전략, Destructive 작업 안전 게이트 | ~390 |
+| `jira-workflow-guidelines` | Epic/Task 생성 컨벤션 검증, 시안 사전 승인 정책, 프로젝트별 커스터마이징(PROJECT_KEY/ASSIGNEE/COMPONENT) 가이드, Jira CLI/MCP/REST 4-tier fallback 설계 (agents의 SSOT) | ~330 |
 
 ### 메타 스킬 (1개)
 

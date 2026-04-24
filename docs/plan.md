@@ -193,6 +193,54 @@ Claude Code 기반 고생산성 개발 환경을 즉시 구성할 수 있는 상
 
 ---
 
+## Phase 15 — 협업 트랙 확장 (진행 중, 목표 v1.10.0)
+
+> **목표:** git + Jira 협업 워크플로우를 하네스에 공식 편입. S14P31A206에서 검증된 `jira` skill을 일반화하여 역전파 + Foundation·Composite 에이전트 4개 신규 추가.
+> **원칙 결정 (2026-04-24 토의):**
+> - 범위: Recommended(4 에이전트) — Foundation 2 + Composite 2
+> - lib.py 위임: CLI 서브커맨드 계약(Option C) — Unix process 경계 기반 4-tier fallback
+> - 실 프로젝트 연동: 같이 수정하되 커밋 분리 (cognitive proximity + 실증 트리거 확보)
+
+### Phase 15-Pre — 실 프로젝트 선행 (S14P31A206 repo, 별도 커밋) ✅ 완료 (2026-04-24)
+
+- [x] `.claude/skills/skill-rules.json` v1.5→v1.6 — `jira` 항목 등록 (keywords 11 + intentPatterns 6 + fileTriggers)
+- [x] `.claude/skills/jira/lib.py`에 argparse CLI 엔트리 추가 (5 subcommand: task-create / epic-create / transition / status / list) — `python lib.py --help` 동작 검증
+- [ ] 트리거 실측 1~2회 → 동작 키워드 기록 (다음 jira 사용 시점으로 이연)
+
+### Phase 15-A — 하네스 Skill 일반화 + 신규 ✅ 완료 (2026-04-24)
+
+- [x] `.claude/skills/jira-workflow-guidelines/SKILL.md` — 실 프로젝트 `jira/SKILL.md` 일반화 (330줄, PROJECT_KEY/ASSIGNEE/COMPONENT placeholder, lib.py 실행 섹션 제거, 프로젝트별 커스터마이징 가이드 Pattern A/B)
+- [x] `.claude/skills/git-workflow-guidelines/SKILL.md` — 신규 작성 (390줄, 브랜치 네이밍·Conventional Commits·리베이스/머지/squash·destructive 게이트·Jira 연계)
+- [x] `skill-rules.json` v1.6→v1.7 — 2개 트리거 등록 (32 skills)
+- [x] `.claude/skills/README.md` 30→32 반영, 🤝 협업 카테고리 신설
+
+### Phase 15-B — Foundation 에이전트 (병렬 2 세션)
+
+**공통 필수 동작 — Bootstrap 자동 실행:**
+> 두 에이전트 모두 **첫 실행 시** `.claude/config/{git,jira}.yaml` 또는 `.claude/skills/jira/{lib.py,config.yaml}` 부재를 감지하면 해당 skill의 Bootstrap 섹션을 자동 실행하여 프로젝트별 초기 세팅을 수행한 뒤 원래 요청을 재개한다. 파이프라인 로직은 skill 본문이 SSOT, 프로젝트별 설정값만 config 파일에 분리.
+
+- [ ] `git-workflow-expert` — conventional commit 자동 생성, 리베이스/충돌 가이드, 브랜치 네이밍 검증
+  - [ ] **Bootstrap:** `.claude/config/git.yaml` 부재 시 7단계 와이자드 실행 (base branch 감지 → 커밋 준수율 분석 → 네이밍 패턴 수집 → 전략·Tracker 질문 → git.yaml 생성 → 검증)
+  - [ ] config 로드 후 모든 판정 로직은 config 값 기반 (하드코딩 금지)
+- [ ] `jira-workflow-expert` — 4-tier fallback(lib.py CLI→jira-cli→MCP→REST), 8개 명령 지원, 시안 승인 정책 계승
+  - [ ] **Bootstrap:** `.env` 시크릿 + `.claude/skills/jira/{lib.py,config.yaml}` 부재 감지 시 7단계 와이자드 실행 (Jira 인스턴스 식별 → myself API로 accountId 획득 → field API로 customfield 자동 매핑 → component 선택 → 컨벤션 확정 → config.yaml 생성 → 시험 호출)
+  - [ ] `issue_tracker.type=jira` 선택 시 git-workflow-expert Bootstrap과 체이닝 동작
+
+### Phase 15-C — Composite 에이전트 (병렬 2 세션, 15-B 선행 필수)
+
+- [ ] `pr-manager` — PR 생성·템플릿·라벨·리뷰어·Jira 링크·머지 전략, `pr-review-trigger` 훅과 중복 회피
+- [ ] `release-manager` — semver 결정, CHANGELOG 갱신, 태그 생성, GitHub Release 발행
+
+### Phase 15-E — 통합 + v1.10.0 릴리즈
+
+- [ ] `.claude/agents/README.md` 33→37, 🤝 협업 카테고리 신규
+- [ ] `base_code_plan.md` v1.9.2 → v1.10.0
+- [ ] CHANGELOG v1.10.0 작성
+- [ ] 4문서 갱신
+- [ ] git commit + push
+
+---
+
 ## 자산 현황 대시보드
 
 | 자산 유형 | 현재 | 비고 |

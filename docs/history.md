@@ -31,18 +31,19 @@
 
 ## 현재 상태 요약
 
-- **현재 Phase:** Phase 14 완료 + v1.9.1 정합성 패치 (2026-04-20) — 다음 작업 대기
-- **직전 완료:** v1.9.1 루트 README 드리프트 수정 (2026-04-20) + Phase 14 Opus 4.7 자산 최적화 (2026-04-20, v1.9.0)
-- **방침:** Opus 4.7 특성 기반 자산 정밀 최적화 완료, 후속 Phase 14-B2(resources/ 분리)는 별도 세션
-- **확정 원칙:** 3-tier model 명시 / 500줄 엄격 + resources 분리 / block 현행 유지
+- **현재 Phase:** Phase 15-A 완료 (2026-04-24) — Phase 15-B Foundation 에이전트 병렬 세션 착수 대기
+- **직전 완료:** Phase 15-A 협업 트랙 Skill 일반화 (2026-04-24) — git/jira skill 2개 신규, skill-rules v1.7
+- **이전 완료:** v1.9.2 (2026-04-20) 4문서 버전 참조 동기화, v1.9.1 README 드리프트 패치
+- **방침:** Phase 15 협업 트랙 4 에이전트 확장 중 — Recommended 범위(git/jira/pr/release) + Option C(CLI 서브커맨드 계약) + 실 프로젝트 분리 커밋
+- **Phase 15 원칙:** lib.py 위임 = Unix 프로세스 경계, 4-tier fallback(lib.py CLI → jira-cli → MCP → REST), 시안 사전 승인 정책 계승
 
-### 자산 현황 (v1.9.1)
+### 자산 현황 (Phase 15-A 반영)
 
 | 자산 | 수량 | 비고 |
 |---|---|---|
 | 베이스 코드 | 9개 | FastAPI/Next.js/Django/NestJS/Spring Boot/Express/React Native/C/C++ |
-| Skills | 30개 | skill-rules.json **v1.6**. description 간결화 5개(docx/pdf/skill-developer/embedded-c/spring-boot) |
-| Agents | 33개 | **model tier 전수 명시** (opus 11 / sonnet 17 / haiku 5). tools YAGNI 3건 정리 |
+| Skills | **32개** | skill-rules.json **v1.7**. 협업 트랙 2개 신규(git-workflow / jira-workflow) |
+| Agents | 33개 | Phase 15-B에서 +4 예정 (git/jira/pr/release) |
 | Commands | 11개 | quality-gate + dev-qa-loop 포함 |
 | Hooks | 3종 (8 스크립트) | 4문서 자동화 2 + CI/CD 1 + 보조 5 |
 
@@ -172,6 +173,53 @@
 **유보:** `csi-signal-processing-guidelines` (WiFi CSI 특화, 범용성 낮음 → S14P31A206 전용 유지)
 
 **`skill-rules.json` 갱신:** v1.4 → v1.5 (4개 신규 트리거 등록, pathPatterns 범용화: `ml/**`, `notebooks/**`, `pipelines/**`, `base/ml/**`)
+
+---
+
+## Phase 15-A 완료 (2026-04-24) — 협업 트랙 Skill 일반화
+
+**배경:** 사용자가 S14P31A206(Here:O)에서 Jira workflow skill을 생성·운영하다 "협업 전문 agents 생성 가이드라인" 요청. 20년차 에이전트 엔지니어 관점 권고 3건 확정 후 착수:
+- 범위: **Recommended (4 에이전트)** — Foundation 2 + Composite 2 (Utility 2는 Phase 16)
+- lib.py 위임: **Option C — CLI 서브커맨드 계약** — Unix process 경계 기반 4-tier fallback
+- 실 프로젝트 수정: **같이 수정, 커밋 분리** — cognitive proximity + 실증 트리거 확보
+
+**Phase 15-Pre (S14P31A206 repo, 2026-04-24):**
+
+| # | 파일 | 변경 |
+|---|---|---|
+| 1 | `.claude/skills/skill-rules.json` v1.5→v1.6 | `jira` skill 항목 등록 (keywords 11 + intentPatterns 6 + fileTriggers) — "그냥 만들다 보니 잘못된 것" 누락 수정 |
+| 2 | `.claude/skills/jira/lib.py` | argparse CLI 엔트리 추가 (5 subcommand: task-create / epic-create / transition / status / list) + JSON 출력 + `python lib.py --help` 검증 |
+
+**Phase 15-A (하네스 repo, 2026-04-24):**
+
+| # | 파일 | 변경 |
+|---|---|---|
+| 1 | `.claude/skills/jira-workflow-guidelines/SKILL.md` (330줄) | 실 프로젝트 `jira/SKILL.md` 역전파 일반화. PROJECT_KEY/ASSIGNEE/COMPONENT placeholder, lib.py 실행 섹션 제거, Pattern A(lib.py) + Pattern B(config.yaml) 커스터마이징 가이드. 8개 명령 시그니처, 시안 승인 정책, 9개 컨벤션 규칙 |
+| 2 | `.claude/skills/git-workflow-guidelines/SKILL.md` (390줄) | 신규 — Conventional Commits (type 13종), 브랜치 전략 4종 비교 + 의사결정 트리, 머지 전략 의사결정 매트릭스, destructive 작업 7종 확인 게이트, Jira smart commit 연계, pre-commit 훅 권고 |
+| 3 | `.claude/skills/skill-rules.json` v1.6→v1.7 | 2개 skill 등록 (32 skills). 키워드 중복 검증 완료 (git hooks vs claude hook system) |
+| 4 | `.claude/skills/README.md` | 30→32, 🤝 협업 카테고리 신설 |
+
+**CLI 계약 확정 (jira-workflow-expert 에이전트의 1순위 실행 경로):**
+
+```
+python .claude/skills/jira/lib.py <subcommand> [args]
+  → stdout: JSON only
+  → stderr: error messages
+  → exit 0 on success, non-zero on failure
+```
+
+**Phase 15-A 보강 (같은 날, 2026-04-24):** 사용자 지적 — "jira/git은 쓸 때마다 위치·컨벤션 다르니 초기 세팅 가능하게. 파이프라인만 공통, 나머지는 프로젝트별." 반영:
+- 두 skill 상단에 **"🔧 Pipeline(공통) vs Config(프로젝트별) 분리"** 명시 섹션 신설 (3x4 매트릭스)
+- 두 skill에 **"🚀 Bootstrap — 첫 실행 초기 세팅"** 7단계 와이자드 추가
+  - Jira: 환경변수 검증 → myself API로 accountId → field API로 customfield 자동 매핑 → component 선택 → 컨벤션 확정 → config.yaml 생성 → 시험 호출
+  - Git: repo 검증 → base branch 감지(symbolic-ref→ls-remote→local) → 커밋 Conventional 준수율 판정(strict/warn/off) → 네이밍 prefix 수집 → 전략·Tracker 질문(jira 체이닝) → git.yaml 생성 → 유효성 검증
+- git SKILL.md 543줄 초과 방지로 `resources/bootstrap.md` 분리 (SKILL 497줄 + resources 180줄)
+- config 템플릿 제공 (`.claude/config/git.yaml`, `.claude/skills/jira/config.yaml`) — 에이전트가 Bootstrap 완료 시 생성
+- Idempotency 규칙: config 존재 시 skip, `--force`나 "재세팅" 명시 시만 덮어쓰기 (.bak 백업)
+
+**다음 단계 (Phase 15-B):** Foundation 에이전트 2개 병렬 세션
+- B1: `git-workflow-expert` (sonnet) — conventional commit 생성, 리베이스 안전 체크, destructive 게이트, **Bootstrap 자동 실행** (config 부재 시)
+- B2: `jira-workflow-expert` (sonnet) — 4-tier fallback(lib.py CLI→jira-cli→MCP→REST), 8개 명령, 시안 승인 정책, **Bootstrap 자동 실행** + git Bootstrap 체이닝
 
 ---
 

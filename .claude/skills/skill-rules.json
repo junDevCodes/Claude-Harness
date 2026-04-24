@@ -1,5 +1,5 @@
 {
-    "version": "1.6",
+    "version": "1.7",
     "description": "Skill activation triggers for Claude Code. Controls when skills automatically suggest or block actions.",
     "skills": {
         "skill-developer": {
@@ -1018,6 +1018,68 @@
                     "Raycaster"
                 ]
             }
+        },
+        "git-workflow-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Git branch strategy, conventional commits, merge policies. GitFlow vs Trunk-based selection, branch naming rules (Jira issue key linkage), rebase/merge/squash decisions, destructive operation safety (force-push/reset/branch delete).",
+            "promptTriggers": {
+                "keywords": [
+                    "conventional commit",
+                    "conventional commits",
+                    "feature branch",
+                    "git rebase",
+                    "리베이스",
+                    "squash merge",
+                    "commit message",
+                    "커밋 메시지",
+                    "브랜치 전략",
+                    "branch strategy",
+                    "gitflow",
+                    "trunk-based",
+                    "force-push",
+                    "force push"
+                ],
+                "intentPatterns": [
+                    "(write|생성|작성).*?(commit|커밋).*?(message|메시지)",
+                    "(create|생성).*?(branch|브랜치)",
+                    "(rebase|merge|squash).*?(strategy|전략|선택)",
+                    "(커밋|commit).*?(컨벤션|convention|규칙)",
+                    "(브랜치|branch).*?(네이밍|naming|이름)"
+                ]
+            }
+        },
+        "jira-workflow-guidelines": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Atlassian Jira (Cloud) workflow — Epic/Task creation, status transitions, branch creation with convention validation, draft-approval policy. All write/update/delete operations require explicit user approval. Project-specific customization (PROJECT_KEY/ASSIGNEE/COMPONENT/customfield) guide. Jira CLI/MCP/REST 4-tier fallback design for agents.",
+            "promptTriggers": {
+                "keywords": [
+                    "jira",
+                    "Jira",
+                    "지라",
+                    "에픽",
+                    "epic",
+                    "jira task",
+                    "jira workflow",
+                    "sprint 할당",
+                    "스프린트 할당",
+                    "story point",
+                    "스토리 포인트",
+                    "이슈 생성",
+                    "epic 생성",
+                    "atlassian"
+                ],
+                "intentPatterns": [
+                    "(create|생성|만들).*?(epic|에픽|jira task|jira issue)",
+                    "(에픽|jira).*?(생성|만들|추가|create)",
+                    "(transition|전이).*?(todo|progress|done|진행|완료)",
+                    "jira.*?(컨벤션|convention|워크플로우|workflow)",
+                    "(assignee|assignee).*?(jira|이슈)"
+                ]
+            }
         }
     },
     "notes": {
@@ -1038,6 +1100,7 @@
             "intentPatterns": "Use regex for flexible user intent matching"
         },
         "changelog": {
+            "v1.7": "2026-04-24 — Phase 15-A 협업 트랙 확장. 신규 2개 스킬 등록: git-workflow-guidelines (Conventional Commits, 브랜치 전략, 리베이스 vs 머지 vs squash, destructive 작업 게이트), jira-workflow-guidelines (Here:O 프로젝트 역전파 일반화 — Epic/Task 생성 컨벤션, 시안 사전 승인 정책, 프로젝트별 커스터마이징 가이드, 4-tier CLI fallback). 전체 등록 스킬: 32개. 협업 에이전트(git-workflow-expert / jira-workflow-expert / pr-manager / release-manager)의 참조 SSOT.",
             "v1.6": "2026-04-20 — Phase 14 Opus 4.7 최적화. enforcement=block은 Next.js 1개 유지 (다른 영역 오탐률 실측 결과 block 필요성 없음). 전체 등록 스킬: 30개 (변경 없음). 이번 릴리즈는 구조 안정화 + 데이터 패치 없음 — Skills 본체(docx/pdf/skill-developer/embedded-c/spring-boot 5개) description 간결화 + Agents 33개 model tier 명시가 주요 변경. Skills 500줄 포화 4개(react-native/pptx/express/django)는 Phase 14-B2 (후속 세션)에서 resources/ 분리 예정.",
             "v1.5": "2026-04-16 — Phase 13 데이터/AI 트랙 보강 (HERE:O S14P31A206 프로젝트 역전파). 신규 4개 스킬 등록: data-analysis-guidelines (pandas/polars EDA), data-pipeline-guidelines (Prefect/Airflow/Dagster + 메달리온 + Great Expectations), ml-training-guidelines (sklearn/LightGBM/PyTorch + MLflow + Optuna), ml-evaluation-guidelines (분류/회귀/시계열 지표 + 누수 방지 + McNemar). 동반 4개 에이전트(data-analyst, data-pipeline-architect, ml-engineer, ml-evaluator) 추가. 프로젝트 전용 csi-signal-processing-guidelines는 S14P31A206에서만 유지. 전체 등록 스킬: 30개.",
             "v1.4": "2026-04-13 — Phase 12-B 실 프로젝트 적용 중 발견. 신규 2개 스킬 등록: react-vite-pwa-guidelines (Vite + React 19 + PWA + React Router v6, Next.js App Router 미사용 SPA용), threejs-realtime-guidelines (Three.js + R3F 실시간 3D 시각화). 전체 등록 스킬: 26개. T3 스켈레톤 버전 — 실 프로젝트 사용 후 패턴 보강 예정.",
